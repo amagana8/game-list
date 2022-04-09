@@ -1,46 +1,46 @@
-type User  {
-	id: ID! 
-	username: String! @search(by:[exact]) @id
-	gameList: [gameList] 
+type User {
+  id: ID!
+  username: String! @search(by: [exact]) @id
+  gameList: [gameList] @hasInverse(field: user)
 }
 
-type Game  {
-	id: ID! 
-	title: String @search(by:[fulltext]) 
-	developer: String 
-	publisher: String 
-	genre: genre 
-	summary: String 
+type Game {
+  id: ID!
+  title: String @search(by: [fulltext])
+  developer: String
+  publisher: String
+  genre: genre
+  summary: String
 }
 
-type gameList  {
-	id: ID! 
-	user: User 
-	game: Game 
-	status: status @search
-	hours: Int 
-	score: Int 
+type gameList {
+  id: ID!
+  user: User
+  game: Game
+  status: status @search
+  hours: Int
+  score: Int
 }
 
 enum genre {
-	adventure
-	board
-	fighting
-	horror
-	racing
-	rpg
-	rhythm
-	sandbox
-	shooter
-	simulation
-	sports
-	strategy
+  adventure
+  board
+  fighting
+  horror
+  racing
+  rpg
+  rhythm
+  sandbox
+  shooter
+  simulation
+  sports
+  strategy
 }
 
 enum status {
-	playing
-	completed
-	paused
-	dropped
-	planning
+  playing
+  completed
+  paused
+  dropped
+  planning
 }

@@ -2,7 +2,8 @@ import type { GetStaticPaths, NextPage } from 'next';
 import { Layout, Table } from 'antd';
 import { NavBar } from '@components/navBar';
 import { GetStaticProps } from 'next';
-import { GameListModel } from '../../gameListModel';
+import { GetList } from '../../graphQLQueries';
+import { client } from "../../apollo-client";
 
 const { Content } = Layout;
 
@@ -11,10 +12,18 @@ type ListProps = {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const model = new GameListModel();
-  const list = await model.getList('PaleteroMan', 'playing');
+  const { loading, error, data } = await client.query({
+    query: GetList,
+    variables: {
+      userName: "PaleteroMan",
+      status: "playing"
+    }
+  });
+
   return {
-    props: { list }
+    props: { 
+      list: data.getUser.gameList
+    }
   };
 };
 
@@ -37,13 +46,13 @@ const GameList: NextPage<ListProps> = ({ list }: ListProps) => {
     <>
       <NavBar index="3" />
       <Content>
-      <Table
+        <Table
           columns={columns}
           dataSource={list.map((row: any) => ({
-            key: row.uid,
-            title: row['Game.title'],
-            score: row['playing|score'],
-            hours: row['playing|hours']
+            key: row.id,
+            title: row.game.title,
+            score: row.score,
+            hours: row.hours
           }))}
           pagination={{ pageSize: 50 }}
         />
