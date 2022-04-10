@@ -36,5 +36,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-# firebase config
-firebase-config.json
+# config
+config.json
