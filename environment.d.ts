@@ -4,6 +4,7 @@ declare global {
       NEO4J_URI: string;
       NEO4J_USER: string;
       NEO4J_PASSWORD: string;
+      JWT_SECRET: string;
     }
   }
 }
