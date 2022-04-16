@@ -3,7 +3,7 @@ import { Layout, Table } from 'antd';
 import { NavBar } from '@components/navBar';
 import { GetStaticProps } from 'next';
 import { GetList } from '../../graphQLQueries';
-import { client } from "../../apollo-client";
+import { client } from '../../apollo-client';
 
 const { Content } = Layout;
 
@@ -15,15 +15,15 @@ export const getStaticProps: GetStaticProps = async () => {
   const { loading, error, data } = await client.query({
     query: GetList,
     variables: {
-      userName: "PaleteroMan",
-      status: "playing"
-    }
+      userName: 'PaleteroMan',
+      status: 'playing',
+    },
   });
 
   return {
-    props: { 
-      list: data.getUser.gameList
-    }
+    props: {
+      list: data.getUser.gameList,
+    },
   };
 };
 
@@ -35,12 +35,12 @@ const GameList: NextPage<ListProps> = ({ list }: ListProps) => {
     },
     {
       title: 'Score',
-      dataIndex: 'score'
+      dataIndex: 'score',
     },
     {
       title: 'Hours',
-      dataIndex: 'hours'
-    }
+      dataIndex: 'hours',
+    },
   ];
   return (
     <>
@@ -52,7 +52,7 @@ const GameList: NextPage<ListProps> = ({ list }: ListProps) => {
             key: row.id,
             title: row.game.title,
             score: row.score,
-            hours: row.hours
+            hours: row.hours,
           }))}
           pagination={{ pageSize: 50 }}
         />
@@ -63,15 +63,15 @@ const GameList: NextPage<ListProps> = ({ list }: ListProps) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const arr: string[] = ['PaleteroMan'];
-  
+
   const paths = arr.map((user) => {
-    return { params: { username: user } }
+    return { params: { username: user } };
   });
 
   return {
     paths,
-    fallback: false
+    fallback: false,
   };
-}
+};
 
 export default GameList;

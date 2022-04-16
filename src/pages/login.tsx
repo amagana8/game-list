@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
-import Link from "next/link";
+import Link from 'next/link';
 import Head from 'next/head';
-import { Layout, Form, Input, Button, message } from "antd";
+import { Layout, Form, Input, Button, message } from 'antd';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { NavBar } from '@components/navBar';
 import styles from '@styles/Login.module.css';
@@ -9,8 +9,8 @@ import styles from '@styles/Login.module.css';
 const { Content } = Layout;
 
 interface LogInForm {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 
 const Login: NextPage = () => {
@@ -61,6 +61,6 @@ const Login: NextPage = () => {
       </Content>
     </>
   );
-}
+};
 
 export default Login;

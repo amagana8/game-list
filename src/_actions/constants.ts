@@ -1,4 +1,4 @@
 export const constants = {
-    LOGIN: 'LOGIN',
-    LOGOUT: 'LOGOUT'
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT',
 };

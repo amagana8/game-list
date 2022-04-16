@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { useEffect } from "react";
-import { Layout, Menu } from "antd";
+import Link from 'next/link';
+import { useEffect } from 'react';
+import { Layout, Menu } from 'antd';
 
 const { Header } = Layout;
 
@@ -9,8 +9,8 @@ type navBarProps = {
 };
 
 const defaultProps: navBarProps = {
-  index: ''
-}
+  index: '',
+};
 
 const NavBar = ({ index }: navBarProps) => {
   let user;

@@ -1,7 +1,7 @@
 import { NavBar } from '@components/navBar';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { Layout, Form, Input, Button, message } from "antd";
+import { Layout, Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import styles from '@styles/Login.module.css';
 import { useState } from 'react';
@@ -9,10 +9,10 @@ import { useState } from 'react';
 const { Content } = Layout;
 
 interface SignUpForm {
-  email: string
-  username: string,
-  password: string
-};
+  email: string;
+  username: string;
+  password: string;
+}
 
 const SignUp: NextPage = () => {
   function onFinish(values: SignUpForm) {
@@ -28,7 +28,7 @@ const SignUp: NextPage = () => {
       <Content>
         <Form
           className={styles.form}
-          initialValues={{ remember: true}}
+          initialValues={{ remember: true }}
           onFinish={onFinish}
         >
           <Form.Item
@@ -54,14 +54,14 @@ const SignUp: NextPage = () => {
             />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" style={{width: 100}}>
+            <Button type="primary" htmlType="submit" style={{ width: 100 }}>
               Sign up
             </Button>
           </Form.Item>
         </Form>
       </Content>
     </>
-  )
-}
+  );
+};
 
 export default SignUp;
