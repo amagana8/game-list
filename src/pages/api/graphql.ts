@@ -4,11 +4,12 @@ import neo4j from 'neo4j-driver';
 import { OGM } from '@neo4j/graphql-ogm';
 import { Neo4jGraphQLAuthJWTPlugin } from '@neo4j/graphql-plugin-auth';
 import { sign } from 'jsonwebtoken';
+import argon2 from 'argon2';
 
 const typeDefs = gql`
   type User @exclude(operations: [CREATE, UPDATE, DELETE]) {
     id: ID! @id
-    username: String!
+    username: String! @unique
     password: String! @private
     gamesPlaying: [Game!]!
       @relationship(type: "IS_PLAYING", properties: "Status", direction: OUT)
@@ -88,6 +89,8 @@ const resolvers = {
         throw new Error(`User with username ${username} already exists!`);
       }
 
+      password = await argon2.hash(password);
+
       const { users } = await User.create({
         input: [
           {
@@ -110,7 +113,7 @@ const resolvers = {
         throw new Error(`User with username ${username} not found!`);
       }
 
-      const correctPassword = password === user.password;
+      const correctPassword = await argon2.verify(user.password, password);
 
       if (!correctPassword) {
         throw new Error(
@@ -146,7 +149,7 @@ export default async function handler(req: any, res: any) {
       auth: new Neo4jGraphQLAuthJWTPlugin({ secret: process.env.JWT_SECRET }),
     },
   });
-  
+
   await ogm.init();
   const apolloServer = new ApolloServer({
     schema: await neoSchema.getSchema(),
