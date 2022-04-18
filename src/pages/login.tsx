@@ -1,21 +1,42 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import Head from 'next/head';
+import Router from 'next/router';
 import { Layout, Form, Input, Button, message } from 'antd';
-import { LockOutlined, MailOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { NavBar } from '@components/navBar';
 import styles from '@styles/Login.module.css';
+import { ApolloError, useMutation } from '@apollo/client';
+import { SignIn } from '../graphQLMutations';
 
 const { Content } = Layout;
 
 interface LogInForm {
-  email: string;
+  username: string;
   password: string;
 }
 
 const Login: NextPage = () => {
-  function onFinish(values: LogInForm) {
-    console.log(values);
+  const [signIn] = useMutation(SignIn);
+
+  async function onFinish(values: LogInForm) {
+    try {
+      const { data } = await signIn({
+        variables: {
+          username: values.username,
+          password: values.password,
+        },
+      });
+      localStorage.setItem('token', data.signIn);
+      localStorage.setItem('username', values.username.toLowerCase());
+      Router.push('/');
+    } catch (error) {
+      if (error instanceof ApolloError) {
+        message.error(error.message);
+      } else {
+        console.log(error);
+      }
+    }
   }
 
   return (
@@ -31,10 +52,10 @@ const Login: NextPage = () => {
           onFinish={onFinish}
         >
           <Form.Item
-            name="email"
-            rules={[{ required: true, message: 'Please input your email!' }]}
+            name="username"
+            rules={[{ required: true, message: 'Please input your Username!' }]}
           >
-            <Input prefix={<MailOutlined />} placeholder="Email" />
+            <Input prefix={<UserOutlined />} placeholder="Username" />
           </Form.Item>
           <Form.Item
             name="password"
