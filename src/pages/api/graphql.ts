@@ -7,7 +7,7 @@ import { sign } from 'jsonwebtoken';
 import argon2 from 'argon2';
 
 const typeDefs = gql`
-  type User @exclude(operations: [CREATE, UPDATE, DELETE]) {
+  type User @exclude(operations: [CREATE, DELETE]) {
     id: ID! @id
     username: String! @unique
     password: String! @private
@@ -23,7 +23,7 @@ const typeDefs = gql`
       @relationship(type: "IS_PLANNING", properties: "Status", direction: OUT)
   }
 
-  type Game @exclude(operations: [CREATE, UPDATE, DELETE]) {
+  type Game @exclude(operations: [DELETE]) {
     id: ID! @id
     title: String
     developer: String
