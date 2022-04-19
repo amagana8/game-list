@@ -7,6 +7,8 @@ import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import styles from '@styles/Login.module.css';
 import { ApolloError, useMutation } from '@apollo/client';
 import { SignUp } from '../graphQLMutations';
+import { decode } from 'jsonwebtoken';
+import { JwtPayload } from '@neo4j/graphql/dist/types';
 
 const { Content } = Layout;
 
@@ -23,12 +25,13 @@ const SignUpPage: NextPage = () => {
     try {
       const { data } = await signUp({
         variables: {
+          email: values.email,
           username: values.username,
           password: values.password,
         },
       });
-      localStorage.setItem('token', data.signUp);
-      localStorage.setItem('username', values.username.toLowerCase());
+      const decoded = decode(data.signIn) as JwtPayload;
+      localStorage.setItem('username', decoded?.username);
       Router.push('/');
     } catch (error) {
       if (error instanceof ApolloError) {
@@ -51,6 +54,12 @@ const SignUpPage: NextPage = () => {
           initialValues={{ remember: true }}
           onFinish={onFinish}
         >
+          <Form.Item
+            name="email"
+            rules={[{ required: true, message: 'Please input your email!' }]}
+          >
+            <Input prefix={<MailOutlined />} placeholder="Email" />
+          </Form.Item>
           <Form.Item
             name="username"
             rules={[{ required: true, message: 'Please input your Username!' }]}

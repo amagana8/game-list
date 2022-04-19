@@ -10,6 +10,7 @@ const typeDefs = gql`
   type User @exclude(operations: [CREATE, DELETE]) {
     id: ID! @id
     username: String! @unique
+    email: String! @unique
     password: String! @private
     gamesPlaying: [Game!]!
       @relationship(type: "IS_PLAYING", properties: "Status", direction: OUT)
@@ -63,8 +64,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    signUp(username: String!, password: String!): String!
-    signIn(username: String!, password: String!): String!
+    signUp(username: String!, email: String!, password: String!): String!
+    signIn(email: String!, password: String!): String!
   }
 `;
 
@@ -78,15 +79,25 @@ const User = ogm.model('User');
 
 const resolvers = {
   Mutation: {
-    signUp: async (_source: any, { username, password }: any) => {
-      const [existing] = await User.find({
+    signUp: async (_source: any, { username, email, password }: any) => {
+      const [existingUsername] = await User.find({
         where: {
           username,
         },
       });
 
-      if (existing) {
+      if (existingUsername) {
         throw new Error(`User with username ${username} already exists!`);
+      }
+
+      const [existingEmail] = await User.find({
+        where: {
+          email,
+        },
+      });
+
+      if (existingEmail) {
+        throw new Error(`User with email ${email} already exists!`);
       }
 
       password = await argon2.hash(password);
@@ -95,33 +106,34 @@ const resolvers = {
         input: [
           {
             username,
+            email,
             password,
           },
         ],
       });
 
-      return sign({ sub: users[0].id }, process.env.JWT_SECRET);
+      return sign({ sub: users[0].id, username: users[0].username }, process.env.JWT_SECRET);
     },
-    signIn: async (_source: any, { username, password }: any) => {
+    signIn: async (_source: any, { email, password }: any) => {
       const [user] = await User.find({
         where: {
-          username,
+          email,
         },
       });
 
       if (!user) {
-        throw new Error(`User with username ${username} not found!`);
+        throw new Error(`User with email ${email} not found!`);
       }
 
       const correctPassword = await argon2.verify(user.password, password);
 
       if (!correctPassword) {
         throw new Error(
-          `Incorrect password for user with username ${username}!`,
+          `Incorrect password for user with email ${email}!`,
         );
       }
 
-      return sign({ sub: user.id }, process.env.JWT_SECRET);
+      return sign({ sub: user.id, username: user.username }, process.env.JWT_SECRET);
     },
   },
 };

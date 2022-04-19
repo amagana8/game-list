@@ -3,16 +3,18 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Router from 'next/router';
 import { Layout, Form, Input, Button, message } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { NavBar } from '@components/navBar';
 import styles from '@styles/Login.module.css';
 import { ApolloError, useMutation } from '@apollo/client';
 import { SignIn } from '../graphQLMutations';
+import { decode } from 'jsonwebtoken';
+import { JwtPayload } from '@neo4j/graphql/dist/types';
 
 const { Content } = Layout;
 
 interface LogInForm {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -23,12 +25,12 @@ const Login: NextPage = () => {
     try {
       const { data } = await signIn({
         variables: {
-          username: values.username,
+          email: values.email,
           password: values.password,
         },
       });
-      localStorage.setItem('token', data.signIn);
-      localStorage.setItem('username', values.username.toLowerCase());
+      const decoded = decode(data.signIn) as JwtPayload;
+      localStorage.setItem('username', decoded?.username);
       Router.push('/');
     } catch (error) {
       if (error instanceof ApolloError) {
@@ -52,10 +54,10 @@ const Login: NextPage = () => {
           onFinish={onFinish}
         >
           <Form.Item
-            name="username"
-            rules={[{ required: true, message: 'Please input your Username!' }]}
+            name="email"
+            rules={[{ required: true, message: 'Please input your email!' }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Username" />
+            <Input prefix={<MailOutlined />} placeholder="Email" />
           </Form.Item>
           <Form.Item
             name="password"
