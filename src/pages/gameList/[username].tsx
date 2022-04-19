@@ -1,28 +1,38 @@
-import type { GetStaticPaths, NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import { Layout, Table } from 'antd';
 import { NavBar } from '@components/navBar';
-import { GetStaticProps } from 'next';
-import { GetList } from '../../graphQLQueries';
+import { GetPlayingList } from '../../graphQLQueries';
 import { client } from '../../apollo-client';
 
 const { Content } = Layout;
 
-type ListProps = {
-  list: any;
-};
+interface Game {
+  id: string;
+  title: string;
+}
+interface ListEntry {
+  hours: Number;
+  score: Number;
+  node: Game;
+}
+interface ListProps {
+  list: Array<ListEntry>;
+}
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { username } = query;
   const { loading, error, data } = await client.query({
-    query: GetList,
+    query: GetPlayingList,
     variables: {
-      userName: 'PaleteroMan',
-      status: 'playing',
+      where: {
+        username: username,
+      },
     },
   });
 
   return {
     props: {
-      list: data.getUser.gameList,
+      list: data.users[0].gamesPlayingConnection.edges,
     },
   };
 };
@@ -48,9 +58,9 @@ const GameList: NextPage<ListProps> = ({ list }: ListProps) => {
       <Content>
         <Table
           columns={columns}
-          dataSource={list.map((row: any) => ({
-            key: row.id,
-            title: row.game.title,
+          dataSource={list.map((row: ListEntry) => ({
+            key: row.node.id,
+            title: row.node.title,
             score: row.score,
             hours: row.hours,
           }))}
@@ -59,19 +69,6 @@ const GameList: NextPage<ListProps> = ({ list }: ListProps) => {
       </Content>
     </>
   );
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const arr: string[] = ['PaleteroMan'];
-
-  const paths = arr.map((user) => {
-    return { params: { username: user } };
-  });
-
-  return {
-    paths,
-    fallback: false,
-  };
 };
 
 export default GameList;

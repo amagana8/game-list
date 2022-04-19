@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Layout, Menu } from 'antd';
 
 const { Header } = Layout;
@@ -13,10 +13,10 @@ const defaultProps: navBarProps = {
 };
 
 const NavBar = ({ index }: navBarProps) => {
-  let user;
+  const [user, setUser] = useState<string>();
   useEffect(() => {
-    user = localStorage.getItem('user');
-  }, []);
+    setUser(localStorage.getItem('username') ?? '');
+  }, [user]);
 
   return (
     <Header>
