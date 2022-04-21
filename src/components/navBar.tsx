@@ -1,6 +1,10 @@
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { Layout, Menu } from 'antd';
+import { Button, Layout, Menu } from 'antd';
+import { useState, useEffect } from 'react';
+import styles from '@styles/NavBar.module.css';
+import { useAppDispatch } from 'src/hooks';
+import { logout } from '../slices/userSlice';
+import Router from 'next/router';
 
 const { Header } = Layout;
 
@@ -13,11 +17,20 @@ const defaultProps: navBarProps = {
 };
 
 const NavBar = ({ index }: navBarProps) => {
-  const [user, setUser] = useState<string>();
+  const [username, setUsername] = useState<string>();
   useEffect(() => {
-    setUser(localStorage.getItem('username') ?? '');
-  }, [user]);
+    setUsername(localStorage.getItem('username') ?? '');
+  }, [username]);
 
+  const dispatch = useAppDispatch();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    dispatch(logout());
+    setUsername('');
+    Router.push('/');;
+  }
   return (
     <Header>
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[index]}>
@@ -31,11 +44,35 @@ const NavBar = ({ index }: navBarProps) => {
             <a>Browse</a>
           </Link>
         </Menu.Item>
-        <Menu.Item key="3">
-          <Link href={`/gameList/${user}`}>
-            <a>Game List</a>
-          </Link>
-        </Menu.Item>
+        {username ? (
+          <>
+            <Menu.Item key="3">
+              <Link href={`/gameList/${username}`}>
+                <a>Game List</a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item className={styles.end}>
+              <Button onClick={handleLogout}>Logout</Button>
+            </Menu.Item>
+          </>
+        ) : (
+          <>
+          <Menu.Item className={styles.end}>
+            <Button>
+              <Link href="/login">
+                <a>Login</a>
+              </Link>
+            </Button>
+          </Menu.Item>
+          <Menu.Item>
+            <Button>
+              <Link href="/signup">
+                <a>Sign Up</a>
+              </Link>
+            </Button>
+          </Menu.Item>
+          </>
+        )}
       </Menu>
     </Header>
   );
