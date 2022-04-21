@@ -12,6 +12,7 @@
     "@neo4j/graphql": "^3.0.4",
     "@neo4j/graphql-ogm": "^3.1.0",
     "@neo4j/graphql-plugin-auth": "^1.0.0",
+    "@reduxjs/toolkit": "^1.8.1",
     "antd": "^4.16.13",
     "apollo-server-micro": "^3.6.7",
     "argon2": "^0.28.5",
@@ -22,9 +23,7 @@
     "next": "12.0.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-redux": "^7.2.6",
-    "redux": "^4.1.2",
-    "redux-thunk": "^2.4.0"
+    "react-redux": "^7.2.6"
   },
   "devDependencies": {
     "@types/node": "16.11.6",
