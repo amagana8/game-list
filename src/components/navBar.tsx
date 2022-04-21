@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button, Layout, Menu } from 'antd';
 import { useState, useEffect } from 'react';
-import styles from '@styles/NavBar.module.css';
+import styles from '@styles/NavBar.module.scss';
 import { useAppDispatch } from 'src/hooks';
 import { logout } from '../slices/userSlice';
 import Router from 'next/router';

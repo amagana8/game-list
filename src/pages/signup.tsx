@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Router from 'next/router';
 import { Layout, Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import styles from '@styles/Login.module.css';
+import styles from '@styles/Login.module.scss';
 import { ApolloError, useMutation } from '@apollo/client';
 import { SignUp } from '../graphQLMutations';
 import { decode } from 'jsonwebtoken';

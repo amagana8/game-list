@@ -1,4 +1,4 @@
-import '../styles/globals.css';
+import '../styles/globals.scss';
 import type { AppProps } from 'next/app';
 import { Layout } from 'antd';
 import { ApolloProvider } from '@apollo/client';

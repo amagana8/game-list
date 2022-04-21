@@ -5,7 +5,7 @@ import Router from 'next/router';
 import { Layout, Form, Input, Button, message } from 'antd';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { NavBar } from '@components/navBar';
-import styles from '@styles/Login.module.css';
+import styles from '@styles/Login.module.scss';
 import { ApolloError, useMutation } from '@apollo/client';
 import { SignIn } from '../graphQLMutations';
 import { decode } from 'jsonwebtoken';

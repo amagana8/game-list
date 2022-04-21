@@ -1,0 +1,58 @@
+@import '~antd/dist/antd.dark.css';
+
+$bg-primary: #141414;
+$bg-secondary: #1d1d1d;
+
+.ant-layout-content {
+  min-height: 280px;
+  padding: 24px;
+  background-color: $bg-primary;
+}
+
+body {
+  background-color: $bg-primary;
+}
+
+.card-container {
+  .ant-tabs-card {
+    .ant-tabs-content {
+      margin-top: -16px;
+      .ant-tabs-tabpane {
+        background: $bg-primary;
+      }
+    }
+
+    .ant-tabs-nav::before {
+      display: none;
+    }
+
+    .ant-tabs-tab {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .ant-tabs-tab-active {
+      background: $bg-secondary;
+      border-color: $bg-secondary;
+      margin-bottom: -1px;
+    }
+  }
+}
+
+.ant-card-body {
+  background: $bg-secondary;
+}
+
+body {
+  &::-webkit-scrollbar {
+    width: 0.25rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #1e1e24;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #177ddc;
+  }
+}
