@@ -9,6 +9,8 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { SignUp } from '../graphQLMutations';
 import { decode } from 'jsonwebtoken';
 import { JwtPayload } from '@neo4j/graphql/dist/types';
+import { useAppDispatch } from '../hooks';
+import { login } from '../slices/userSlice';
 
 const { Content } = Layout;
 
@@ -20,6 +22,7 @@ interface SignUpForm {
 
 const SignUpPage: NextPage = () => {
   const [signUp] = useMutation(SignUp);
+  const dispatch = useAppDispatch();
 
   async function onFinish(values: SignUpForm) {
     try {
@@ -30,8 +33,11 @@ const SignUpPage: NextPage = () => {
           password: values.password,
         },
       });
+      localStorage.setItem('token', data.signIn);
       const decoded = decode(data.signIn) as JwtPayload;
-      localStorage.setItem('username', decoded?.username);
+      const username = decoded?.username;
+      dispatch(login(username));
+      localStorage.setItem('username',username);
       Router.push('/');
     } catch (error) {
       if (error instanceof ApolloError) {

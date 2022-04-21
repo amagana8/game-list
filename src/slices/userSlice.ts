@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserState {
-  user: string;
+  username: string;
 }
 
 const initialState: UserState = {
-  user: '',
+  username: '',
 };
 
 export const userSlice = createSlice({
@@ -13,7 +13,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action: PayloadAction<string>) => {
-      state.user = action.payload;
+      state.username = action.payload;
     },
     logout: (state) => {
       state = initialState;
