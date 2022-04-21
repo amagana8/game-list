@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   return {
     props: {
-      list: data.users[0].gamesPlayingConnection.edges,
+      list: data.users[0]?.gamesPlayingConnection.edges ?? [],
     },
   };
 };
