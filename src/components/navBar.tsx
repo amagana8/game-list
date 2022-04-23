@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { Button, Layout, Menu } from 'antd';
-import { useState, useEffect } from 'react';
 import styles from '@styles/NavBar.module.scss';
-import { useAppDispatch } from 'src/hooks';
+import { useAppDispatch, useAppSelector } from 'src/hooks';
 import { logout } from '../slices/userSlice';
 import Router from 'next/router';
 
@@ -17,18 +16,11 @@ const defaultProps: navBarProps = {
 };
 
 const NavBar = ({ index }: navBarProps) => {
-  const [username, setUsername] = useState<string>();
-  useEffect(() => {
-    setUsername(localStorage.getItem('username') ?? '');
-  }, [username]);
-
+  const username = useAppSelector(state => state.user.username);
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
     dispatch(logout());
-    setUsername('');
     Router.push('/');;
   }
   return (

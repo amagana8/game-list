@@ -33,11 +33,12 @@ const SignUpPage: NextPage = () => {
           password: values.password,
         },
       });
-      localStorage.setItem('token', data.signIn);
       const decoded = decode(data.signIn) as JwtPayload;
-      const username = decoded?.username;
-      dispatch(login(username));
-      localStorage.setItem('username',username);
+      const user = {
+        username: decoded.username,
+        token: data.signIn,
+      };
+      dispatch(login(user));
       Router.push('/');
     } catch (error) {
       if (error instanceof ApolloError) {

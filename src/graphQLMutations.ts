@@ -7,7 +7,7 @@ export const SignUp = gql`
 `;
 
 export const SignIn = gql`
-  mutation SignUp($email: String!, $password: String!) {
+  mutation SignIn($email: String!, $password: String!) {
     signIn(email: $email, password: $password)
   }
 `;
