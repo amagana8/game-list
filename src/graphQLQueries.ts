@@ -16,3 +16,25 @@ export const GetPlayingList = gql`
     }
   }
 `;
+
+export const GetGames = gql`
+  query Games {
+    games {
+      id
+      title
+    }
+  }
+`;
+
+export const GetGame = gql`
+  query Games($where: GameWhere) {
+    games(where: $where) {
+      id
+      title
+      publisher
+      developer
+      summary
+      genre
+    }
+  }
+`;
