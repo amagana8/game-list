@@ -16,13 +16,13 @@ const defaultProps: navBarProps = {
 };
 
 const NavBar = ({ index }: navBarProps) => {
-  const username = useAppSelector(state => state.user.username);
+  const username = useAppSelector((state) => state.user.username);
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
-    Router.push('/');;
-  }
+    Router.push('/');
+  };
   return (
     <Header>
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[index]}>
@@ -40,29 +40,34 @@ const NavBar = ({ index }: navBarProps) => {
           <>
             <Menu.Item key="3">
               <Link href={`/gameList/${username}`}>
-                <a>Game List</a>
+                <a>My List</a>
               </Link>
             </Menu.Item>
-            <Menu.Item className={styles.end}>
+            <Menu.Item key="4">
+              <Link href={`/addGame`}>
+                <a>New Game</a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="5" className={styles.end}>
               <Button onClick={handleLogout}>Logout</Button>
             </Menu.Item>
           </>
         ) : (
           <>
-          <Menu.Item className={styles.end}>
-            <Button>
-              <Link href="/login">
-                <a>Login</a>
-              </Link>
-            </Button>
-          </Menu.Item>
-          <Menu.Item>
-            <Button>
-              <Link href="/signup">
-                <a>Sign Up</a>
-              </Link>
-            </Button>
-          </Menu.Item>
+            <Menu.Item key="6" className={styles.end}>
+              <Button>
+                <Link href="/login">
+                  <a>Login</a>
+                </Link>
+              </Button>
+            </Menu.Item>
+            <Menu.Item key="7">
+              <Button>
+                <Link href="/signup">
+                  <a>Sign Up</a>
+                </Link>
+              </Button>
+            </Menu.Item>
           </>
         )}
       </Menu>

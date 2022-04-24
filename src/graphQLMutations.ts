@@ -21,3 +21,18 @@ export const AddGame = gql`
     }
   }
 `;
+
+export const NewGame = gql`
+  mutation CreateGames($input: [GameCreateInput!]!) {
+    createGames(input: $input) {
+      games {
+        id
+        title
+        developer
+        publisher
+        summary
+        genre
+      }
+    }
+  }
+`;
