@@ -11,3 +11,13 @@ export const SignIn = gql`
     signIn(email: $email, password: $password)
   }
 `;
+
+export const AddGame = gql`
+  mutation UpdateUsers($where: UserWhere, $connect: UserConnectInput) {
+    updateUsers(where: $where, connect: $connect) {
+      info {
+        relationshipsCreated
+      }
+    }
+  }
+`;

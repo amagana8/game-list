@@ -1,8 +1,10 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { client } from '../../apollo-client';
 import { GetGame } from '../../graphQLQueries';
-import { Typography, Layout } from 'antd';
+import { Typography, Layout, Button } from 'antd';
 import { NavBar } from '@components/navBar';
+import { AddGameModal } from '@components/addGameModal';
+import React, { useState } from 'react';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -39,12 +41,24 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 const GamePage: NextPage<GameProps> = ({ game }) => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <>
       <NavBar />
       <Content>
-        <Title>{game.title}</Title>
-        <Text>{game.developer}</Text>
+        <div>
+          <Title>{game.title}</Title>
+          <Text>Developer: {game.developer}</Text>
+        </div>
+        <Button type="primary" onClick={() => setShowModal(true)}>
+          Add to List
+        </Button>
+        <AddGameModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          gameTitle={game.title}
+        />
       </Content>
     </>
   );
