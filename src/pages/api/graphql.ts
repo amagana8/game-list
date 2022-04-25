@@ -5,9 +5,12 @@ import { OGM } from '@neo4j/graphql-ogm';
 import { Neo4jGraphQLAuthJWTPlugin } from '@neo4j/graphql-plugin-auth';
 import { sign } from 'jsonwebtoken';
 import argon2 from 'argon2';
+import Cors from 'micro-cors';
+
+const cors = Cors();
 
 const typeDefs = gql`
-  type User @exclude(operations: [CREATE, DELETE]) {
+  type User @exclude(operations: [DELETE]) {
     id: ID! @id
     username: String! @unique
     email: String! @unique
@@ -138,12 +141,12 @@ const resolvers = {
   },
 };
 
-export default async function handler(req: any, res: any) {
+export default cors(async (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader(
-    'Access-Control-Allow-Origin',
-    'https://studio.apollographql.com',
-  );
+  // res.setHeader(
+  //   'Access-Control-Allow-Origin',
+  //   'https://studio.apollographql.com',
+  // );
   res.setHeader(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',
@@ -170,7 +173,7 @@ export default async function handler(req: any, res: any) {
   await apolloServer.createHandler({
     path: '/api/graphql',
   })(req, res);
-}
+});
 
 export const config = {
   api: {
