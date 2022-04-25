@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import { Layout, Table } from 'antd';
 import { NavBar } from '@components/navBar';
 import { client } from 'src/apollo-client';
@@ -16,7 +16,7 @@ interface GameList {
   games: Array<Game>;
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const { data } = await client.query({
     query: GetGames,
   });
