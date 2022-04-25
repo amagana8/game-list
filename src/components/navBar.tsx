@@ -62,7 +62,7 @@ const NavBar = ({ index }: navBarProps) => {
               </Button>
             </Menu.Item>
             <Menu.Item key="7">
-              <Button>
+              <Button type="primary">
                 <Link href="/signup">
                   <a>Sign Up</a>
                 </Link>

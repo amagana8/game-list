@@ -33,7 +33,7 @@ const SignUpPage: NextPage = () => {
           password: values.password,
         },
       });
-      const decoded = decode(data.signIn) as JwtPayload;
+      const decoded = decode(data.signUp) as JwtPayload;
       const user = {
         username: decoded.username,
         token: data.signIn,

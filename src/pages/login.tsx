@@ -51,7 +51,7 @@ const Login: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Log in to GameList - GameList</title>
+        <title>Login to GameList - GameList</title>
       </Head>
       <NavBar />
       <Content>
@@ -78,7 +78,7 @@ const Login: NextPage = () => {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Log in
+              Login
             </Button>
           </Form.Item>
           <Form.Item>

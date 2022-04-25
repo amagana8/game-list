@@ -5,9 +5,10 @@ import { Typography, Layout, Button } from 'antd';
 import { NavBar } from '@components/navBar';
 import { AddGameModal } from '@components/addGameModal';
 import React, { useState } from 'react';
+import styles from '@styles/title.module.scss';
 
 const { Content } = Layout;
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 interface Game {
   id: string;
@@ -47,13 +48,29 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
     <>
       <NavBar />
       <Content>
-        <div>
-          <Title>{game.title}</Title>
-          <Text>Developer: {game.developer}</Text>
-        </div>
-        <Button type="primary" onClick={() => setShowModal(true)}>
+        <Title className={styles.gameTitle}>{game.title}</Title>
+        <Button
+          type="primary"
+          className={styles.addButton}
+          onClick={() => setShowModal(true)}
+        >
           Add to List
         </Button>
+        <ul className={styles.list}>
+          <li>
+            <Text strong>Developer: </Text>
+            <Text>{game.developer}</Text>
+          </li>
+          <li>
+            <Text strong>Publisher: </Text>
+            <Text>{game.publisher}</Text>
+          </li>
+          <li>
+            <Text strong>Genre: </Text>
+            <Text>{game.genre}</Text>
+          </li>
+        </ul>
+        <Paragraph>Summary: {game.summary}</Paragraph>
         <AddGameModal
           showModal={showModal}
           setShowModal={setShowModal}
