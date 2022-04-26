@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { GameFragment } from './graphQLFragments';
 
 export const SignUp = gql`
   mutation SignUp($username: String!, $email: String!, $password: String!) {
@@ -26,13 +27,9 @@ export const NewGame = gql`
   mutation CreateGames($input: [GameCreateInput!]!) {
     createGames(input: $input) {
       games {
-        id
-        title
-        developer
-        publisher
-        summary
-        genre
+        ...GameFragment
       }
     }
   }
+  ${GameFragment}
 `;

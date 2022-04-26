@@ -8,17 +8,20 @@ import Title from 'antd/lib/typography/Title';
 import { useMutation } from '@apollo/client';
 import { NewGame } from '../graphQLMutations';
 import Router from 'next/router';
+import { ListInput } from '@components/listInput';
+import { useState } from 'react';
 
 interface NewGameForm {
   title: string;
-  developer: string;
-  publisher: string;
   summary: string;
   genre: string;
 }
 
 const AddGame: NextPage = () => {
   const [newGame] = useMutation(NewGame);
+
+  const [developers, setDevelopers] = useState<string[]>([]);
+  const [publishers, setPublishers] = useState<string[]>([]);
 
   async function onFinish(input: NewGameForm) {
     try {
@@ -27,8 +30,8 @@ const AddGame: NextPage = () => {
           input: [
             {
               title: input.title,
-              developer: input.developer,
-              publisher: input.publisher,
+              developers: developers,
+              publishers: publishers,
               summary: input.summary,
               genre: input.genre,
             },
@@ -48,18 +51,22 @@ const AddGame: NextPage = () => {
 
   return (
     <>
-      <NavBar index="3" />
+      <NavBar index="4" />
       <Content>
         <Title className={styles.title}>Add a New Game</Title>
-        <Form {...layout} onFinish={onFinish}>
+        <Form
+          {...layout}
+          onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+          onFinish={onFinish}
+        >
           <Form.Item label="Title" name="title">
             <Input />
           </Form.Item>
-          <Form.Item label="Developer" name="developer">
-            <Input />
+          <Form.Item label="Developers" name="developers">
+            <ListInput inputs={developers} setInputs={setDevelopers} />
           </Form.Item>
-          <Form.Item label="Publisher" name="publisher">
-            <Input />
+          <Form.Item label="Publishers" name="publishers">
+            <ListInput inputs={publishers} setInputs={setPublishers} />
           </Form.Item>
           <Form.Item label="Genre" name="genre">
             <Select>

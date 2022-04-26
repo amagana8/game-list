@@ -30,8 +30,8 @@ const typeDefs = gql`
   type Game @exclude(operations: [DELETE]) {
     id: ID! @id
     title: String
-    developer: String
-    publisher: String
+    developers: [String!]!
+    publishers: [String!]!
     genre: Genre
     summary: String
     usersPlaying: [User!]!

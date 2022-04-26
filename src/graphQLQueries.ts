@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { GameFragment } from './graphQLFragments';
 
 export const GetPlayingList = gql`
   query Users($where: UserWhere) {
@@ -29,12 +30,8 @@ export const GetGames = gql`
 export const GetGame = gql`
   query Games($where: GameWhere) {
     games(where: $where) {
-      id
-      title
-      publisher
-      developer
-      summary
-      genre
+      ...GameFragment
     }
   }
+  ${GameFragment}
 `;

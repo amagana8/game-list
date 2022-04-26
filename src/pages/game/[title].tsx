@@ -13,8 +13,8 @@ const { Title, Text, Paragraph } = Typography;
 interface Game {
   id: string;
   title: string;
-  publisher: string;
-  developer: string;
+  publishers: string[];
+  developers: string[];
   summary: string;
   genre: string;
 }
@@ -58,12 +58,12 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
         </Button>
         <ul className={styles.list}>
           <li>
-            <Text strong>Developer: </Text>
-            <Text>{game.developer}</Text>
+            <Text strong>Developers: </Text>
+            <Text>{game.developers.join(', ')}</Text>
           </li>
           <li>
-            <Text strong>Publisher: </Text>
-            <Text>{game.publisher}</Text>
+            <Text strong>Publishers: </Text>
+            <Text>{game.publishers.join(', ')}</Text>
           </li>
           <li>
             <Text strong>Genre: </Text>
