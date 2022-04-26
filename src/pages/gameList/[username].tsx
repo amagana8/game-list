@@ -1,8 +1,10 @@
-import type { GetServerSideProps, NextPage } from 'next';
+import type { NextPage } from 'next';
 import { Layout, Table } from 'antd';
 import { NavBar } from '@components/navBar';
 import { GetPlayingList } from '../../graphQLQueries';
-import { client } from '../../apollo-client';
+import { useQuery } from '@apollo/client';
+import { useAppSelector } from 'src/hooks';
+import { LoadingSpinner } from '@components/loadingSpinner';
 
 const { Content } = Layout;
 
@@ -15,14 +17,11 @@ interface ListEntry {
   score: Number;
   node: Game;
 }
-interface ListProps {
-  list: Array<ListEntry>;
-}
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { username } = query;
-  const { loading, error, data } = await client.query({
-    query: GetPlayingList,
+const GameList: NextPage = () => {
+  const username = useAppSelector((state) => state.user.username);
+
+  const { loading, data } = useQuery(GetPlayingList, {
     variables: {
       where: {
         username: username,
@@ -30,14 +29,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   });
 
-  return {
-    props: {
-      list: data.users[0]?.gamesPlayingConnection.edges ?? [],
-    },
-  };
-};
+  const list = data?.users[0]?.gamesPlayingConnection.edges ?? [];
 
-const GameList: NextPage<ListProps> = ({ list }: ListProps) => {
   const columns = [
     {
       title: 'Title',
@@ -56,16 +49,20 @@ const GameList: NextPage<ListProps> = ({ list }: ListProps) => {
     <>
       <NavBar index="3" />
       <Content>
-        <Table
-          columns={columns}
-          dataSource={list.map((row: ListEntry) => ({
-            key: row.node.id,
-            title: row.node.title,
-            score: row.score,
-            hours: row.hours,
-          }))}
-          pagination={{ pageSize: 50 }}
-        />
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={list.map((row: ListEntry) => ({
+              key: row.node.id,
+              title: row.node.title,
+              score: row.score,
+              hours: row.hours,
+            }))}
+            pagination={{ pageSize: 50 }}
+          />
+        )}
       </Content>
     </>
   );
