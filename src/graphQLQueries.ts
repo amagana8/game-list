@@ -35,3 +35,12 @@ export const GetGame = gql`
   }
   ${GameFragment}
 `;
+
+export const GetUser = gql`
+  query Users($where: UserWhere) {
+    users(where: $where) {
+      username
+      email
+    }
+  }
+`;

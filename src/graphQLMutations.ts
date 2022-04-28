@@ -33,3 +33,17 @@ export const NewGame = gql`
   }
   ${GameFragment}
 `;
+
+export const UpdateUser = gql`
+  mutation UpdateUser(
+    $username: String!
+    $newUsername: String
+    $newEmail: String
+  ) {
+    updateUser(
+      username: $username
+      newUsername: $newUsername
+      newEmail: $newEmail
+    )
+  }
+`;

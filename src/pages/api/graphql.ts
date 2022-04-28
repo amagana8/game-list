@@ -6,11 +6,13 @@ import { Neo4jGraphQLAuthJWTPlugin } from '@neo4j/graphql-plugin-auth';
 import { sign } from 'jsonwebtoken';
 import argon2 from 'argon2';
 import Cors from 'micro-cors';
+import { Source } from 'graphql';
+import { UserForm, UpdateUserForm } from 'src/types';
 
 const cors = Cors();
 
 const typeDefs = gql`
-  type User @exclude(operations: [DELETE]) {
+  type User @exclude(operations: [CREATE, UPDATE, DELETE]) {
     id: ID! @id
     username: String! @unique
     email: String! @unique
@@ -69,6 +71,11 @@ const typeDefs = gql`
   type Mutation {
     signUp(username: String!, email: String!, password: String!): String!
     signIn(email: String!, password: String!): String!
+    updateUser(
+      username: String!
+      newUsername: String
+      newEmail: String
+    ): String!
   }
 `;
 
@@ -82,7 +89,10 @@ const User = ogm.model('User');
 
 const resolvers = {
   Mutation: {
-    signUp: async (_source: any, { username, email, password }: any) => {
+    signUp: async (
+      _source: Source,
+      { username, email, password }: UserForm,
+    ) => {
       const [existingUsername] = await User.find({
         where: {
           username,
@@ -115,9 +125,12 @@ const resolvers = {
         ],
       });
 
-      return sign({ sub: users[0].id, username: users[0].username }, process.env.JWT_SECRET);
+      return sign(
+        { sub: users[0].id, username: users[0].username },
+        process.env.JWT_SECRET,
+      );
     },
-    signIn: async (_source: any, { email, password }: any) => {
+    signIn: async (_source: Source, { email, password }: UserForm) => {
       const [user] = await User.find({
         where: {
           email,
@@ -131,12 +144,65 @@ const resolvers = {
       const correctPassword = await argon2.verify(user.password, password);
 
       if (!correctPassword) {
-        throw new Error(
-          `Incorrect password for user with email ${email}!`,
-        );
+        throw new Error(`Incorrect password for user with email ${email}!`);
       }
 
-      return sign({ sub: user.id, username: user.username }, process.env.JWT_SECRET);
+      return sign(
+        { sub: user.id, username: user.username },
+        process.env.JWT_SECRET,
+      );
+    },
+    updateUser: async (
+      _source: Source,
+      { username, newUsername, newEmail }: UpdateUserForm,
+    ) => {
+      if (newUsername) {
+        const [existingUsername] = await User.find({
+          where: {
+            username: newUsername,
+          },
+        });
+
+        if (existingUsername) {
+          throw new Error(`User with username ${newUsername} already exists!`);
+        } else {
+          User.update({
+            where: {
+              username,
+            },
+            update: {
+              username: newUsername,
+            },
+          });
+        }
+      }
+
+      if (newEmail) {
+        const [existingEmail] = await User.find({
+          where: {
+            email: newEmail,
+          },
+        });
+
+        if (existingEmail) {
+          throw new Error(`User with email ${newEmail} already exists!`);
+        } else {
+          User.update({
+            where: {
+              username,
+            },
+            update: {
+              email: newEmail,
+            },
+          });
+        }
+      }
+
+      if (newUsername) {
+        return newUsername;
+      } else {
+        return username;
+      }
     },
   },
 };

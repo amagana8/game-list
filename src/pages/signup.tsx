@@ -11,20 +11,15 @@ import { decode } from 'jsonwebtoken';
 import { JwtPayload } from '@neo4j/graphql/dist/types';
 import { useAppDispatch } from '../hooks';
 import { login } from '../slices/userSlice';
+import { UserForm } from 'src/types';
 
 const { Content } = Layout;
-
-interface SignUpForm {
-  email: string;
-  username: string;
-  password: string;
-}
 
 const SignUpPage: NextPage = () => {
   const [signUp] = useMutation(SignUp);
   const dispatch = useAppDispatch();
 
-  async function onFinish(values: SignUpForm) {
+  async function onFinish(values: UserForm) {
     try {
       const { data } = await signUp({
         variables: {
