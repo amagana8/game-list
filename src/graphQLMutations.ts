@@ -34,13 +34,13 @@ export const NewGame = gql`
   ${GameFragment}
 `;
 
-export const UpdateUser = gql`
-  mutation UpdateUser(
+export const UpdateUserDetails = gql`
+  mutation UpdateUserDetails(
     $username: String!
     $newUsername: String
     $newEmail: String
   ) {
-    updateUser(
+    updateUserDetails(
       username: $username
       newUsername: $newUsername
       newEmail: $newEmail

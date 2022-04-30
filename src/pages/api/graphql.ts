@@ -12,10 +12,10 @@ import { UserForm, UpdateUserForm } from 'src/types';
 const cors = Cors();
 
 const typeDefs = gql`
-  type User @exclude(operations: [CREATE, UPDATE, DELETE]) {
-    id: ID! @id
-    username: String! @unique
-    email: String! @unique
+  type User @exclude(operations: [CREATE, DELETE]) {
+    id: ID! @id @auth(rules: [{ allow: { id: "$jwt.sub" } }])
+    username: String! @unique @readonly
+    email: String! @unique @readonly @auth(rules: [{ allow: { id: "$jwt.sub" } }])
     password: String! @private
     gamesPlaying: [Game!]!
       @relationship(type: "IS_PLAYING", properties: "Status", direction: OUT)
@@ -71,12 +71,26 @@ const typeDefs = gql`
   type Mutation {
     signUp(username: String!, email: String!, password: String!): String!
     signIn(email: String!, password: String!): String!
-    updateUser(
+    updateUserDetails(
       username: String!
       newUsername: String
       newEmail: String
     ): String!
   }
+
+  extend type Game @auth(rules: [
+    {
+      operations: [CREATE, UPDATE],
+      isAuthenticated: true
+    }
+  ])
+
+  extend type User @auth(rules: [
+    {
+      operations: [UPDATE, CONNECT, DISCONNECT],
+      allow: { id: "$jwt.sub" }
+    }
+  ])
 `;
 
 const driver = neo4j.driver(
@@ -152,10 +166,21 @@ const resolvers = {
         process.env.JWT_SECRET,
       );
     },
-    updateUser: async (
+    updateUserDetails: async (
       _source: Source,
       { username, newUsername, newEmail }: UpdateUserForm,
+      context: any
     ) => {
+      const [user] = await User.find({
+        where: {
+          username,
+        },
+      });
+
+      if (!context.auth.jwt || user.id !== context.auth.jwt.sub) {
+        throw new Error('Unauthorized request. Please login and try again.');
+      }
+
       if (newUsername) {
         const [existingUsername] = await User.find({
           where: {
@@ -234,6 +259,11 @@ export default cors(async (req, res) => {
   await ogm.init();
   const apolloServer = new ApolloServer({
     schema: await neoSchema.getSchema(),
+    context: ({req}) => {
+      return {
+        req,
+      };
+    },
   });
   await apolloServer.start();
   await apolloServer.createHandler({

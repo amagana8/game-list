@@ -11,14 +11,14 @@ import { LoadingSpinner } from '@components/loadingSpinner';
 import { Typography } from 'antd';
 import styles from '@styles/settings.module.scss';
 import { UpdateUserForm } from 'src/types';
-import { UpdateUser } from 'src/graphQLMutations';
+import { UpdateUserDetails } from 'src/graphQLMutations';
 import { updateUsername } from '../slices/userSlice';
 
 const { Title } = Typography;
 
 const Settings: NextPage = () => {
   const username = useAppSelector((state) => state.user.username);
-  const [updateUser] = useMutation(UpdateUser);
+  const [updateUserDetails] = useMutation(UpdateUserDetails);
   const dispatch = useAppDispatch();
 
   const { loading, data } = useQuery(GetUser, {
@@ -36,7 +36,7 @@ const Settings: NextPage = () => {
 
   async function onFinish(input: UpdateUserForm) {
     try {
-      const { data } = await updateUser({
+      const { data } = await updateUserDetails({
         variables: {
           username: username,
           newUsername: input.newUsername,
