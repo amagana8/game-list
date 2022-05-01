@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { store } from './store';
 
-const HOST_URL = process.env.NEXT_PUBLIC_VERCEL_URL ?  `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : 'http://localhost:3000';
+const HOST_URL = process.env.NEXT_PUBLIC_VERCEL_URL ?  'https://game-list-preview.vercel.app' : 'http://localhost:3000';
 
 const httpLink = createHttpLink({
   uri: `${HOST_URL}/api/graphql`,
