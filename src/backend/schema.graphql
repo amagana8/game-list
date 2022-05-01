@@ -1,0 +1,75 @@
+type User @exclude(operations: [CREATE, DELETE]) {
+  id: ID! @id @auth(rules: [{ allow: { id: "$jwt.sub" } }])
+  username: String! @unique @readonly
+  email: String! @unique @readonly @auth(rules: [{ allow: { id: "$jwt.sub" } }])
+  password: String! @private
+  gamesPlaying: [Game!]!
+    @relationship(type: "IS_PLAYING", properties: "Status", direction: OUT)
+  gamesCompleted: [Game!]!
+    @relationship(type: "HAS_COMPLETED", properties: "Status", direction: OUT)
+  gamesPaused: [Game!]!
+    @relationship(type: "HAS_PAUSED", properties: "Status", direction: OUT)
+  gamesDropped: [Game!]!
+    @relationship(type: "HAS_DROPPED", properties: "Status", direction: OUT)
+  gamesPlanning: [Game!]!
+    @relationship(type: "IS_PLANNING", properties: "Status", direction: OUT)
+}
+
+type Game @exclude(operations: [DELETE]) {
+  id: ID! @id
+  title: String
+  developers: [String!]!
+  publishers: [String!]!
+  genre: Genre
+  summary: String
+  usersPlaying: [User!]!
+    @relationship(type: "IS_PLAYING", properties: "Status", direction: IN)
+  usersCompleted: [User!]!
+    @relationship(type: "HAS_COMPLETED", properties: "Status", direction: IN)
+  usersPaused: [User!]!
+    @relationship(type: "HAS_PAUSED", properties: "Status", direction: IN)
+  usersDropped: [User!]!
+    @relationship(type: "HAS_DROPPED", properties: "Status", direction: IN)
+  usersPlanning: [User!]!
+    @relationship(type: "IS_PLANNING", properties: "Status", direction: IN)
+}
+
+interface Status @relationshipProperties {
+  hours: Int
+  score: Int
+}
+
+enum Genre {
+  adventure
+  board
+  fighting
+  horror
+  racing
+  rpg
+  rhythm
+  sandbox
+  shooter
+  simulation
+  sports
+  strategy
+}
+
+type Mutation {
+  signUp(username: String!, email: String!, password: String!): String!
+  signIn(email: String!, password: String!): String!
+  updateUserDetails(
+    username: String!
+    newUsername: String
+    newEmail: String
+  ): String!
+}
+
+extend type Game
+  @auth(rules: [{ operations: [CREATE, UPDATE], isAuthenticated: true }])
+
+extend type User
+  @auth(
+    rules: [
+      { operations: [UPDATE, CONNECT, DISCONNECT], allow: { id: "$jwt.sub" } }
+    ]
+  )
