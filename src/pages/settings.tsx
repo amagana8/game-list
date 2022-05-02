@@ -43,8 +43,8 @@ const Settings: NextPage = () => {
           newEmail: input.newEmail,
         },
       });
-      if (data.updateUser) {
-        dispatch(updateUsername(data.updateUser));
+      if (data.updateUserDetails) {
+        dispatch(updateUsername(data.updateUserDetails));
       }
       message.success('User updated successfully!');
     } catch (error) {
