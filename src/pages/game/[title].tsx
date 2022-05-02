@@ -1,11 +1,12 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { client } from '../../apollo-client';
 import { GetGame } from '../../graphQLQueries';
-import { Typography, Layout, Button } from 'antd';
+import { Typography, Layout, Button, Progress, Space } from 'antd';
 import { NavBar } from '@components/navBar';
 import { AddGameModal } from '@components/addGameModal';
 import React, { useState } from 'react';
 import styles from '@styles/title.module.scss';
+import { UserStatusBar } from '@components/userStatusBar';
 
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -17,8 +18,21 @@ interface Game {
   developers: string[];
   summary: string;
   genre: string;
+  usersTotal: UserListAggregate;
+  usersPlaying: statusCount;
+  usersCompleted: statusCount;
+  usersPaused: statusCount;
+  usersDropped: statusCount;
+  usersPlanning: statusCount;
 }
 
+interface UserListAggregate {
+  count: number;
+}
+
+interface statusCount {
+  totalCount: number;
+}
 interface GameProps {
   game: Game;
 }
@@ -43,7 +57,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 const GamePage: NextPage<GameProps> = ({ game }) => {
   const [showModal, setShowModal] = useState(false);
-
   return (
     <>
       <NavBar />
@@ -56,6 +69,11 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
         >
           Add to List
         </Button>
+        <AddGameModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          gameTitle={game.title}
+        />
         <ul className={styles.list}>
           <li>
             <Text strong>Developers: </Text>
@@ -71,11 +89,33 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
           </li>
         </ul>
         <Paragraph>Summary: {game.summary}</Paragraph>
-        <AddGameModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          gameTitle={game.title}
-        />
+        <div>
+          <UserStatusBar
+            section="Playing"
+            amount={game.usersPlaying.totalCount}
+            total={game.usersTotal.count}
+          />
+          <UserStatusBar
+            section="Completed"
+            amount={game.usersCompleted.totalCount}
+            total={game.usersTotal.count}
+          />
+          <UserStatusBar
+            section="Paused"
+            amount={game.usersPaused.totalCount}
+            total={game.usersTotal.count}
+          />
+          <UserStatusBar
+            section="Dropped"
+            amount={game.usersDropped.totalCount}
+            total={game.usersTotal.count}
+          />
+          <UserStatusBar
+            section="Planning"
+            amount={game.usersPlanning.totalCount}
+            total={game.usersTotal.count}
+          />
+        </div>
       </Content>
     </>
   );
