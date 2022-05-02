@@ -3,16 +3,8 @@ type User @exclude(operations: [CREATE, DELETE]) {
   username: String! @unique @readonly
   email: String! @unique @readonly @auth(rules: [{ allow: { id: "$jwt.sub" } }])
   password: String! @private
-  gamesPlaying: [Game!]!
-    @relationship(type: "IS_PLAYING", properties: "Status", direction: OUT)
-  gamesCompleted: [Game!]!
-    @relationship(type: "HAS_COMPLETED", properties: "Status", direction: OUT)
-  gamesPaused: [Game!]!
-    @relationship(type: "HAS_PAUSED", properties: "Status", direction: OUT)
-  gamesDropped: [Game!]!
-    @relationship(type: "HAS_DROPPED", properties: "Status", direction: OUT)
-  gamesPlanning: [Game!]!
-    @relationship(type: "IS_PLANNING", properties: "Status", direction: OUT)
+  gameList: [Game!]!
+    @relationship(type: "LISTED", properties: "ListEntry", direction: OUT)
 }
 
 type Game @exclude(operations: [DELETE]) {
@@ -22,21 +14,22 @@ type Game @exclude(operations: [DELETE]) {
   publishers: [String!]!
   genre: Genre
   summary: String
-  usersPlaying: [User!]!
-    @relationship(type: "IS_PLAYING", properties: "Status", direction: IN)
-  usersCompleted: [User!]!
-    @relationship(type: "HAS_COMPLETED", properties: "Status", direction: IN)
-  usersPaused: [User!]!
-    @relationship(type: "HAS_PAUSED", properties: "Status", direction: IN)
-  usersDropped: [User!]!
-    @relationship(type: "HAS_DROPPED", properties: "Status", direction: IN)
-  usersPlanning: [User!]!
-    @relationship(type: "IS_PLANNING", properties: "Status", direction: IN)
+  userList: [User!]!
+    @relationship(type: "LISTED", properties: "ListEntry", direction: IN)
 }
 
-interface Status @relationshipProperties {
+interface ListEntry @relationshipProperties {
+  status: Status
   hours: Int
   score: Int
+}
+
+enum Status {
+  playing
+  completed
+  paused
+  dropped
+  planning
 }
 
 enum Genre {

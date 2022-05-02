@@ -1,13 +1,17 @@
 import { gql } from '@apollo/client';
 import { GameFragment } from './graphQLFragments';
 
-export const GetPlayingList = gql`
-  query Users($where: UserWhere) {
+export const GetList = gql`
+  query Users(
+    $where: UserWhere
+    $gameListConnectionWhere: UserGameListConnectionWhere
+  ) {
     users(where: $where) {
-      gamesPlayingConnection {
+      gameListConnection(where: $gameListConnectionWhere) {
         edges {
           hours
           score
+          status
           node {
             id
             title

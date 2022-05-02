@@ -32,7 +32,7 @@ const AddGameModal = ({
             username: username,
           },
           connect: {
-            [input.status]: [
+            gameList: [
               {
                 where: {
                   node: {
@@ -42,6 +42,7 @@ const AddGameModal = ({
                 edge: {
                   hours: input.hours,
                   score: input.score,
+                  status: input.status,
                 },
               },
             ],
@@ -74,11 +75,11 @@ const AddGameModal = ({
       <Form id="addGameForm" onFinish={onFinish}>
         <Form.Item label="Status" name="status">
           <Select>
-            <Option value="gamesPlaying">Playing</Option>
-            <Option value="gamesCompleted">Completed</Option>
-            <Option value="gamesPaused">Paused</Option>
-            <Option value="gamesDropped">Dropped</Option>
-            <Option value="gamesPlanning">Planning</Option>
+            <Option value="playing">Playing</Option>
+            <Option value="completed">Completed</Option>
+            <Option value="paused">Paused</Option>
+            <Option value="dropped">Dropped</Option>
+            <Option value="planning">Planning</Option>
           </Select>
         </Form.Item>
         <Form.Item label="Hours" name="hours">
