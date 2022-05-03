@@ -68,3 +68,20 @@ export const GetUser = gql`
     }
   }
 `;
+
+export const GetGameStatus = gql`
+  query Users(
+    $where: UserWhere
+    $gameListConnectionWhere2: UserGameListConnectionWhere
+  ) {
+    users(where: $where) {
+      gameListConnection(where: $gameListConnectionWhere2) {
+        edges {
+          status
+          hours
+          score
+        }
+      }
+    }
+  }
+`;

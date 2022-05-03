@@ -1,8 +1,9 @@
 import { useQuery } from '@apollo/client';
-import { useAppSelector } from 'src/hooks';
 import { LoadingSpinner } from '@components/loadingSpinner';
 import { Table, Typography } from 'antd';
 import { GetList } from '../graphQLQueries';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const { Title } = Typography;
 
@@ -22,11 +23,11 @@ interface ListEntry {
 }
 
 const GameTable = ({ status }: gameTableProps) => {
-  const username = useAppSelector((state) => state.user.username);
+  const { username } = useRouter().query;
   const { loading, data } = useQuery(GetList, {
     variables: {
       where: {
-        username: username,
+        username,
       },
       gameListConnectionWhere: {
         edge: {
@@ -40,6 +41,11 @@ const GameTable = ({ status }: gameTableProps) => {
     {
       title: 'Title',
       dataIndex: 'title',
+      render: (text: string) => (
+        <Link href={`/game/${text}`}>
+          <a>{text}</a>
+        </Link>
+      ),
     },
     {
       title: 'Score',

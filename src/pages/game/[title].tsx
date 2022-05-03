@@ -1,12 +1,14 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { client } from '../../apollo-client';
-import { GetGame } from '../../graphQLQueries';
-import { Typography, Layout, Button, Progress, Space } from 'antd';
+import { GetGame, GetGameStatus } from '../../graphQLQueries';
+import { Typography, Layout, Button } from 'antd';
 import { NavBar } from '@components/navBar';
 import { AddGameModal } from '@components/addGameModal';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '@styles/title.module.scss';
 import { UserStatusBar } from '@components/userStatusBar';
+import { useQuery } from '@apollo/client';
+import { useAppSelector } from 'src/hooks';
 
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -57,6 +59,24 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 const GamePage: NextPage<GameProps> = ({ game }) => {
   const [showModal, setShowModal] = useState(false);
+
+  const username = useAppSelector((state) => state.user.username);
+
+  const { loading, data } = useQuery(GetGameStatus, {
+    variables: {
+      where: {
+        username,
+      },
+      gameListConnectionWhere2: {
+        node: {
+          id: game.id,
+        },
+      },
+    },
+  });
+
+  const gameConnection = data?.users[0].gameListConnection.edges[0];
+
   return (
     <>
       <NavBar />
@@ -64,15 +84,22 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
         <Title className={styles.gameTitle}>{game.title}</Title>
         <Button
           type="primary"
-          className={styles.addButton}
+          className={styles.listButton}
           onClick={() => setShowModal(true)}
         >
-          Add to List
+          {!loading && gameConnection ? 'Edit List Entry' : 'Add to List'}
         </Button>
         <AddGameModal
           showModal={showModal}
           setShowModal={setShowModal}
           gameTitle={game.title}
+          initialValues={
+            gameConnection && {
+              status: gameConnection.status,
+              hours: gameConnection.hours,
+              score: gameConnection.score,
+            }
+          }
         />
         <ul className={styles.list}>
           <li>

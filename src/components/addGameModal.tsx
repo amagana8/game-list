@@ -2,6 +2,7 @@ import { Modal, Form, Select, InputNumber, Button } from 'antd';
 import { useMutation } from '@apollo/client';
 import { AddGame } from 'src/graphQLMutations';
 import { useAppSelector } from 'src/hooks';
+import { Status } from 'src/enums';
 
 const { Option } = Select;
 
@@ -9,6 +10,7 @@ interface AddGameModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<boolean>;
   gameTitle: string;
+  initialValues?: AddGameForm;
 }
 
 interface AddGameForm {
@@ -19,6 +21,7 @@ interface AddGameForm {
 
 const AddGameModal = ({
   gameTitle,
+  initialValues,
   showModal,
   setShowModal,
 }: AddGameModalProps) => {
@@ -72,14 +75,14 @@ const AddGameModal = ({
         </Button>,
       ]}
     >
-      <Form id="addGameForm" onFinish={onFinish}>
+      <Form id="addGameForm" onFinish={onFinish} initialValues={initialValues}>
         <Form.Item label="Status" name="status">
           <Select>
-            <Option value="playing">Playing</Option>
-            <Option value="completed">Completed</Option>
-            <Option value="paused">Paused</Option>
-            <Option value="dropped">Dropped</Option>
-            <Option value="planning">Planning</Option>
+            <Option value={Status.Playing}>Playing</Option>
+            <Option value={Status.Completed}>Completed</Option>
+            <Option value={Status.Paused}>Paused</Option>
+            <Option value={Status.Dropped}>Dropped</Option>
+            <Option value={Status.Planning}>Planning</Option>
           </Select>
         </Form.Item>
         <Form.Item label="Hours" name="hours">

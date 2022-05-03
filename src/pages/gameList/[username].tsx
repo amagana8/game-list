@@ -4,6 +4,7 @@ import { NavBar } from '@components/navBar';
 import { GameTable } from '@components/gameTable';
 import Link from 'next/link';
 import styles from '@styles/gameList.module.scss';
+import { Status } from 'src/enums';
 
 const { Content, Sider } = Layout;
 
@@ -42,11 +43,11 @@ const GameList: NextPage = () => {
           </Menu>
         </Sider>
         <Content>
-          <GameTable status="playing" />
-          <GameTable status="completed" />
-          <GameTable status="paused" />
-          <GameTable status="dropped" />
-          <GameTable status="planning" />
+          <GameTable status={Status.Playing} />
+          <GameTable status={Status.Completed} />
+          <GameTable status={Status.Paused} />
+          <GameTable status={Status.Dropped} />
+          <GameTable status={Status.Planning} />
         </Content>
       </Layout>
     </>
