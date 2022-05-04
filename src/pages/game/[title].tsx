@@ -6,7 +6,7 @@ import { NavBar } from '@components/navBar';
 import { AddGameModal } from '@components/addGameModal';
 import React, { useEffect, useState } from 'react';
 import styles from '@styles/title.module.scss';
-import { UserStatusBar } from '@components/userStatusBar';
+import { StatusCountBar } from '@components/statusCountBar';
 import { useQuery } from '@apollo/client';
 import { useAppSelector } from 'src/hooks';
 
@@ -117,27 +117,27 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
         </ul>
         <Paragraph>Summary: {game.summary}</Paragraph>
         <div>
-          <UserStatusBar
+          <StatusCountBar
             section="Playing"
             amount={game.usersPlaying.totalCount}
             total={game.usersTotal.count}
           />
-          <UserStatusBar
+          <StatusCountBar
             section="Completed"
             amount={game.usersCompleted.totalCount}
             total={game.usersTotal.count}
           />
-          <UserStatusBar
+          <StatusCountBar
             section="Paused"
             amount={game.usersPaused.totalCount}
             total={game.usersTotal.count}
           />
-          <UserStatusBar
+          <StatusCountBar
             section="Dropped"
             amount={game.usersDropped.totalCount}
             total={game.usersTotal.count}
           />
-          <UserStatusBar
+          <StatusCountBar
             section="Planning"
             amount={game.usersPlanning.totalCount}
             total={game.usersTotal.count}

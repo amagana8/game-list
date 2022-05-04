@@ -7,7 +7,7 @@ interface UserStatusBarProps {
   total: number;
 }
 
-const UserStatusBar = ({ section, amount, total }: UserStatusBarProps) => {
+const StatusCountBar = ({ section, amount, total }: UserStatusBarProps) => {
   return (
     <Row gutter={[16, 16]}>
       <Col span={2}>
@@ -27,4 +27,4 @@ const UserStatusBar = ({ section, amount, total }: UserStatusBarProps) => {
   );
 };
 
-export { UserStatusBar };
+export { StatusCountBar };

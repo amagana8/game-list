@@ -85,3 +85,30 @@ export const GetGameStatus = gql`
     }
   }
 `;
+
+export const GetUserCounts = gql`
+  query GameListAggregate($where: UserWhere) {
+    users(where: $where) {
+      gamesTotal: gameListAggregate {
+        count
+      }
+      gamesPlaying: gameListConnection(where: { edge: { status: playing } }) {
+        totalCount
+      }
+      gamesCompleted: gameListConnection(
+        where: { edge: { status: completed } }
+      ) {
+        totalCount
+      }
+      gamesPaused: gameListConnection(where: { edge: { status: paused } }) {
+        totalCount
+      }
+      gamesDropped: gameListConnection(where: { edge: { status: dropped } }) {
+        totalCount
+      }
+      gamesPlanning: gameListConnection(where: { edge: { status: planning } }) {
+        totalCount
+      }
+    }
+  }
+`;

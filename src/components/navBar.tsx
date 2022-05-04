@@ -26,13 +26,24 @@ const NavBar = ({ index }: navBarProps) => {
   };
 
   const content = (
-    <Space>
-      <Button onClick={handleLogout}>Logout</Button>
-      <Link href="/settings">
+    <Space direction="vertical">
+      <Link href={`/profile/${username}`}>
         <a>
-          <Button icon={<SettingOutlined />}></Button>
+          <Button className={styles.popoverButton} icon={<UserOutlined />}>
+            Profile
+          </Button>
         </a>
       </Link>
+      <Link href="/settings">
+        <a>
+          <Button className={styles.popoverButton} icon={<SettingOutlined />}>
+            Settings
+          </Button>
+        </a>
+      </Link>
+      <Button className={styles.popoverButton} onClick={handleLogout}>
+        Logout
+      </Button>
     </Space>
   );
 
