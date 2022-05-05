@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/plots": "^1.0.9",
     "@apollo/client": "3.5.10",
     "@neo4j/graphql": "3.1.0",
     "@neo4j/graphql-ogm": "3.1.0",

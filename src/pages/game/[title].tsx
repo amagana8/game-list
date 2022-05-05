@@ -4,11 +4,15 @@ import { GetGame, GetGameStatus } from '../../graphQLQueries';
 import { Typography, Layout, Button } from 'antd';
 import { NavBar } from '@components/navBar';
 import { AddGameModal } from '@components/addGameModal';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from '@styles/title.module.scss';
-import { StatusCountBar } from '@components/statusCountBar';
 import { useQuery } from '@apollo/client';
 import { useAppSelector } from 'src/hooks';
+import dynamic from 'next/dynamic';
+
+const DoughnutChart = dynamic(() => import('@components/doughnutChart'), {
+  ssr: false,
+});
 
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -76,6 +80,29 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
   });
 
   const gameConnection = data?.users[0].gameListConnection.edges[0];
+  
+  const chartData = [
+    {
+      type: 'Playing',
+      value: game.usersPlaying.totalCount,
+    },
+    {
+      type: 'Completed',
+      value: game.usersCompleted.totalCount,
+    },
+    {
+      type: 'Paused',
+      value: game.usersPaused.totalCount,
+    },
+    {
+      type: 'Dropped',
+      value: game.usersDropped.totalCount,
+    },
+    {
+      type: 'Planning',
+      value: game.usersPlanning.totalCount,
+    },
+  ];
 
   return (
     <>
@@ -116,33 +143,7 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
           </li>
         </ul>
         <Paragraph>Summary: {game.summary}</Paragraph>
-        <div>
-          <StatusCountBar
-            section="Playing"
-            amount={game.usersPlaying.totalCount}
-            total={game.usersTotal.count}
-          />
-          <StatusCountBar
-            section="Completed"
-            amount={game.usersCompleted.totalCount}
-            total={game.usersTotal.count}
-          />
-          <StatusCountBar
-            section="Paused"
-            amount={game.usersPaused.totalCount}
-            total={game.usersTotal.count}
-          />
-          <StatusCountBar
-            section="Dropped"
-            amount={game.usersDropped.totalCount}
-            total={game.usersTotal.count}
-          />
-          <StatusCountBar
-            section="Planning"
-            amount={game.usersPlanning.totalCount}
-            total={game.usersTotal.count}
-          />
-        </div>
+        <DoughnutChart data={chartData} />
       </Content>
     </>
   );

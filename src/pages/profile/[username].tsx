@@ -5,10 +5,14 @@ import { Button, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import { GetUserCounts } from 'src/graphQLQueries';
-import { StatusCountBar } from '@components/statusCountBar';
 import { LoadingSpinner } from '@components/loadingSpinner';
 import Link from 'next/link';
 import styles from '@styles/profile.module.scss';
+import dynamic from 'next/dynamic';
+
+const DoughnutChart = dynamic(() => import('@components/doughnutChart'), {
+  ssr: false,
+});
 
 const { Title } = Typography;
 
@@ -23,49 +27,44 @@ const Profile: NextPage = () => {
     },
   });
 
+  if (loading) return <LoadingSpinner />;
+
+  const chartData = [
+    {
+      type: 'Playing',
+      value: data.users[0].gamesPlaying.totalCount,
+    },
+    {
+      type: 'Completed',
+      value: data.users[0].gamesCompleted.totalCount,
+    },
+    {
+      type: 'Paused',
+      value: data.users[0].gamesPaused.totalCount,
+    },
+    {
+      type: 'Dropped',
+      value: data.users[0].gamesDropped.totalCount,
+    },
+    {
+      type: 'Planning',
+      value: data.users[0].gamesPlanning.totalCount,
+    },
+  ];
+
   return (
     <>
       <NavBar index="" />
       <Content>
         <Title>{username}</Title>
         <div className={styles.listButton}>
-        <Button type="primary">
-          <Link href={`/gameList/${username}`}>
-            <a>Game List</a>
-          </Link>
-        </Button>
+          <Button type="primary">
+            <Link href={`/gameList/${username}`}>
+              <a>Game List</a>
+            </Link>
+          </Button>
         </div>
-        {loading ? (
-          <LoadingSpinner />
-        ) : (
-          <>
-            <StatusCountBar
-              section="Playing"
-              amount={data.users[0].gamesPlaying.totalCount}
-              total={data.users[0].gamesTotal.count}
-            />
-            <StatusCountBar
-              section="Completed"
-              amount={data.users[0].gamesCompleted.totalCount}
-              total={data.users[0].gamesTotal.count}
-            />
-            <StatusCountBar
-              section="Paused"
-              amount={data.users[0].gamesPaused.totalCount}
-              total={data.users[0].gamesTotal.count}
-            />
-            <StatusCountBar
-              section="Dropped"
-              amount={data.users[0].gamesDropped.totalCount}
-              total={data.users[0].gamesTotal.count}
-            />
-            <StatusCountBar
-              section="Planning"
-              amount={data.users[0].gamesPlanning.totalCount}
-              total={data.users[0].gamesTotal.count}
-            />
-          </>
-        )}
+        <DoughnutChart data={chartData} />
       </Content>
     </>
   );
