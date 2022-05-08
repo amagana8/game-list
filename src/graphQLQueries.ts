@@ -6,6 +6,7 @@ import {
   UserStatusDistribution,
   UserScoreDistribution,
   UserStatsSummary,
+  UserGenreDistribution,
 } from './graphQLFragments';
 
 export const GetList = gql`
@@ -83,9 +84,11 @@ export const GetUserStats = gql`
       ...UserStatusDistribution
       ...UserScoreDistribution
       ...UserStatsSummary
+      ...UserGenreDistribution
     }
   }
   ${UserStatusDistribution}
   ${UserScoreDistribution}
   ${UserStatsSummary}
+  ${UserGenreDistribution}
 `;

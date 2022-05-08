@@ -138,3 +138,46 @@ export const UserStatsSummary = gql`
     }
   }
 `;
+
+export const UserGenreDistribution = gql`
+  fragment UserGenreDistribution on User {
+    genre_adventure: gameListConnection(where: { node: { genre: adventure } }) {
+      totalCount
+    }
+    genre_board: gameListConnection(where: { node: { genre: board } }) {
+      totalCount
+    }
+    genre_fighting: gameListConnection(where: { node: { genre: fighting } }) {
+      totalCount
+    }
+    genre_horror: gameListConnection(where: { node: { genre: horror } }) {
+      totalCount
+    }
+    genre_racing: gameListConnection(where: { node: { genre: racing } }) {
+      totalCount
+    }
+    genre_rpg: gameListConnection(where: { node: { genre: rpg } }) {
+      totalCount
+    }
+    genre_rhythm: gameListConnection(where: { node: { genre: rhythm } }) {
+      totalCount
+    }
+    genre_sandbox: gameListConnection(where: { node: { genre: sandbox } }) {
+      totalCount
+    }
+    genre_shooter: gameListConnection(where: { node: { genre: shooter } }) {
+      totalCount
+    }
+    genre_simulation: gameListConnection(
+      where: { node: { genre: simulation } }
+    ) {
+      totalCount
+    }
+    genre_sports: gameListConnection(where: { node: { genre: sports } }) {
+      totalCount
+    }
+    genre_strategy: gameListConnection(where: { node: { genre: strategy } }) {
+      totalCount
+    }
+  }
+`;

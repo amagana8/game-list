@@ -17,6 +17,9 @@ const DoughnutChart = dynamic(() => import('@components/doughnutChart'), {
 const BarChart = dynamic(() => import('@components/barChart'), {
   ssr: false,
 });
+const TreeMap = dynamic(() => import('@components/treeMap'), {
+  ssr: false,
+});
 
 const { Title } = Typography;
 
@@ -45,6 +48,13 @@ const Profile: NextPage = () => {
     .map((field) => ({
       score: scoreMap.get(field.replace('score_', '')),
       amount: data.users[0][field].totalCount,
+    }));
+
+  const genreData = Object.keys(data.users[0])
+    .filter((field) => field.startsWith('genre_'))
+    .map((field) => ({
+      name: field.replace('genre_', ''),
+      value: data.users[0][field].totalCount,
     }));
 
   return (
@@ -94,6 +104,10 @@ const Profile: NextPage = () => {
           <Col>
             <Title level={2}>Score Distribution</Title>
             <BarChart data={scoreData} />
+          </Col>
+          <Col>
+          <Title level={2}>Genre Distribution</Title>
+            <TreeMap data={genreData} />
           </Col>
         </Row>
       </Content>
