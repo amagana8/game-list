@@ -1,5 +1,11 @@
 import { gql } from '@apollo/client';
-import { GameFragment } from './graphQLFragments';
+import {
+  GameFragment,
+  GameStatusDistribution,
+  GameScoreDistribution,
+  UserStatusDistribution,
+  UserScoreDistribution,
+} from './graphQLFragments';
 
 export const GetList = gql`
   query Users(
@@ -35,29 +41,13 @@ export const GetGame = gql`
   query Games($where: GameWhere) {
     games(where: $where) {
       ...GameFragment
-      usersTotal: userListAggregate {
-        count
-      }
-      usersPlaying: userListConnection(where: { edge: { status: playing } }) {
-        totalCount
-      }
-      usersCompleted: userListConnection(
-        where: { edge: { status: completed } }
-      ) {
-        totalCount
-      }
-      usersPaused: userListConnection(where: { edge: { status: paused } }) {
-        totalCount
-      }
-      usersDropped: userListConnection(where: { edge: { status: dropped } }) {
-        totalCount
-      }
-      usersPlanning: userListConnection(where: { edge: { status: planning } }) {
-        totalCount
-      }
+      ...GameStatusDistribution
+      ...GameScoreDistribution
     }
   }
   ${GameFragment}
+  ${GameStatusDistribution}
+  ${GameScoreDistribution}
 `;
 
 export const GetUser = gql`
@@ -86,29 +76,13 @@ export const GetGameStatus = gql`
   }
 `;
 
-export const GetUserCounts = gql`
-  query GameListAggregate($where: UserWhere) {
+export const GetUserStats = gql`
+  query Users($where: UserWhere) {
     users(where: $where) {
-      gamesTotal: gameListAggregate {
-        count
-      }
-      gamesPlaying: gameListConnection(where: { edge: { status: playing } }) {
-        totalCount
-      }
-      gamesCompleted: gameListConnection(
-        where: { edge: { status: completed } }
-      ) {
-        totalCount
-      }
-      gamesPaused: gameListConnection(where: { edge: { status: paused } }) {
-        totalCount
-      }
-      gamesDropped: gameListConnection(where: { edge: { status: dropped } }) {
-        totalCount
-      }
-      gamesPlanning: gameListConnection(where: { edge: { status: planning } }) {
-        totalCount
-      }
+      ...UserStatusDistribution
+      ...UserScoreDistribution
     }
   }
+  ${UserStatusDistribution}
+  ${UserScoreDistribution}
 `;

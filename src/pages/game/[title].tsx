@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { client } from '../../apollo-client';
 import { GetGame, GetGameStatus } from '../../graphQLQueries';
-import { Typography, Layout, Button } from 'antd';
+import { Typography, Layout, Button, Row, Col, Space } from 'antd';
 import { NavBar } from '@components/navBar';
 import { AddGameModal } from '@components/addGameModal';
 import React, { useState } from 'react';
@@ -9,8 +9,12 @@ import styles from '@styles/title.module.scss';
 import { useQuery } from '@apollo/client';
 import { useAppSelector } from 'src/hooks';
 import dynamic from 'next/dynamic';
+import { scoreMap } from 'src/enums';
 
 const DoughnutChart = dynamic(() => import('@components/doughnutChart'), {
+  ssr: false,
+});
+const BarChart = dynamic(() => import('@components/barChart'), {
   ssr: false,
 });
 
@@ -24,20 +28,6 @@ interface Game {
   developers: string[];
   summary: string;
   genre: string;
-  usersTotal: UserListAggregate;
-  usersPlaying: statusCount;
-  usersCompleted: statusCount;
-  usersPaused: statusCount;
-  usersDropped: statusCount;
-  usersPlanning: statusCount;
-}
-
-interface UserListAggregate {
-  count: number;
-}
-
-interface statusCount {
-  totalCount: number;
 }
 interface GameProps {
   game: Game;
@@ -61,7 +51,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   };
 };
 
-const GamePage: NextPage<GameProps> = ({ game }) => {
+const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [showModal, setShowModal] = useState(false);
 
   const username = useAppSelector((state) => state.user.username);
@@ -79,30 +69,21 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
     },
   });
 
-  const gameConnection = data?.users[0].gameListConnection.edges[0];
-  
-  const chartData = [
-    {
-      type: 'Playing',
-      value: game.usersPlaying.totalCount,
-    },
-    {
-      type: 'Completed',
-      value: game.usersCompleted.totalCount,
-    },
-    {
-      type: 'Paused',
-      value: game.usersPaused.totalCount,
-    },
-    {
-      type: 'Dropped',
-      value: game.usersDropped.totalCount,
-    },
-    {
-      type: 'Planning',
-      value: game.usersPlanning.totalCount,
-    },
-  ];
+  const gameConnection = data?.users[0]?.gameListConnection.edges[0];
+
+  const statusData = Object.entries(game)
+    .filter(([field]) => field.startsWith('users'))
+    .map(([field, data]) => ({
+      type: field.replace('users', ''),
+      value: data.totalCount,
+    }));
+
+  const scoreData = Object.entries(game)
+    .filter(([field]) => field.startsWith('score_'))
+    .map(([field, data]) => ({
+      score: scoreMap.get(field.replace('score_', '')),
+      amount: data.totalCount,
+    }));
 
   return (
     <>
@@ -142,8 +123,19 @@ const GamePage: NextPage<GameProps> = ({ game }) => {
             <Text>{game.genre}</Text>
           </li>
         </ul>
+        <Space direction="vertical" size="large">
         <Paragraph>Summary: {game.summary}</Paragraph>
-        <DoughnutChart data={chartData} />
+        <Row>
+          <Col span={6}>
+            <Title>Status Distribution</Title>
+            <DoughnutChart data={statusData} />
+          </Col>
+          <Col>
+            <Title>Score Distribution</Title>
+            <BarChart data={scoreData} />
+          </Col>
+        </Row>
+        </Space>
       </Content>
     </>
   );
