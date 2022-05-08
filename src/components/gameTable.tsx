@@ -4,6 +4,7 @@ import { Table, Typography } from 'antd';
 import { GetList } from '../graphQLQueries';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { AlignType } from 'rc-table/lib/interface';
 
 const { Title } = Typography;
 
@@ -41,6 +42,7 @@ const GameTable = ({ status }: gameTableProps) => {
     {
       title: 'Title',
       dataIndex: 'title',
+      width: '84%',
       render: (text: string) => (
         <Link href={`/game/${text}`}>
           <a>{text}</a>
@@ -50,10 +52,14 @@ const GameTable = ({ status }: gameTableProps) => {
     {
       title: 'Score',
       dataIndex: 'score',
+      width: '8%',
+      align: 'center' as AlignType,
     },
     {
       title: 'Hours',
       dataIndex: 'hours',
+      width: '8%',
+      align: 'center' as AlignType,
     },
   ];
 

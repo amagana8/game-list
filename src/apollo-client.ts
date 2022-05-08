@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { store } from './store';
 
 const HOST_URL = process.env.NEXT_PUBLIC_VERCEL_URL ?  'https://game-list-preview.vercel.app' : 'http://localhost:3000';
 
@@ -14,7 +13,15 @@ const httpLink = createHttpLink({
 
 // setup authorization header
 const authLink = setContext((_, { headers }) => {
-  const token = store.getState().user.token;
+  let token = '';
+  if (typeof window !== 'undefined') {
+    const storeString = localStorage.getItem('persist:root');
+    if (storeString) {
+      const store = JSON.parse(storeString);
+      token = JSON.parse(store.user).token;
+    }
+  }
+
   return {
     headers: {
       ...headers,
