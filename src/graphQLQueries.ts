@@ -5,6 +5,7 @@ import {
   GameScoreDistribution,
   UserStatusDistribution,
   UserScoreDistribution,
+  UserStatsSummary,
 } from './graphQLFragments';
 
 export const GetList = gql`
@@ -81,8 +82,10 @@ export const GetUserStats = gql`
     users(where: $where) {
       ...UserStatusDistribution
       ...UserScoreDistribution
+      ...UserStatsSummary
     }
   }
   ${UserStatusDistribution}
   ${UserScoreDistribution}
+  ${UserStatsSummary}
 `;

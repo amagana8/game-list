@@ -1,7 +1,7 @@
 import { NavBar } from '@components/navBar';
 import { Content } from 'antd/lib/layout/layout';
 import type { NextPage } from 'next';
-import { Button, Col, Row, Typography } from 'antd';
+import { Button, Col, Row, Statistic, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import { GetUserStats } from 'src/graphQLQueries';
@@ -34,18 +34,18 @@ const Profile: NextPage = () => {
   if (loading) return <LoadingSpinner />;
 
   const statusData = Object.keys(data.users[0])
-  .filter(field => field.startsWith('game'))
-  .map(field => ({
-    type: field.replace('games', ''),
-    value: data.users[0][field].totalCount,
-  }));
+    .filter((field) => field.startsWith('games'))
+    .map((field) => ({
+      type: field.replace('games', ''),
+      value: data.users[0][field].totalCount,
+    }));
 
   const scoreData = Object.keys(data.users[0])
-  .filter(field => field.startsWith('score_'))
-  .map(field => ({
-    score: scoreMap.get(field.replace('score_', '')),
-    amount: data.users[0][field].totalCount,
-  }));
+    .filter((field) => field.startsWith('score_'))
+    .map((field) => ({
+      score: scoreMap.get(field.replace('score_', '')),
+      amount: data.users[0][field].totalCount,
+    }));
 
   return (
     <>
@@ -59,13 +59,40 @@ const Profile: NextPage = () => {
             </Link>
           </Button>
         </div>
-        <Row>
-          <Col span={6}>
-            <Title>Status Distribution</Title>
+        <div className={styles.summary}>
+          <Title level={2}>Summary</Title>
+          <Row gutter={16}>
+            <Col>
+              <Statistic
+                title="Total Games"
+                value={data.users[0].gameListConnection.totalCount}
+              />
+            </Col>
+            <Col>
+              <Statistic
+                title="Hours Played"
+                value={data.users[0].gameListAggregate.edge.hours.sum}
+              />
+            </Col>
+            <Col>
+              <Statistic
+                title="Mean Score"
+                value={
+                  Math.round(
+                    data.users[0].gameListAggregate.edge.score.average * 100,
+                  ) / 100
+                }
+              />
+            </Col>
+          </Row>
+        </div>
+        <Row gutter={64}>
+          <Col>
+            <Title level={2}>Status Distribution</Title>
             <DoughnutChart data={statusData} />
           </Col>
           <Col>
-            <Title>Score Distribution</Title>
+            <Title level={2}>Score Distribution</Title>
             <BarChart data={scoreData} />
           </Col>
         </Row>

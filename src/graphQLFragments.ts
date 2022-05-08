@@ -120,3 +120,21 @@ export const UserScoreDistribution = gql`
     }
   }
 `;
+
+export const UserStatsSummary = gql`
+  fragment UserStatsSummary on User {
+    gameListConnection(where: { edge: { status_NOT: planning } }) {
+      totalCount
+    }
+    gameListAggregate {
+      edge {
+        hours {
+          sum
+        }
+        score {
+          average
+        }
+      }
+    }
+  }
+`;
