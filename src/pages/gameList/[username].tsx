@@ -1,14 +1,18 @@
 import type { NextPage } from 'next';
-import { Layout, Menu } from 'antd';
+import { Button, Layout, Menu } from 'antd';
 import { NavBar } from '@components/navBar';
 import { GameTable } from '@components/gameTable';
 import Link from 'next/link';
 import styles from '@styles/gameList.module.scss';
 import { Status } from 'src/enums';
+import { Typography } from 'antd';
+import { useRouter } from 'next/router';
 
 const { Content, Sider } = Layout;
+const { Title } = Typography;
 
 const GameList: NextPage = () => {
+  const { username } = useRouter().query;
   return (
     <>
       <NavBar index="3" />
@@ -43,6 +47,12 @@ const GameList: NextPage = () => {
           </Menu>
         </Sider>
         <Content>
+          <Title className={styles.title}>{username}</Title>
+          <Button type="primary" className={styles.profileButton}>
+            <Link href={`/profile/${username}`}>
+              <a>Profile</a>
+            </Link>
+          </Button>
           <GameTable status={Status.Playing} />
           <GameTable status={Status.Completed} />
           <GameTable status={Status.Paused} />

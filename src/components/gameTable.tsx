@@ -5,6 +5,7 @@ import { GetList } from '../graphQLQueries';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { AlignType } from 'rc-table/lib/interface';
+import styles from '@styles/gameTable.module.scss';
 
 const { Title } = Typography;
 
@@ -69,7 +70,7 @@ const GameTable = ({ status }: gameTableProps) => {
         <LoadingSpinner />
       ) : (
         <Table
-          title={() => <Title id={status}>{status}</Title>}
+          title={() => <Title level={2} className={styles.title} id={status}>{status}</Title>}
           columns={columns}
           dataSource={data.users[0].gameListConnection.edges.map(
             (row: ListEntry) => ({

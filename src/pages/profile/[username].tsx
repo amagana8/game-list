@@ -61,7 +61,7 @@ const Profile: NextPage = () => {
     <>
       <NavBar index="" />
       <Content>
-        <Title>{username}</Title>
+        <Title className={styles.title}>{username}</Title>
         <div className={styles.listButton}>
           <Button type="primary">
             <Link href={`/gameList/${username}`}>

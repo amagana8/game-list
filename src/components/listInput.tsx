@@ -1,18 +1,24 @@
-import { Input, Tag } from 'antd';
-import React, { useState, KeyboardEvent } from 'react';
+import { Button, Input, Tag } from 'antd';
+import React, { useState } from 'react';
 import styles from '@styles/listInput.module.scss';
 
 interface listInputProps {
-    inputs: string[];
-    setInputs: React.Dispatch<React.SetStateAction<string[]>>;
-  }
+  inputs: string[];
+  setInputs: React.Dispatch<React.SetStateAction<string[]>>;
+  type: string;
+}
 
-const ListInput = ({inputs, setInputs}: listInputProps) => {
+const ListInput = ({ inputs, setInputs, type }: listInputProps) => {
   const [value, setValue] = useState('');
 
-  const onPressEnter = (e: KeyboardEvent) => {
-    setInputs((prevState: string[]) => [...prevState, (e.target as HTMLInputElement).value]);
+  const addItem = () => {
+    setInputs((prevState: string[]) => [...prevState, value]);
     setValue('');
+  };
+
+  const onClose = (input: string) => {
+    const newState = inputs.filter(item => item !== input);
+    setInputs(newState);
   };
 
   return (
@@ -20,11 +26,16 @@ const ListInput = ({inputs, setInputs}: listInputProps) => {
       <Input
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        onPressEnter={onPressEnter}
+        onPressEnter={addItem}
       />
       {inputs.map((input, index) => (
-        <Tag className={styles.tag} key={index}>{input}</Tag>
+        <Tag closable onClose={() => onClose(input)} className={styles.tag} key={index}>
+          {input}
+        </Tag>
       ))}
+      <div className={styles.addButton}>
+        <Button onClick={addItem}>Add {type}</Button>
+      </div>
     </>
   );
 };

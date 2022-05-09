@@ -1,5 +1,6 @@
 import { Column } from '@ant-design/plots';
 import styles from '@styles/barChart.module.scss';
+import { Empty } from 'antd';
 
 interface BarChartProps {
   data: ScoreData[];
@@ -11,11 +12,12 @@ interface ScoreData {
 }
 
 const BarChart = ({ data }: BarChartProps) => {
+  const isEmpty = data.every((entry) => entry.amount === 0);
   const config = {
-    color: ({score}: any) => {
-      switch(score) {
+    color: ({ score }: any) => {
+      switch (score) {
         case '1': {
-          return '#a8071a'
+          return '#a8071a';
         }
         case '2': {
           return '#cf1322';
@@ -65,8 +67,11 @@ const BarChart = ({ data }: BarChartProps) => {
       },
     },
   };
-
-  return <Column {...config} className={styles.barChart} />;
+  return (
+    <>
+      {isEmpty ? <Empty /> : <Column {...config} className={styles.barChart} />}
+    </>
+  );
 };
 
 export default BarChart;

@@ -63,10 +63,10 @@ const AddGame: NextPage = () => {
             <Input />
           </Form.Item>
           <Form.Item label="Developers" name="developers">
-            <ListInput inputs={developers} setInputs={setDevelopers} />
+            <ListInput inputs={developers} setInputs={setDevelopers} type="Developer" />
           </Form.Item>
           <Form.Item label="Publishers" name="publishers">
-            <ListInput inputs={publishers} setInputs={setPublishers} />
+            <ListInput inputs={publishers} setInputs={setPublishers} type="Publisher" />
           </Form.Item>
           <Form.Item label="Genre" name="genre">
             <Select>

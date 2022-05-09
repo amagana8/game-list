@@ -1,5 +1,6 @@
 import { Treemap } from '@ant-design/plots';
 import styles from '@styles/treeMap.module.scss';
+import { Empty } from 'antd';
 
 interface TreeMapProps {
   data: TreeMapDataObj[];
@@ -20,7 +21,15 @@ const TreeMap = ({ data }: TreeMapProps) => {
     data: tree,
     colorField: 'name',
   };
-  return <Treemap {...config} className={styles.treeMap} />;
+  return (
+    <>
+      {filteredData.length ? (
+        <Treemap {...config} className={styles.treeMap} />
+      ) : (
+        <Empty />
+      )}
+    </>
+  );
 };
 
 export default TreeMap;

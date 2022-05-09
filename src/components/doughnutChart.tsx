@@ -1,5 +1,6 @@
 import { Pie } from '@ant-design/plots';
 import styles from '@styles/doughnutChart.module.scss';
+import { Empty } from 'antd';
 
 interface DataObj {
   type: string;
@@ -14,8 +15,8 @@ const DoughnutChart = ({ data }: DoughnutChartProps) => {
   const filteredData = data.filter((item: DataObj) => item.value);
 
   const config = {
-    color: ({type}: any) => {
-      switch(type) {
+    color: ({ type }: any) => {
+      switch (type) {
         case 'Playing': {
           return '#177ddc';
         }
@@ -55,7 +56,7 @@ const DoughnutChart = ({ data }: DoughnutChartProps) => {
       title: {
         style: {
           color: '#ffffffd9',
-        }
+        },
       },
       content: {
         offsetY: 4,
@@ -84,7 +85,15 @@ const DoughnutChart = ({ data }: DoughnutChartProps) => {
       },
     ],
   };
-  return <Pie {...config} className={styles.chart}/>;
+  return (
+    <>
+      {filteredData.length ? (
+        <Pie {...config} className={styles.chart} />
+      ) : (
+        <Empty />
+      )}
+    </>
+  );
 };
 
 export default DoughnutChart;
