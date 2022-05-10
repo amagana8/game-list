@@ -1,15 +1,15 @@
 import { NavBar } from '@components/navBar';
 import { Content } from 'antd/lib/layout/layout';
 import type { NextPage } from 'next';
-import { Button, Col, Row, Statistic, Typography } from 'antd';
+import { Col, Row, Statistic, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import { GetUserStats } from 'src/graphQLQueries';
 import { LoadingSpinner } from '@components/loadingSpinner';
-import Link from 'next/link';
 import styles from '@styles/profile.module.scss';
 import dynamic from 'next/dynamic';
 import { scoreMap } from 'src/enums';
+import { UserNavBar } from '@components/userNavBar';
 
 const DoughnutChart = dynamic(() => import('@components/doughnutChart'), {
   ssr: false,
@@ -34,7 +34,16 @@ const Profile: NextPage = () => {
     },
   });
 
-  if (loading) return <LoadingSpinner />;
+  if (loading)
+    return (
+      <>
+        <NavBar index="" />
+        <Content>
+          <UserNavBar username={username} index="1" />
+          <LoadingSpinner />
+        </Content>
+      </>
+    );
 
   const statusData = Object.keys(data.users[0])
     .filter((field) => field.startsWith('games'))
@@ -61,14 +70,7 @@ const Profile: NextPage = () => {
     <>
       <NavBar index="" />
       <Content>
-        <Title className={styles.title}>{username}</Title>
-        <div className={styles.listButton}>
-          <Button type="primary">
-            <Link href={`/gameList/${username}`}>
-              <a>Game List</a>
-            </Link>
-          </Button>
-        </div>
+        <UserNavBar username={username} index="1" />
         <div className={styles.summary}>
           <Title level={2}>Summary</Title>
           <Row gutter={16}>
@@ -106,7 +108,7 @@ const Profile: NextPage = () => {
             <BarChart data={scoreData} />
           </Col>
           <Col>
-          <Title level={2}>Genre Distribution</Title>
+            <Title level={2}>Genre Distribution</Title>
             <TreeMap data={genreData} />
           </Col>
         </Row>
