@@ -64,3 +64,10 @@ body {
 .ant-table-container {
   padding-bottom: 5rem;
 }
+
+.ant-card {
+  background: $bg-secondary;
+  &-head {
+    background: $bg-primary;
+  }
+}
