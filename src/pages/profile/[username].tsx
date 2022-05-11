@@ -23,6 +23,10 @@ const TreeMap = dynamic(() => import('@components/treeMap'), {
 
 const { Title } = Typography;
 
+const roundNumber = (num: number) => {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+};
+
 const Profile: NextPage = () => {
   const { username } = useRouter().query;
 
@@ -45,58 +49,80 @@ const Profile: NextPage = () => {
       </>
     );
 
-  const statusData = Object.keys(data.users[0])
+  const userData = data.users[0];
+
+  const statusData = Object.keys(userData)
     .filter((field) => field.startsWith('games'))
     .map((field) => ({
       type: field.replace('games', ''),
-      value: data.users[0][field].totalCount,
+      value: userData[field].totalCount,
     }));
 
-  const scoreData = Object.keys(data.users[0])
+  const scoreData = Object.keys(userData)
     .filter((field) => field.startsWith('score_'))
     .map((field) => ({
       score: scoreMap.get(field.replace('score_', '')),
-      amount: data.users[0][field].totalCount,
+      amount: userData[field].totalCount,
     }));
 
-  const genreData = Object.keys(data.users[0])
+  const genreData = Object.keys(userData)
     .filter((field) => field.startsWith('genre_'))
     .map((field) => ({
       name: field.replace('genre_', ''),
-      value: data.users[0][field].totalCount,
+      value: userData[field].totalCount,
     }));
+
+  const hoursPlayed = userData.gameListAggregate.edge.hours.sum;
+  const daysPlayed = roundNumber(hoursPlayed / 24);
+  const yearsPlayed = roundNumber(daysPlayed / 365);
 
   return (
     <>
       <NavBar index="" />
       <Content>
         <UserNavBar username={username} index="1" />
-        <div className={styles.summary}>
-          <Title level={2}>Summary</Title>
-          <Row gutter={16}>
-            <Col>
-              <Statistic
-                title="Total Games"
-                value={data.users[0].gameListConnection.totalCount}
-              />
-            </Col>
-            <Col>
-              <Statistic
-                title="Hours Played"
-                value={data.users[0].gameListAggregate.edge.hours.sum}
-              />
-            </Col>
-            <Col>
-              <Statistic
-                title="Mean Score"
-                value={
-                  Math.round(
-                    data.users[0].gameListAggregate.edge.score.average * 100,
-                  ) / 100
-                }
-              />
-            </Col>
-          </Row>
+        <div className={styles.stats}>
+          <div className={styles.summary}>
+            <Title level={2}>Summary</Title>
+            <Row gutter={16}>
+              <Col>
+                <Statistic
+                  title="Total Games"
+                  value={userData.gameListConnection.totalCount}
+                />
+              </Col>
+              <Col>
+                <Statistic
+                  title="Mean Score"
+                  value={roundNumber(
+                    userData.gameListAggregate.edge.score.average,
+                  )}
+                />
+              </Col>
+              <Col>
+                <Statistic
+                  title="Mean Hours"
+                  value={roundNumber(
+                    userData.gameListAggregate.edge.hours.average,
+                  )}
+                />
+              </Col>
+            </Row>
+          </div>
+          <div>
+            <Title level={2}>Hours Spent</Title>
+            <Row gutter={16}>
+              <Col>
+                <Statistic title="Hours Played" value={hoursPlayed} />
+              </Col>
+              <Col>
+                <Statistic title="Days Played" value={daysPlayed} />
+              </Col>
+              <Col>
+                <Statistic title="Years Played" value={yearsPlayed} />
+              </Col>
+            </Row>
+          </div>
         </div>
         <Row gutter={64}>
           <Col>

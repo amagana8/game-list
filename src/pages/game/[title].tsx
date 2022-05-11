@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { client } from '../../apollo-client';
 import { GetGame, GetGameStatus } from '../../graphQLQueries';
-import { Typography, Layout, Button, Row, Col, Space } from 'antd';
+import { Typography, Layout, Button, Row, Col, Space, Progress } from 'antd';
 import { NavBar } from '@components/navBar';
 import { AddGameModal } from '@components/addGameModal';
 import React, { useState } from 'react';
@@ -9,7 +9,7 @@ import styles from '@styles/title.module.scss';
 import { useQuery } from '@apollo/client';
 import { useAppSelector } from 'src/hooks';
 import dynamic from 'next/dynamic';
-import { scoreMap } from 'src/enums';
+import { colorMap, scoreMap } from 'src/enums';
 
 const DoughnutChart = dynamic(() => import('@components/doughnutChart'), {
   ssr: false,
@@ -28,6 +28,7 @@ interface Game {
   developers: string[];
   summary: string;
   genre: string;
+  userListAggregate: { edge: { score: { average: number } } };
 }
 interface GameProps {
   game: Game;
@@ -61,7 +62,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
       where: {
         username,
       },
-      gameListConnectionWhere2: {
+      gameListConnectionWhere: {
         node: {
           id: game.id,
         },
@@ -85,6 +86,8 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
       amount: data.totalCount,
     }));
 
+  const meanScore = game.userListAggregate.edge.score.average;
+
   return (
     <>
       <NavBar />
@@ -97,6 +100,19 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
         >
           {!loading && gameConnection ? 'Edit List Entry' : 'Add to List'}
         </Button>
+        <div className={styles.meter}>
+          <Row>
+            <Progress
+              type="circle"
+              strokeColor={colorMap.get(meanScore)}
+              percent={meanScore * 10}
+              format={(percent) => percent ? percent / 10 : 'No Data'}
+            />
+          </Row>
+          <Row>
+            <p>Mean Score</p>
+          </Row>
+        </div>
         <AddGameModal
           showModal={showModal}
           setShowModal={setShowModal}
@@ -124,17 +140,17 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           </li>
         </ul>
         <Space direction="vertical" size="large">
-        <Paragraph>Summary: {game.summary}</Paragraph>
-        <Row>
-          <Col span={6}>
-            <Title>Status Distribution</Title>
-            <DoughnutChart data={statusData} />
-          </Col>
-          <Col>
-            <Title>Score Distribution</Title>
-            <BarChart data={scoreData} />
-          </Col>
-        </Row>
+          <Paragraph>Summary: {game.summary}</Paragraph>
+          <Row>
+            <Col span={8}>
+              <Title>Status Distribution</Title>
+              <DoughnutChart data={statusData} />
+            </Col>
+            <Col>
+              <Title>Score Distribution</Title>
+              <BarChart data={scoreData} />
+            </Col>
+          </Row>
         </Space>
       </Content>
     </>

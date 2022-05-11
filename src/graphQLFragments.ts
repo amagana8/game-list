@@ -33,6 +33,13 @@ export const GameStatusDistribution = gql`
 
 export const GameScoreDistribution = gql`
   fragment GameScoreDistribution on Game {
+    userListAggregate {
+      edge {
+        score {
+          average
+        }
+      }
+    }
     score_ones: userListConnection(where: { edge: { score: 1 } }) {
       totalCount
     }
@@ -130,6 +137,7 @@ export const UserStatsSummary = gql`
       edge {
         hours {
           sum
+          average
         }
         score {
           average

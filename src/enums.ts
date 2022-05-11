@@ -18,3 +18,16 @@ export const scoreMap = new Map([
   ['nines', '9'],
   ['tens', '10'],
 ]);
+
+export const colorMap = new Map([
+  [1, '#a8071a'],
+  [2, '#cf1322'],
+  [3, '#d4380d'],
+  [4, '#d46b08'],
+  [5, '#d48806'],
+  [6, '#d4b106'],
+  [7, '#cad803'],
+  [8, '#7cb305'],
+  [9, '#59ad05'],
+  [10, '#389e0d'],
+]);

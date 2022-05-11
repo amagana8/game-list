@@ -64,10 +64,10 @@ export const GetUser = gql`
 export const GetGameStatus = gql`
   query Users(
     $where: UserWhere
-    $gameListConnectionWhere2: UserGameListConnectionWhere
+    $gameListConnectionWhere: UserGameListConnectionWhere
   ) {
     users(where: $where) {
-      gameListConnection(where: $gameListConnectionWhere2) {
+      gameListConnection(where: $gameListConnectionWhere) {
         edges {
           status
           hours
