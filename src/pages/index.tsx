@@ -11,7 +11,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Home - GameList</title>
+        <title>Home · GameList</title>
       </Head>
       <NavBar index="1" />
       <Content className={styles.content}>

@@ -7,6 +7,7 @@ import styles from '@styles/gameList.module.scss';
 import { Status } from 'src/enums';
 import { useRouter } from 'next/router';
 import { UserNavBar } from '@components/userNavBar';
+import Head from 'next/head';
 
 const { Content, Sider } = Layout;
 
@@ -14,6 +15,9 @@ const GameList: NextPage = () => {
   const { username } = useRouter().query;
   return (
     <>
+      <Head>
+        <title>{`${username}'s List · GameList`}</title>
+      </Head>
       <NavBar index="3" />
       <Layout>
         <Sider width={0}>
@@ -46,7 +50,7 @@ const GameList: NextPage = () => {
           </Menu>
         </Sider>
         <Content>
-          <UserNavBar username={username} index="2"/>
+          <UserNavBar username={username} index="2" />
           <GameTable status={Status.Playing} />
           <GameTable status={Status.Completed} />
           <GameTable status={Status.Paused} />

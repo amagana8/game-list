@@ -10,6 +10,8 @@ import { useQuery } from '@apollo/client';
 import { useAppSelector } from 'src/hooks';
 import dynamic from 'next/dynamic';
 import { colorMap, scoreMap } from 'src/enums';
+import Head from 'next/head';
+import { roundNumber } from 'src/utils';
 
 const DoughnutChart = dynamic(() => import('@components/doughnutChart'), {
   ssr: false,
@@ -90,6 +92,9 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
 
   return (
     <>
+      <Head>
+        <title>{game.title} · GameList</title>
+      </Head>
       <NavBar />
       <Content>
         <Title className={styles.gameTitle}>{game.title}</Title>
@@ -104,9 +109,9 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           <Row>
             <Progress
               type="circle"
-              strokeColor={colorMap.get(meanScore)}
-              percent={meanScore * 10}
-              format={(percent) => percent ? percent / 10 : 'No Data'}
+              strokeColor={colorMap.get(Math.round(meanScore))}
+              percent={roundNumber(meanScore) * 10}
+              format={(percent) => (percent ? percent / 10 : 'No Data')}
             />
           </Row>
           <Row>

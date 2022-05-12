@@ -47,7 +47,7 @@ const Login: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Login to GameList - GameList</title>
+        <title>Login to GameList · GameList</title>
       </Head>
       <NavBar />
       <Content>

@@ -10,6 +10,8 @@ import styles from '@styles/profile.module.scss';
 import dynamic from 'next/dynamic';
 import { scoreMap } from 'src/enums';
 import { UserNavBar } from '@components/userNavBar';
+import Head from 'next/head';
+import { roundNumber } from 'src/utils';
 
 const DoughnutChart = dynamic(() => import('@components/doughnutChart'), {
   ssr: false,
@@ -22,10 +24,6 @@ const TreeMap = dynamic(() => import('@components/treeMap'), {
 });
 
 const { Title } = Typography;
-
-const roundNumber = (num: number) => {
-  return Math.round((num + Number.EPSILON) * 100) / 100;
-};
 
 const Profile: NextPage = () => {
   const { username } = useRouter().query;
@@ -78,6 +76,9 @@ const Profile: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>{`${username}'s Profile · GameList`}</title>
+      </Head>
       <NavBar index="" />
       <Content>
         <UserNavBar username={username} index="1" />

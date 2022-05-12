@@ -59,7 +59,7 @@ const Settings: NextPage = () => {
   return (
     <>
       <Head>
-        <title>User Settings - GameList</title>
+        <title>User Settings · GameList</title>
       </Head>
       <NavBar index="" />
       <Content>

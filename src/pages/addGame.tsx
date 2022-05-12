@@ -10,6 +10,7 @@ import { NewGame } from '../graphQLMutations';
 import Router from 'next/router';
 import { ListInput } from '@components/listInput';
 import { useState } from 'react';
+import Head from 'next/head';
 
 interface NewGameForm {
   title: string;
@@ -51,6 +52,9 @@ const AddGame: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Submit New Game · GameList</title>
+      </Head>
       <NavBar index="4" />
       <Content>
         <Title className={styles.title}>Add a New Game</Title>
@@ -63,10 +67,18 @@ const AddGame: NextPage = () => {
             <Input />
           </Form.Item>
           <Form.Item label="Developers" name="developers">
-            <ListInput inputs={developers} setInputs={setDevelopers} type="Developer" />
+            <ListInput
+              inputs={developers}
+              setInputs={setDevelopers}
+              type="Developer"
+            />
           </Form.Item>
           <Form.Item label="Publishers" name="publishers">
-            <ListInput inputs={publishers} setInputs={setPublishers} type="Publisher" />
+            <ListInput
+              inputs={publishers}
+              setInputs={setPublishers}
+              type="Publisher"
+            />
           </Form.Item>
           <Form.Item label="Genre" name="genre">
             <Select>

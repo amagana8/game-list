@@ -47,7 +47,7 @@ const SignUpPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Sign up for GameList - GameList</title>
+        <title>Sign up for GameList · GameList</title>
       </Head>
       <NavBar />
       <Content>

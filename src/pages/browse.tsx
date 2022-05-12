@@ -5,6 +5,7 @@ import { GetGames } from 'src/graphQLQueries';
 import Link from 'next/link';
 import { useQuery } from '@apollo/client';
 import { LoadingSpinner } from '@components/loadingSpinner';
+import Head from 'next/head';
 
 const { Content } = Layout;
 
@@ -29,6 +30,9 @@ const Browse: NextPage = () => {
   ];
   return (
     <>
+      <Head>
+        <title>Browse Games · GameList</title>
+      </Head>
       <NavBar index="2" />
       <Content>
         {loading ? (
