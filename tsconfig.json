@@ -16,10 +16,13 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@styles/*": ["src/styles/*"],
-      "@actions/*": ["src/_actions/*"],
-      "@reducers/*": ["src/_reducers/*"]
+      "@frontend/*": ["frontend/*"],
+      "@components/*": ["frontend/components/*"],
+      "@pages/*": ["frontend/pages/*"],
+      "@graphql/*": ["frontend/graphql/*"],
+      "@utils/*": ["frontend/utils/*"],
+      "@slices/*": ["frontend/slices/*"],
+      "@backend/*": ["backend/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
