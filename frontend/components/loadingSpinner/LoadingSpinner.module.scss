@@ -1,5 +1,7 @@
+@import '../../styles/colors.scss';
+
 .spinner {
   display: grid;
   place-items: center;
-  background-color: #141414;
+  background-color: $bg-primary;
 }

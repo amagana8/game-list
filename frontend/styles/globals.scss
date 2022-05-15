@@ -1,7 +1,5 @@
 @import '~antd/dist/antd.dark.css';
-
-$bg-primary: #141414;
-$bg-secondary: #1d1d1d;
+@import './colors.scss';
 
 .ant-layout-content {
   min-height: 280px;
