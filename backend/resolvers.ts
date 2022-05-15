@@ -12,22 +12,26 @@ export const resolvers = {
     ) => {
       const [existingUsername] = await User.find({
         where: {
-          username,
+          username_MATCHES: `(?i)${username}`,
         },
       });
 
       if (existingUsername) {
-        throw new Error(`User with username ${username} already exists!`);
+        throw new Error(
+          `User with username ${username.toLowerCase()} already exists!`,
+        );
       }
 
       const [existingEmail] = await User.find({
         where: {
-          email,
+          email_MATCHES: `(?i)${email}`,
         },
       });
 
       if (existingEmail) {
-        throw new Error(`User with email ${email} already exists!`);
+        throw new Error(
+          `User with email ${email.toLowerCase()} already exists!`,
+        );
       }
 
       password = await argon2.hash(password);
@@ -87,12 +91,14 @@ export const resolvers = {
       if (newUsername) {
         const [existingUsername] = await User.find({
           where: {
-            username: newUsername,
+            username_MATCHES: `(?i)${newUsername}`,
           },
         });
 
         if (existingUsername) {
-          throw new Error(`User with username ${newUsername} already exists!`);
+          throw new Error(
+            `User with username ${newUsername.toLowerCase()} already exists!`,
+          );
         } else {
           User.update({
             where: {
@@ -108,12 +114,14 @@ export const resolvers = {
       if (newEmail) {
         const [existingEmail] = await User.find({
           where: {
-            email: newEmail,
+            email: `(?i)${newEmail}`,
           },
         });
 
         if (existingEmail) {
-          throw new Error(`User with email ${newEmail} already exists!`);
+          throw new Error(
+            `User with email ${newEmail.toString()} already exists!`,
+          );
         } else {
           User.update({
             where: {

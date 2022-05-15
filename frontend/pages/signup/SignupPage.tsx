@@ -31,7 +31,7 @@ const SignUpPage: NextPage = () => {
       const decoded = decode(data.signUp) as JwtPayload;
       const user = {
         username: decoded.username,
-        token: data.signIn,
+        token: data.signUp,
       };
       dispatch(login(user));
       Router.push('/');
