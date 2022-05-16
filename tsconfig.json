@@ -16,12 +16,12 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@frontend/*": ["frontend/*"],
       "@components/*": ["frontend/components/*"],
       "@pages/*": ["frontend/pages/*"],
       "@graphql/*": ["frontend/graphql/*"],
       "@utils/*": ["frontend/utils/*"],
       "@slices/*": ["frontend/slices/*"],
+      "@frontend/*": ["frontend/*"],
       "@backend/*": ["backend/*"]
     }
   },

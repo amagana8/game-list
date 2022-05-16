@@ -9,3 +9,8 @@ export interface UpdateUserForm {
   newUsername?: string;
   newEmail?: string;
 }
+
+export interface Game {
+  id: number;
+  title: string;
+}

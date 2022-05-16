@@ -6,6 +6,11 @@ export enum Status {
   Planning = 'planning',
 }
 
+export enum SearchType {
+  Games = 'games',
+  Users = 'users',
+}
+
 export const scoreMap = new Map([
   ['ones', '1'],
   ['twos', '2'],

@@ -57,6 +57,17 @@ type Mutation {
   ): String!
 }
 
+type Query {
+  searchUsers(query: String): [User!]!
+    @cypher(
+      statement: "MATCH (n:User) WHERE toLower(n.username) CONTAINS toLower($query) RETURN n"
+    )
+  searchGames(query: String): [Game!]!
+    @cypher(
+      statement: "MATCH (n:Game) WHERE toLower(n.title) CONTAINS toLower($query) RETURN n"
+    )
+}
+
 extend type Game
   @auth(rules: [{ operations: [CREATE, UPDATE], isAuthenticated: true }])
 

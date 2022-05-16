@@ -1,12 +1,16 @@
 import Link from 'next/link';
-import { Button, Layout, Menu, Popover, Space } from 'antd';
+import { Button, Layout, Menu, Popover, Space, Input, Select } from 'antd';
 import styles from './NavBar.module.scss';
 import { useAppDispatch, useAppSelector } from '@utils/hooks';
 import { logout } from '@slices/userSlice';
 import Router from 'next/router';
 import { UserOutlined, SettingOutlined } from '@ant-design/icons';
+import { setSearchType, setSearchLoading } from '@slices/searchSlice';
+import { SearchType } from '@utils/enums';
 
 const { Header } = Layout;
+const { Search } = Input;
+const { Option } = Select;
 
 type navBarProps = {
   index: string;
@@ -18,7 +22,14 @@ const defaultProps: navBarProps = {
 
 const NavBar = ({ index }: navBarProps) => {
   const username = useAppSelector((state) => state.user.username);
+  const searchType = useAppSelector((state) => state.search.type);
+  const searchLoading = useAppSelector((state) => state.search.loading);
   const dispatch = useAppDispatch();
+
+  const onSearch = (query: string) => {
+    dispatch(setSearchLoading(true));
+    Router.push(`/search/${searchType}?search=${query}`);
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -47,6 +58,16 @@ const NavBar = ({ index }: navBarProps) => {
     </Space>
   );
 
+  const searchTypeSelect = (
+    <Select
+      defaultValue={searchType}
+      onChange={(option) => dispatch(setSearchType(option))}
+    >
+      <Option value={SearchType.Games}>Games</Option>
+      <Option value={SearchType.Users}>Users</Option>
+    </Select>
+  );
+
   return (
     <Header>
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[index]}>
@@ -60,7 +81,7 @@ const NavBar = ({ index }: navBarProps) => {
             <a>Browse</a>
           </Link>
         </Menu.Item>
-        {username ? (
+        {username && (
           <>
             <Menu.Item key="3">
               <Link href={`/gameList/${username}`}>
@@ -72,30 +93,35 @@ const NavBar = ({ index }: navBarProps) => {
                 <a>New Game</a>
               </Link>
             </Menu.Item>
-            <Popover content={content} trigger="click">
-              <div className={styles.right}>
-                <UserOutlined className={styles.profileIcon} />
-              </div>
-            </Popover>
           </>
-        ) : (
-          <>
-            <Menu.Item key="5" className={styles.end}>
+        )}
+        <Space size="large" className={styles.right}>
+          <Search
+            onSearch={onSearch}
+            className={styles.search}
+            addonBefore={searchTypeSelect}
+            loading={searchLoading}
+            enterButton
+          />
+          {username ? (
+            <Popover content={content} trigger="click">
+              <UserOutlined className={styles.profileIcon} />
+            </Popover>
+          ) : (
+            <>
               <Button>
                 <Link href="/login">
                   <a>Login</a>
                 </Link>
               </Button>
-            </Menu.Item>
-            <Menu.Item key="6">
               <Button type="primary">
                 <Link href="/signup">
                   <a>Sign Up</a>
                 </Link>
               </Button>
-            </Menu.Item>
-          </>
-        )}
+            </>
+          )}
+        </Space>
       </Menu>
     </Header>
   );

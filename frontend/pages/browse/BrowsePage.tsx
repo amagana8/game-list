@@ -6,13 +6,9 @@ import Link from 'next/link';
 import { useQuery } from '@apollo/client';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 import Head from 'next/head';
+import { Game } from '@utils/types';
 
 const { Content } = Layout;
-
-interface Game {
-  id: number;
-  title: string;
-}
 
 const BrowsePage: NextPage = () => {
   const { loading, data } = useQuery(GetGames);

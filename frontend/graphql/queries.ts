@@ -92,3 +92,20 @@ export const GetUserStats = gql`
   ${UserStatsSummary}
   ${UserGenreDistribution}
 `;
+
+export const SearchGames = gql`
+  query SearchGames($query: String) {
+    searchGames(query: $query) {
+      id
+      title
+    }
+  }
+`;
+
+export const SearchUsers = gql`
+  query SearchUsers($query: String) {
+    searchUsers(query: $query) {
+      username
+    }
+  }
+`;
