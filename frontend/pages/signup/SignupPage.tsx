@@ -64,13 +64,27 @@ const SignUpPage: NextPage = () => {
           </Form.Item>
           <Form.Item
             name="username"
-            rules={[{ required: true, message: 'Please input your Username!' }]}
+            rules={[
+              { required: true, message: 'Please input your Username!' },
+              { min: 2, message: 'Username must be at least 2 characters.' },
+              {
+                max: 30,
+                message: 'Username may not be longer than 30 characters',
+              },
+            ]}
           >
             <Input prefix={<UserOutlined />} placeholder="Username" />
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: 'Please input your Password!' }]}
+            rules={[
+              { required: true, message: 'Please input your Password!' },
+              { min: 8, message: 'Password must be at least 8 characters.' },
+              {
+                max: 256,
+                message: 'Password may not be longer 256 characters.',
+              },
+            ]}
           >
             <Input
               prefix={<LockOutlined />}

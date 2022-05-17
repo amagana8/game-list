@@ -76,7 +76,20 @@ const SettingsPage: NextPage = () => {
                   defaultValue={data.users[0].email}
                 />
               </Form.Item>
-              <Form.Item name="newUsername" label="Username">
+              <Form.Item
+                name="newUsername"
+                label="Username"
+                rules={[
+                  {
+                    min: 2,
+                    message: 'Username must be at least 2 characters.',
+                  },
+                  {
+                    max: 30,
+                    message: 'Username may not be longer than 30 characters',
+                  },
+                ]}
+              >
                 <Input
                   prefix={<UserOutlined />}
                   placeholder="Username"
