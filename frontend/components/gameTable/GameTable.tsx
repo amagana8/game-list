@@ -40,7 +40,7 @@ const GameTable = ({ status }: gameTableProps) => {
     {
       title: '',
       key: 'action',
-      width: 66,
+      width: '6%',
       render: (game: Game) => (
         <Image
           src={game.cover}
@@ -54,7 +54,7 @@ const GameTable = ({ status }: gameTableProps) => {
     {
       title: 'Title',
       dataIndex: 'title',
-      width: '84%',
+      width: '78%',
       render: (text: string) => (
         <Link href={`/game/${text}`}>
           <a>{text}</a>
