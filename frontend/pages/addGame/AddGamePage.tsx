@@ -14,6 +14,7 @@ import Head from 'next/head';
 
 interface NewGameForm {
   title: string;
+  cover: string;
   summary: string;
   genre: string;
 }
@@ -31,6 +32,7 @@ const AddGamePage: NextPage = () => {
           input: [
             {
               title: input.title,
+              cover: input.cover,
               developers: developers,
               publishers: publishers,
               summary: input.summary,
@@ -64,6 +66,9 @@ const AddGamePage: NextPage = () => {
           onFinish={onFinish}
         >
           <Form.Item label="Title" name="title">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Cover Image URL" name="cover">
             <Input />
           </Form.Item>
           <Form.Item label="Developers" name="developers">

@@ -4,10 +4,19 @@ export const GameFragment = gql`
   fragment GameFragment on Game {
     id
     title
+    cover
     developers
     publishers
     summary
     genre
+  }
+`;
+
+export const SmallGameFragment = gql`
+  fragment SmallGameFragment on Game {
+    id
+    title
+    cover
   }
 `;
 

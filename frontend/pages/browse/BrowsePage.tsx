@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { Layout, Table } from 'antd';
+import { Layout, Table, Image } from 'antd';
 import { NavBar } from '@components/navBar/NavBar';
 import { GetGames } from '@graphql/queries';
 import Link from 'next/link';
@@ -14,6 +14,20 @@ const BrowsePage: NextPage = () => {
   const { loading, data } = useQuery(GetGames);
 
   const columns = [
+    {
+      title: '',
+      key: 'action',
+      width: 66,
+      render: (game: Game) => (
+        <Image
+          src={game.cover}
+          preview={false}
+          width={66}
+          alt={`${game.title} Cover`}
+          fallback="https://i.imgur.com/fac0ifd.png"
+        />
+      ),
+    },
     {
       title: 'Title',
       dataIndex: 'title',
@@ -39,6 +53,7 @@ const BrowsePage: NextPage = () => {
             dataSource={data.games.map((row: Game) => ({
               key: row.id,
               title: row.title,
+              cover: row.cover,
             }))}
           />
         )}

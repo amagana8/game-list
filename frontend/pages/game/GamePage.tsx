@@ -1,6 +1,15 @@
 import type { NextPage } from 'next';
 import { GetGameStatus } from '@graphql/queries';
-import { Typography, Layout, Button, Row, Col, Space, Progress } from 'antd';
+import {
+  Typography,
+  Layout,
+  Button,
+  Row,
+  Col,
+  Space,
+  Progress,
+  Image,
+} from 'antd';
 import { NavBar } from '@components/navBar/NavBar';
 import { AddGameModal } from '@components/addGameModal/AddGameModal';
 import React, { useState } from 'react';
@@ -28,6 +37,7 @@ const { Title, Text, Paragraph } = Typography;
 interface Game {
   id: string;
   title: string;
+  cover: string;
   publishers: string[];
   developers: string[];
   summary: string;
@@ -81,39 +91,58 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
       </Head>
       <NavBar />
       <Content>
-        <Title className={styles.gameTitle}>{game.title}</Title>
-        <Button
-          type="primary"
-          className={styles.listButton}
-          onClick={() => setShowModal(true)}
-        >
-          {!loading && gameConnection ? 'Edit List Entry' : 'Add to List'}
-        </Button>
-        <div className={styles.meter}>
-          <Row>
-            <Progress
-              type="circle"
-              strokeColor={colorMap.get(Math.round(meanScore))}
-              percent={roundNumber(meanScore) * 10}
-              format={(percent) => (percent ? percent / 10 : 'No Data')}
-            />
-          </Row>
-          <Row>
-            <p>Mean Score</p>
-          </Row>
-        </div>
-        <AddGameModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          gameTitle={game.title}
-          initialValues={
-            gameConnection && {
-              status: gameConnection.status,
-              hours: gameConnection.hours,
-              score: gameConnection.score,
-            }
-          }
-        />
+        <Row justify="space-between">
+          <Col>
+            <Title className={styles.gameTitle}>{game.title}</Title>
+          </Col>
+          <Col>
+            <Space>
+              <div className={styles.meter}>
+                <Row>
+                  <Progress
+                    type="circle"
+                    strokeColor={colorMap.get(Math.round(meanScore))}
+                    percent={roundNumber(meanScore) * 10}
+                    format={(percent) => (percent ? percent / 10 : 'No Data')}
+                  />
+                </Row>
+                <Row>
+                  <p>Mean Score</p>
+                </Row>
+              </div>
+              <Button
+                type="primary"
+                className={styles.listButton}
+                onClick={() => setShowModal(true)}
+              >
+                {!loading && gameConnection ? 'Edit List Entry' : 'Add to List'}
+              </Button>
+              <AddGameModal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                gameTitle={game.title}
+                initialValues={
+                  gameConnection && {
+                    status: gameConnection.status,
+                    hours: gameConnection.hours,
+                    score: gameConnection.score,
+                  }
+                }
+              />
+            </Space>
+          </Col>
+        </Row>
+        <Space>
+          <Image
+            src={game.cover}
+            preview={false}
+            width={264}
+            alt={`${game.title} Cover`}
+            fallback="https://i.imgur.com/fac0ifd.png"
+            className={styles.cover}
+          />
+          <Paragraph className={styles.summary}>{game.summary}</Paragraph>
+        </Space>
         <ul className={styles.list}>
           <li>
             <Text strong>Developers: </Text>
@@ -125,11 +154,10 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           </li>
           <li>
             <Text strong>Genre: </Text>
-            <Text>{game.genre}</Text>
+            <Text className={styles.genre}>{game.genre}</Text>
           </li>
         </ul>
         <Space direction="vertical" size="large">
-          <Paragraph>Summary: {game.summary}</Paragraph>
           <Row>
             <Col span={8}>
               <Title>Status Distribution</Title>

@@ -10,6 +10,7 @@ type User @exclude(operations: [CREATE, DELETE]) {
 type Game @exclude(operations: [DELETE]) {
   id: ID! @id
   title: String
+  cover: String
   developers: [String!]!
   publishers: [String!]!
   genre: Genre

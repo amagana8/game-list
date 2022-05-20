@@ -1,11 +1,12 @@
 import { useQuery } from '@apollo/client';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
-import { Table, Typography } from 'antd';
+import { Image, Table, Typography } from 'antd';
 import { GetList } from '@graphql/queries';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { AlignType } from 'rc-table/lib/interface';
 import styles from './GameTable.module.scss';
+import { Game } from '@utils/types';
 
 const { Title } = Typography;
 
@@ -13,10 +14,6 @@ interface gameTableProps {
   status: string;
 }
 
-interface Game {
-  id: string;
-  title: string;
-}
 interface ListEntry {
   hours: Number;
   score: Number;
@@ -40,6 +37,20 @@ const GameTable = ({ status }: gameTableProps) => {
   });
 
   const columns = [
+    {
+      title: '',
+      key: 'action',
+      width: 66,
+      render: (game: Game) => (
+        <Image
+          src={game.cover}
+          preview={false}
+          width={66}
+          alt={`${game.title} Cover`}
+          fallback="https://i.imgur.com/fac0ifd.png"
+        />
+      ),
+    },
     {
       title: 'Title',
       dataIndex: 'title',
@@ -80,6 +91,7 @@ const GameTable = ({ status }: gameTableProps) => {
             (row: ListEntry) => ({
               key: row.node.id,
               title: row.node.title,
+              cover: row.node.cover,
               score: row.score,
               hours: row.hours,
             }),

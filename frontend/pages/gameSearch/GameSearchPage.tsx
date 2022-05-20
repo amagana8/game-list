@@ -1,5 +1,5 @@
 import { NavBar } from '@components/navBar/NavBar';
-import { Layout, Table, Typography } from 'antd';
+import { Image, Layout, Table, Typography } from 'antd';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Game } from '@utils/types';
@@ -22,6 +22,20 @@ const GameSearchPage = ({ games }: GameSearchPageProps) => {
   }, [games, dispatch]);
 
   const columns = [
+    {
+      title: '',
+      key: 'action',
+      width: 66,
+      render: (game: Game) => (
+        <Image
+          src={game.cover}
+          preview={false}
+          width={66}
+          alt={`${game.title} Cover`}
+          fallback="https://i.imgur.com/fac0ifd.png"
+        />
+      ),
+    },
     {
       title: 'Title',
       dataIndex: 'title',
@@ -46,6 +60,7 @@ const GameSearchPage = ({ games }: GameSearchPageProps) => {
           dataSource={games.map((row: Game) => ({
             key: row.id,
             title: row.title,
+            cover: row.cover,
           }))}
         />
       </Content>

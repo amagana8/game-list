@@ -7,6 +7,7 @@ import {
   UserScoreDistribution,
   UserStatsSummary,
   UserGenreDistribution,
+  SmallGameFragment,
 } from './fragments';
 
 export const GetList = gql`
@@ -21,22 +22,22 @@ export const GetList = gql`
           score
           status
           node {
-            id
-            title
+            ...SmallGameFragment
           }
         }
       }
     }
   }
+  ${SmallGameFragment}
 `;
 
 export const GetGames = gql`
   query Games {
     games {
-      id
-      title
+      ...SmallGameFragment
     }
   }
+  ${SmallGameFragment}
 `;
 
 export const GetGame = gql`
@@ -96,10 +97,10 @@ export const GetUserStats = gql`
 export const SearchGames = gql`
   query SearchGames($query: String) {
     searchGames(query: $query) {
-      id
-      title
+      ...SmallGameFragment
     }
   }
+  ${SmallGameFragment}
 `;
 
 export const SearchUsers = gql`
