@@ -10,7 +10,7 @@ const usernameRegex = new RegExp(
 const emailRegex = new RegExp(
   '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$',
 );
-const passwordRegex = new RegExp('^\S{8,256}$');
+const passwordRegex = new RegExp('^\\S{8,256}$');
 
 export const resolvers = {
   Mutation: {
