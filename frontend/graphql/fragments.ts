@@ -9,6 +9,7 @@ export const GameFragment = gql`
     publishers
     summary
     genre
+    releaseDate
   }
 `;
 
@@ -139,6 +140,7 @@ export const UserScoreDistribution = gql`
 
 export const UserStatsSummary = gql`
   fragment UserStatsSummary on User {
+    createdAt
     gameListConnection(where: { edge: { status_NOT: planning } }) {
       totalCount
     }

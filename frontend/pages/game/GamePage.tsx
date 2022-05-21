@@ -19,7 +19,7 @@ import { useAppSelector } from '@utils/hooks';
 import dynamic from 'next/dynamic';
 import { colorMap, scoreMap } from '@utils/enums';
 import Head from 'next/head';
-import { roundNumber } from '@utils/index';
+import { parseDate, roundNumber } from '@utils/index';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -42,6 +42,7 @@ interface Game {
   developers: string[];
   summary: string;
   genre: string;
+  releaseDate: string;
   userListAggregate: { edge: { score: { average: number } } };
 }
 interface GameProps {
@@ -155,6 +156,10 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           <li>
             <Text strong>Genre: </Text>
             <Text className={styles.genre}>{game.genre}</Text>
+          </li>
+          <li>
+            <Text strong>Release Date: </Text>
+            <Text>{parseDate(game.releaseDate)}</Text>
           </li>
         </ul>
         <Space direction="vertical" size="large">

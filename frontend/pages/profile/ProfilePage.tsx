@@ -11,7 +11,7 @@ import dynamic from 'next/dynamic';
 import { scoreMap } from '@utils/enums';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
 import Head from 'next/head';
-import { roundNumber } from '@utils/index';
+import { parseDate, roundNumber } from '@utils/index';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -85,6 +85,9 @@ const ProfilePage: NextPage = () => {
       <NavBar index="" />
       <Content>
         <UserPageNavBar username={username} index="1" />
+        <p className={styles.joinDate}>
+          Joined GameList on {parseDate(userData.createdAt)}
+        </p>
         <div className={styles.stats}>
           <div className={styles.summary}>
             <Title level={2}>Summary</Title>

@@ -3,6 +3,7 @@ type User @exclude(operations: [CREATE, DELETE]) {
   username: String! @unique @readonly
   email: String! @unique @readonly @auth(rules: [{ allow: { id: "$jwt.sub" } }])
   password: String! @private
+  createdAt: DateTime! @timestamp(operations: [CREATE])
   gameList: [Game!]!
     @relationship(type: "LISTED", properties: "ListEntry", direction: OUT)
 }
@@ -15,6 +16,7 @@ type Game @exclude(operations: [DELETE]) {
   publishers: [String!]!
   genre: Genre
   summary: String
+  releaseDate: Date
   userList: [User!]!
     @relationship(type: "LISTED", properties: "ListEntry", direction: IN)
 }
