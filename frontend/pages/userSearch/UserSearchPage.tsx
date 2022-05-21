@@ -36,7 +36,7 @@ const UserSearchPage = ({ users }: UserSearchPageProps) => {
           dataSource={users.map((row: User) => row.username)}
           renderItem={(username: string) => (
             <List.Item>
-              <Link href={`/profile/${username}`}>
+              <Link href={`/user/${username}`}>
                 <a>{username}</a>
               </Link>
             </List.Item>

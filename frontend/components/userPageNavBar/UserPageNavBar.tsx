@@ -8,12 +8,12 @@ const UserPageNavBar = ({ username, index }: any) => (
     <Title>{username}</Title>
     <Menu mode="horizontal" defaultSelectedKeys={[index]}>
       <Menu.Item key="1">
-        <Link href={`/profile/${username}`}>
+        <Link href={`/user/${username}`}>
           <a>Profile</a>
         </Link>
       </Menu.Item>
       <Menu.Item key="2">
-        <Link href={`/gameList/${username}`}>
+        <Link href={`/user/${username}/gamelist`}>
           <a>Game List</a>
         </Link>
       </Menu.Item>

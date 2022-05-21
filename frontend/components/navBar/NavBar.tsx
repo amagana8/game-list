@@ -38,7 +38,7 @@ const NavBar = ({ index }: navBarProps) => {
 
   const content = (
     <Space direction="vertical">
-      <Link href={`/profile/${username}`}>
+      <Link href={`/user/${username}`}>
         <a>
           <Button className={styles.popoverButton} icon={<UserOutlined />}>
             Profile
@@ -84,7 +84,7 @@ const NavBar = ({ index }: navBarProps) => {
         {username && (
           <>
             <Menu.Item key="3">
-              <Link href={`/gameList/${username}`}>
+              <Link href={`/user/${username}/gamelist`}>
                 <a>My List</a>
               </Link>
             </Menu.Item>
