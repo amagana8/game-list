@@ -137,7 +137,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
               <AddGameModal
                 showModal={showModal}
                 setShowModal={setShowModal}
-                gameTitle={game.title}
+                game={game}
                 initialValues={
                   gameConnection && {
                     status: gameConnection.status,

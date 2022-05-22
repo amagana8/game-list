@@ -3,13 +3,14 @@ import { useMutation } from '@apollo/client';
 import { AddGame } from '@graphql/mutations';
 import { useAppSelector } from '@utils/hooks';
 import { Status } from '@utils/enums';
+import { Game } from '@utils/types';
 
 const { Option } = Select;
 
 interface AddGameModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<boolean>;
-  gameTitle: string;
+  game: Game;
   initialValues?: AddGameForm;
 }
 
@@ -20,7 +21,7 @@ interface AddGameForm {
 }
 
 const AddGameModal = ({
-  gameTitle,
+  game,
   initialValues,
   showModal,
   setShowModal,
@@ -39,7 +40,7 @@ const AddGameModal = ({
               {
                 where: {
                   node: {
-                    title: gameTitle,
+                    id: game.id,
                   },
                 },
                 edge: {
@@ -59,7 +60,7 @@ const AddGameModal = ({
   }
   return (
     <Modal
-      title={gameTitle}
+      title={game.title}
       visible={showModal}
       footer={[
         <Button key="cancel" onClick={() => setShowModal(false)}>
