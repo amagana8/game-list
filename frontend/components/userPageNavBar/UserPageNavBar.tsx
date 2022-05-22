@@ -17,6 +17,11 @@ const UserPageNavBar = ({ username, index }: any) => (
           <a>Game List</a>
         </Link>
       </Menu.Item>
+      <Menu.Item key="3">
+        <Link href={`/user/${username}/reviews`}>
+          <a>Reviews</a>
+        </Link>
+      </Menu.Item>
     </Menu>
   </>
 );

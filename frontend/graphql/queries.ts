@@ -8,6 +8,7 @@ import {
   UserStatsSummary,
   UserGenreDistribution,
   SmallGameFragment,
+  GameReviews,
 } from './fragments';
 
 export const GetList = gql`
@@ -46,11 +47,13 @@ export const GetGame = gql`
       ...GameFragment
       ...GameStatusDistribution
       ...GameScoreDistribution
+      ...GameReviews
     }
   }
   ${GameFragment}
   ${GameStatusDistribution}
   ${GameScoreDistribution}
+  ${GameReviews}
 `;
 
 export const GetUser = gql`
@@ -66,6 +69,7 @@ export const GetGameStatus = gql`
   query Users(
     $where: UserWhere
     $gameListConnectionWhere: UserGameListConnectionWhere
+    $gameReviewsWhere: ReviewWhere
   ) {
     users(where: $where) {
       gameListConnection(where: $gameListConnectionWhere) {
@@ -74,6 +78,9 @@ export const GetGameStatus = gql`
           hours
           score
         }
+      }
+      gameReviews(where: $gameReviewsWhere) {
+        id
       }
     }
   }
@@ -107,6 +114,41 @@ export const SearchUsers = gql`
   query SearchUsers($query: String) {
     searchUsers(query: $query) {
       username
+    }
+  }
+`;
+
+export const GetReviews = gql`
+  query GameReviews($where: UserWhere) {
+    users(where: $where) {
+      gameReviews {
+        id
+        summary
+        subject {
+          title
+        }
+        author {
+          username
+        }
+      }
+    }
+  }
+`;
+
+export const GetReview = gql`
+  query Reviews($where: ReviewWhere) {
+    reviews(where: $where) {
+      id
+      summary
+      body
+      createdAt
+      updatedAt
+      author {
+        username
+      }
+      subject {
+        title
+      }
     }
   }
 `;

@@ -6,6 +6,7 @@ type User @exclude(operations: [CREATE, DELETE]) {
   createdAt: DateTime! @timestamp(operations: [CREATE])
   gameList: [Game!]!
     @relationship(type: "LISTED", properties: "ListEntry", direction: OUT)
+  gameReviews: [Review!]! @relationship(type: "WROTE_REVIEW", direction: OUT)
 }
 
 type Game @exclude(operations: [DELETE]) {
@@ -19,6 +20,17 @@ type Game @exclude(operations: [DELETE]) {
   releaseDate: Date
   userList: [User!]!
     @relationship(type: "LISTED", properties: "ListEntry", direction: IN)
+  userReviews: [Review!]! @relationship(type: "REVIEW_OF", direction: IN)
+}
+
+type Review @exclude(operations: [CONNECT, DISCONNECT]) {
+  id: ID! @id
+  body: String!
+  summary: String
+  createdAt: DateTime! @timestamp(operations: [CREATE])
+  updatedAt: DateTime @timestamp(operations: [UPDATE])
+  author: User! @relationship(type: "WROTE_REVIEW", direction: IN)
+  subject: Game! @relationship(type: "REVIEW_OF", direction: OUT)
 }
 
 interface ListEntry @relationshipProperties {
@@ -78,5 +90,15 @@ extend type User
   @auth(
     rules: [
       { operations: [UPDATE, CONNECT, DISCONNECT], allow: { id: "$jwt.sub" } }
+    ]
+  )
+
+extend type Review
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE]
+        allow: { author: { id: "$jwt.sub" } }
+      }
     ]
   )

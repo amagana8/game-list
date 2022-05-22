@@ -47,3 +47,42 @@ export const UpdateUserDetails = gql`
     )
   }
 `;
+
+export const NewReview = gql`
+  mutation CreateReviews($input: [ReviewCreateInput!]!) {
+    createReviews(input: $input) {
+      reviews {
+        id
+        body
+        summary
+        createdAt
+        updatedAt
+        author {
+          username
+        }
+        subject {
+          title
+        }
+      }
+    }
+  }
+`;
+
+export const UpdateReview = gql`
+  mutation UpdateReviews($update: ReviewUpdateInput, $where: ReviewWhere) {
+    updateReviews(update: $update, where: $where) {
+      reviews {
+        body
+        summary
+      }
+    }
+  }
+`;
+
+export const DeleteReview = gql`
+  mutation DeleteReviews($where: ReviewWhere) {
+    deleteReviews(where: $where) {
+      nodesDeleted
+    }
+  }
+`;

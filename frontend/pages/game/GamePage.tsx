@@ -20,6 +20,10 @@ import dynamic from 'next/dynamic';
 import { colorMap, scoreMap } from '@utils/enums';
 import Head from 'next/head';
 import { parseDate, roundNumber } from '@utils/index';
+import Link from 'next/link';
+import { Game } from '@utils/types';
+import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
+import { ReviewGridType } from '@utils/enums';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -34,17 +38,6 @@ const BarChart = dynamic(() => import('@components/charts/barChart/BarChart'), {
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
-interface Game {
-  id: string;
-  title: string;
-  cover: string;
-  publishers: string[];
-  developers: string[];
-  summary: string;
-  genre: string;
-  releaseDate: string;
-  userListAggregate: { edge: { score: { average: number } } };
-}
 interface GameProps {
   game: Game;
 }
@@ -64,10 +57,16 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           id: game.id,
         },
       },
+      gameReviewsWhere: {
+        subject: {
+          id: game.id,
+        },
+      },
     },
   });
 
   const gameConnection = data?.users[0]?.gameListConnection.edges[0];
+  const reviewed = data?.users[0]?.gameReviews.length;
 
   const statusData = Object.entries(game)
     .filter(([field]) => field.startsWith('users'))
@@ -111,13 +110,30 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
                   <p>Mean Score</p>
                 </Row>
               </div>
-              <Button
-                type="primary"
-                className={styles.listButton}
-                onClick={() => setShowModal(true)}
-              >
-                {!loading && gameConnection ? 'Edit List Entry' : 'Add to List'}
-              </Button>
+              <Space direction="vertical" size="large">
+                <Button
+                  type="primary"
+                  className={styles.button}
+                  onClick={() => setShowModal(true)}
+                >
+                  {!loading && gameConnection
+                    ? 'Edit List Entry'
+                    : 'Add to List'}
+                </Button>
+                {reviewed ? (
+                   <Link href={`/user/${username}/reviews/${game.title}`}>
+                   <a>
+                     <Button className={styles.button}>See Your Review</Button>
+                   </a>
+                 </Link>
+                ) : (
+                  <Link href={`/game/${game.title}/review`}>
+                    <a>
+                      <Button className={styles.button}>Submit Review</Button>
+                    </a>
+                  </Link>
+                )}
+              </Space>
               <AddGameModal
                 showModal={showModal}
                 setShowModal={setShowModal}
@@ -173,6 +189,10 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
               <BarChart data={scoreData} />
             </Col>
           </Row>
+          <div>
+            <Title>Reviews</Title>
+            <ReviewGrid reviews={game.userReviews} type={ReviewGridType.Game} />
+          </div>
         </Space>
       </Content>
     </>

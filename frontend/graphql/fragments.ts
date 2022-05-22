@@ -83,6 +83,21 @@ export const GameScoreDistribution = gql`
   }
 `;
 
+export const GameReviews = gql`
+  fragment GameReviews on Game {
+    userReviews {
+      id
+      summary
+      author {
+        username
+      }
+      subject {
+        title
+      }
+    }
+  }
+`;
+
 export const UserStatusDistribution = gql`
   fragment UserStatusDistribution on User {
     gamesPlaying: gameListConnection(where: { edge: { status: playing } }) {
