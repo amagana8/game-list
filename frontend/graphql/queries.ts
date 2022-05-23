@@ -125,6 +125,7 @@ export const GetReviews = gql`
         id
         summary
         subject {
+          slug
           title
         }
         author {
@@ -147,6 +148,7 @@ export const GetReview = gql`
         username
       }
       subject {
+        slug
         title
       }
     }

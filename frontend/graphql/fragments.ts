@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const GameFragment = gql`
   fragment GameFragment on Game {
     id
+    slug
     title
     cover
     developers
@@ -16,6 +17,7 @@ export const GameFragment = gql`
 export const SmallGameFragment = gql`
   fragment SmallGameFragment on Game {
     id
+    slug
     title
     cover
   }

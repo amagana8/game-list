@@ -53,11 +53,11 @@ const GameTable = ({ status }: gameTableProps) => {
     },
     {
       title: 'Title',
-      dataIndex: 'title',
+      key:'action',
       width: '78%',
-      render: (text: string) => (
-        <Link href={`/game/${text}`}>
-          <a>{text}</a>
+      render: (game: Game) => (
+        <Link href={`/game/${game.slug}`}>
+          <a>{game.title}</a>
         </Link>
       ),
     },
@@ -90,6 +90,7 @@ const GameTable = ({ status }: gameTableProps) => {
           dataSource={data.users[0].gameListConnection.edges.map(
             (row: ListEntry) => ({
               key: row.node.id,
+              slug: row.node.slug,
               title: row.node.title,
               cover: row.node.cover,
               score: row.score,

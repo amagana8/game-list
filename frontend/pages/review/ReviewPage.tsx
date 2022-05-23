@@ -61,7 +61,7 @@ const ReviewPage = ({ review }: ReviewPageProps) => {
           },
         },
       });
-      Router.push(`/game/${review.subject.title}`);
+      Router.push(`/game/${review.subject.slug}`);
     } catch (error) {
       message.error('Failed to delete review.');
       console.log(error);

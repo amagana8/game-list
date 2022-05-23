@@ -4,7 +4,7 @@ import { ReviewPage } from '@pages/review/ReviewPage';
 import { GetServerSideProps } from 'next';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { username, title } = query;
+  const { username, slug } = query;
   const { data } = await client.query({
     query: GetReview,
     variables: {
@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
           username,
         },
         subject: {
-          title,
+          slug,
         },
       },
     },

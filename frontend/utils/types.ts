@@ -12,6 +12,7 @@ export interface UpdateUserForm {
 
 export interface Game {
   id: string;
+  slug: string;
   title: string;
   cover: string;
   publishers: string[];

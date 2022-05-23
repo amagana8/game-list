@@ -22,7 +22,7 @@ const ReviewGrid = ({ reviews, type }: ReviewGridProps) => {
           rowKey={(review: Review) => review.id}
           renderItem={(review: Review) => (
             <Link
-              href={`/user/${review.author.username}/reviews/${review.subject.title}`}
+              href={`/user/${review.author.username}/reviews/${review.subject.slug}`}
             >
               <a>
                 <List.Item>

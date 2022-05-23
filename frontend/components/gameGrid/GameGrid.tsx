@@ -17,7 +17,7 @@ const GameGrid = ({ games }: any) => {
       }}
       dataSource={games}
       renderItem={(game: Game) => (
-        <Link href={`/game/${game.title}`}>
+        <Link href={`/game/${game.slug}`}>
           <a>
             <List.Item>
               <Card

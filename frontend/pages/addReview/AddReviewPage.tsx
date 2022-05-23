@@ -15,7 +15,7 @@ interface ReviewForm {
 }
 
 const AddReviewPage = () => {
-  const { title } = useRouter().query;
+  const { slug } = useRouter().query;
   const username = useAppSelector((state) => state.user.username);
   const layout = {
     labelCol: { span: 4 },
@@ -45,7 +45,7 @@ const AddReviewPage = () => {
                 connect: {
                   where: {
                     node: {
-                      title: title,
+                      slug,
                     },
                   },
                 },
@@ -54,7 +54,7 @@ const AddReviewPage = () => {
           ],
         },
       });
-      Router.push(`/user/${username}/reviews/${title}`);
+      Router.push(`/user/${username}/reviews/${slug}`);
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +66,7 @@ const AddReviewPage = () => {
       </Head>
       <NavBar index="" />
       <Content>
-        <Title className={styles.title}>Submit a review for {title}</Title>
+        <Title className={styles.title}>Submit a review</Title>
         <Form {...layout} onFinish={onFinish}>
           <Form.Item label="Review Summary" name="summary">
             <Input.TextArea rows={3} />

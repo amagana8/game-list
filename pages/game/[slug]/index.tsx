@@ -4,12 +4,12 @@ import { client } from '@frontend/apollo-client';
 import { GetGame } from '@graphql/queries';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { title } = query;
+  const { slug } = query;
   const { data } = await client.query({
     query: GetGame,
     variables: {
       where: {
-        title: title,
+        slug,
       },
     },
   });
