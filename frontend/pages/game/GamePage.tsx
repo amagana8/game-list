@@ -121,11 +121,11 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
                     : 'Add to List'}
                 </Button>
                 {reviewed ? (
-                   <Link href={`/user/${username}/reviews/${game.slug}`}>
-                   <a>
-                     <Button className={styles.button}>See Your Review</Button>
-                   </a>
-                 </Link>
+                  <Link href={`/user/${username}/reviews/${game.slug}`}>
+                    <a>
+                      <Button className={styles.button}>See Your Review</Button>
+                    </a>
+                  </Link>
                 ) : (
                   <Link href={`/game/${game.slug}/review`}>
                     <a>

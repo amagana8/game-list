@@ -42,18 +42,22 @@ const GameTable = ({ status }: gameTableProps) => {
       key: 'action',
       width: '6%',
       render: (game: Game) => (
-        <Image
-          src={game.cover}
-          preview={false}
-          width={66}
-          alt={`${game.title} Cover`}
-          fallback="https://i.imgur.com/fac0ifd.png"
-        />
+        <Link href={`/game/${game.slug}`}>
+          <a>
+            <Image
+              src={game.cover}
+              preview={false}
+              width={66}
+              alt={`${game.title} Cover`}
+              fallback="https://i.imgur.com/fac0ifd.png"
+            />
+          </a>
+        </Link>
       ),
     },
     {
       title: 'Title',
-      key:'action',
+      key: 'action',
       width: '78%',
       render: (game: Game) => (
         <Link href={`/game/${game.slug}`}>
