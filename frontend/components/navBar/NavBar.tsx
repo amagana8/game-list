@@ -4,9 +4,14 @@ import styles from './NavBar.module.scss';
 import { useAppDispatch, useAppSelector } from '@utils/hooks';
 import { logout } from '@slices/userSlice';
 import Router from 'next/router';
-import { UserOutlined, SettingOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
 import { setSearchType, setSearchLoading } from '@slices/searchSlice';
 import { SearchType } from '@utils/enums';
+import Image from 'next/image';
 
 const { Header } = Layout;
 const { Search } = Input;
@@ -52,7 +57,11 @@ const NavBar = ({ index }: navBarProps) => {
           </Button>
         </a>
       </Link>
-      <Button className={styles.popoverButton} onClick={handleLogout}>
+      <Button
+        className={styles.popoverButton}
+        icon={<LogoutOutlined />}
+        onClick={handleLogout}
+      >
         Logout
       </Button>
     </Space>
@@ -71,6 +80,18 @@ const NavBar = ({ index }: navBarProps) => {
   return (
     <Header>
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[index]}>
+        <div className={styles.logo}>
+          <Link href="/">
+            <a>
+              <Image
+                src="/logo.png"
+                width={36}
+                height={36}
+                alt="GameList Logo"
+              />
+            </a>
+          </Link>
+        </div>
         <Menu.Item key="1">
           <Link href="/">
             <a>Home</a>
