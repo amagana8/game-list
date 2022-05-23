@@ -3,18 +3,22 @@ import { Card, Image, List } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import Link from 'next/link';
 
-const GameGrid = ({ games }: any) => {
+const GameGrid = ({ games, home }: any) => {
   return (
     <List
-      grid={{
-        gutter: 16,
-        xs: 1,
-        sm: 2,
-        md: 3,
-        lg: 4,
-        xl: 5,
-        xxl: 7,
-      }}
+      grid={
+        home
+          ? { column: 2 }
+          : {
+              gutter: 16,
+              xs: 1,
+              sm: 2,
+              md: 3,
+              lg: 4,
+              xl: 5,
+              xxl: 7,
+            }
+      }
       dataSource={games}
       renderItem={(game: Game) => (
         <Link href={`/game/${game.slug}`}>

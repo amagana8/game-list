@@ -154,3 +154,45 @@ export const GetReview = gql`
     }
   }
 `;
+
+export const GetSortedReviews = gql`
+  query Reviews($options: ReviewOptions) {
+    reviews(options: $options) {
+      id
+      summary
+      subject {
+        title
+        slug
+      }
+      author {
+        username
+      }
+    }
+  }
+`;
+
+export const GetSortedGames = gql`
+  query Games($options: GameOptions) {
+    games(options: $options) {
+      id
+      slug
+      title
+      cover
+    }
+  }
+`;
+
+export const GetSortedUsers = gql`
+  query Users($options: UserOptions) {
+    users(options: $options) {
+      username
+      gameListAggregate {
+        edge {
+          hours {
+            sum
+          }
+        }
+      }
+    }
+  }
+`;

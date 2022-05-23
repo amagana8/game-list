@@ -12,12 +12,29 @@ interface ReviewGridProps {
 }
 
 const ReviewGrid = ({ reviews, type }: ReviewGridProps) => {
+  const generateTitle = (review: Review) => {
+    switch (type) {
+      default:
+        return `${review.author.username} - ${review.subject.title}`;
+      case ReviewGridType.User:
+        return review.subject.title;
+      case ReviewGridType.Game:
+        return review.author.username;
+    }
+  };
+
   return (
     <div>
       {reviews.length ? (
         <List
-          className={styles.reviewGrid}
-          grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
+          className={
+            type === ReviewGridType.Home ? styles.reviewList : styles.reviewGrid
+          }
+          grid={
+            type === ReviewGridType.Home
+              ? { column: 1 }
+              : { gutter: 16, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }
+          }
           dataSource={reviews}
           rowKey={(review: Review) => review.id}
           renderItem={(review: Review) => (
@@ -26,13 +43,7 @@ const ReviewGrid = ({ reviews, type }: ReviewGridProps) => {
             >
               <a>
                 <List.Item>
-                  <Card
-                    title={
-                      type === ReviewGridType.User
-                        ? review.subject.title
-                        : review.author.username
-                    }
-                  >
+                  <Card title={generateTitle(review)}>
                     <Paragraph>{review.summary}</Paragraph>
                   </Card>
                 </List.Item>

@@ -14,6 +14,7 @@ export enum SearchType {
 export enum ReviewGridType {
   Game = 'game',
   User = 'user',
+  Home = 'home',
 }
 
 export const scoreMap = new Map([

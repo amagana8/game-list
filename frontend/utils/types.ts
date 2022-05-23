@@ -26,6 +26,7 @@ export interface Game {
 
 export interface User {
   username: string;
+  gameListAggregate: { edge: { hours: { sum: number } } };
 }
 export interface Review {
   id: string;
