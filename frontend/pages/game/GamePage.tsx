@@ -171,7 +171,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           </li>
           <li>
             <Text strong>Genre: </Text>
-            <Text className={styles.genre}>{game.genre}</Text>
+            <Text className={styles.genre}>{game.genres.join(', ')}</Text>
           </li>
           <li>
             <Text strong>Release Date: </Text>

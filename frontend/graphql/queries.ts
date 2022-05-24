@@ -6,7 +6,6 @@ import {
   UserStatusDistribution,
   UserScoreDistribution,
   UserStatsSummary,
-  UserGenreDistribution,
   SmallGameFragment,
   GameReviews,
 } from './fragments';
@@ -92,13 +91,11 @@ export const GetUserStats = gql`
       ...UserStatusDistribution
       ...UserScoreDistribution
       ...UserStatsSummary
-      ...UserGenreDistribution
     }
   }
   ${UserStatusDistribution}
   ${UserScoreDistribution}
   ${UserStatsSummary}
-  ${UserGenreDistribution}
 `;
 
 export const SearchGames = gql`

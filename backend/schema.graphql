@@ -16,7 +16,7 @@ type Game @exclude(operations: [DELETE]) {
   cover: String
   developers: [String!]!
   publishers: [String!]!
-  genre: Genre
+  genres: [String!]!
   summary: String
   releaseDate: Date
   userList: [User!]!
@@ -46,21 +46,6 @@ enum Status {
   paused
   dropped
   planning
-}
-
-enum Genre {
-  adventure
-  board
-  fighting
-  horror
-  racing
-  rpg
-  rhythm
-  sandbox
-  shooter
-  simulation
-  sports
-  strategy
 }
 
 type Mutation {

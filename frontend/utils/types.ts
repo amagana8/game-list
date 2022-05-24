@@ -18,7 +18,7 @@ export interface Game {
   publishers: string[];
   developers: string[];
   summary: string;
-  genre: string;
+  genres: string[];
   releaseDate: string;
   userReviews: Review[];
   userListAggregate: { edge: { score: { average: number } } };

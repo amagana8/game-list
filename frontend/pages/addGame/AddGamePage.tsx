@@ -1,8 +1,7 @@
 import type { NextPage } from 'next';
 import { NavBar } from '@components/navBar/NavBar';
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
-import { Option } from 'antd/lib/mentions';
 import styles from './AddGamePage.module.scss';
 import Title from 'antd/lib/typography/Title';
 import { useMutation } from '@apollo/client';
@@ -17,7 +16,6 @@ interface NewGameForm {
   slug: string;
   cover: string;
   summary: string;
-  genre: string;
 }
 
 const AddGamePage: NextPage = () => {
@@ -25,6 +23,7 @@ const AddGamePage: NextPage = () => {
 
   const [developers, setDevelopers] = useState<string[]>([]);
   const [publishers, setPublishers] = useState<string[]>([]);
+  const [genres, setGenres] = useState<string[]>([]);
 
   async function onFinish(input: NewGameForm) {
     try {
@@ -38,7 +37,7 @@ const AddGamePage: NextPage = () => {
               developers: developers,
               publishers: publishers,
               summary: input.summary,
-              genre: input.genre,
+              genres: genres,
             },
           ],
         },
@@ -90,21 +89,8 @@ const AddGamePage: NextPage = () => {
               type="Publisher"
             />
           </Form.Item>
-          <Form.Item label="Genre" name="genre">
-            <Select>
-              <Option value="adventure">Adventure</Option>
-              <Option value="board">Board</Option>
-              <Option value="fighting">Fighting</Option>
-              <Option value="horror">Horror</Option>
-              <Option value="racing">Racing</Option>
-              <Option value="rpg">RPG</Option>
-              <Option value="rhythm">Rhythm</Option>
-              <Option value="sandbox">Sandbox</Option>
-              <Option value="shooter">Shooter</Option>
-              <Option value="simulation">Simulation</Option>
-              <Option value="sports">Sports</Option>
-              <Option value="strategy">Strategy</Option>
-            </Select>
+          <Form.Item label="Genres" name="genres">
+            <ListInput inputs={genres} setInputs={setGenres} type="Genre" />
           </Form.Item>
           <Form.Item label="Summary" name="summary">
             <Input.TextArea />
