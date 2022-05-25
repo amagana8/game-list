@@ -69,7 +69,11 @@ const SettingsPage: NextPage = () => {
           <>
             <Title className={styles.title}>User Settings</Title>
             <Form {...layout} onFinish={onFinish} className={styles.form}>
-              <Form.Item name="newEmail" label="Email">
+              <Form.Item
+                name="newEmail"
+                label="Email"
+                rules={[{ type: 'email', message: 'Not a valid email!' }]}
+              >
                 <Input
                   prefix={<MailOutlined />}
                   placeholder="Email"

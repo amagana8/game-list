@@ -58,7 +58,10 @@ const SignUpPage: NextPage = () => {
         >
           <Form.Item
             name="email"
-            rules={[{ required: true, message: 'Please input your email!' }]}
+            rules={[
+              { required: true, message: 'Please input your email!' },
+              { type: 'email', message: 'Not a valid email!' },
+            ]}
           >
             <Input prefix={<MailOutlined />} placeholder="Email" />
           </Form.Item>

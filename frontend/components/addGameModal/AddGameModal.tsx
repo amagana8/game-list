@@ -87,10 +87,10 @@ const AddGameModal = ({
           </Select>
         </Form.Item>
         <Form.Item label="Hours" name="hours">
-          <InputNumber></InputNumber>
+          <InputNumber precision={0} />
         </Form.Item>
         <Form.Item label="Score" name="score">
-          <InputNumber min={1} max={10}></InputNumber>
+          <InputNumber min={1} max={10} precision={0} />
         </Form.Item>
       </Form>
     </Modal>
