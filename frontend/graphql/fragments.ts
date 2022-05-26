@@ -23,6 +23,34 @@ export const SmallGameFragment = gql`
   }
 `;
 
+export const ReviewFragment = gql`
+  fragment ReviewFragment on Review {
+    id
+    summary
+    subject {
+      title
+      slug
+    }
+    author {
+      username
+    }
+  }
+`;
+
+export const ListFragment = gql`
+  fragment ListFragment on UserGameListConnection {
+    edges {
+      hours
+      score
+      status
+      node {
+        ...SmallGameFragment
+      }
+    }
+  }
+  ${SmallGameFragment}
+`;
+
 export const GameStatusDistribution = gql`
   fragment GameStatusDistribution on Game {
     usersPlaying: userListConnection(where: { edge: { status: playing } }) {
@@ -81,21 +109,6 @@ export const GameScoreDistribution = gql`
     }
     score_tens: userListConnection(where: { edge: { score: 10 } }) {
       totalCount
-    }
-  }
-`;
-
-export const GameReviews = gql`
-  fragment GameReviews on Game {
-    userReviews {
-      id
-      summary
-      author {
-        username
-      }
-      subject {
-        title
-      }
     }
   }
 `;

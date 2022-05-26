@@ -7,33 +7,36 @@ import {
   UserScoreDistribution,
   UserStatsSummary,
   SmallGameFragment,
-  GameReviews,
+  ReviewFragment,
+  ListFragment,
 } from './fragments';
 
 export const GetList = gql`
-  query Users(
-    $where: UserWhere
-    $gameListConnectionWhere: UserGameListConnectionWhere
-  ) {
+  query Users($where: UserWhere) {
     users(where: $where) {
-      gameListConnection(where: $gameListConnectionWhere) {
-        edges {
-          hours
-          score
-          status
-          node {
-            ...SmallGameFragment
-          }
-        }
+      Playing: gameListConnection(where: { edge: { status: playing } }) {
+        ...ListFragment
+      }
+      Completed: gameListConnection(where: { edge: { status: completed } }) {
+        ...ListFragment
+      }
+      Paused: gameListConnection(where: { edge: { status: paused } }) {
+        ...ListFragment
+      }
+      Dropped: gameListConnection(where: { edge: { status: dropped } }) {
+        ...ListFragment
+      }
+      Planning: gameListConnection(where: { edge: { status: planning } }) {
+        ...ListFragment
       }
     }
   }
-  ${SmallGameFragment}
+  ${ListFragment}
 `;
 
 export const GetGames = gql`
-  query Games {
-    games {
+  query Games($options: GameOptions) {
+    games(options: $options) {
       ...SmallGameFragment
     }
   }
@@ -46,13 +49,15 @@ export const GetGame = gql`
       ...GameFragment
       ...GameStatusDistribution
       ...GameScoreDistribution
-      ...GameReviews
+      userReviews {
+        ...ReviewFragment
+      }
     }
   }
   ${GameFragment}
   ${GameStatusDistribution}
   ${GameScoreDistribution}
-  ${GameReviews}
+  ${ReviewFragment}
 `;
 
 export const GetUser = gql`
@@ -115,22 +120,15 @@ export const SearchUsers = gql`
   }
 `;
 
-export const GetReviews = gql`
+export const GetUserReviews = gql`
   query GameReviews($where: UserWhere) {
     users(where: $where) {
       gameReviews {
-        id
-        summary
-        subject {
-          slug
-          title
-        }
-        author {
-          username
-        }
+        ...ReviewFragment
       }
     }
   }
+  ${ReviewFragment}
 `;
 
 export const GetReview = gql`
@@ -152,36 +150,22 @@ export const GetReview = gql`
   }
 `;
 
-export const GetSortedReviews = gql`
+export const GetReviews = gql`
   query Reviews($options: ReviewOptions) {
     reviews(options: $options) {
-      id
-      summary
-      subject {
-        title
-        slug
-      }
-      author {
-        username
-      }
+      ...ReviewFragment
     }
   }
+  ${ReviewFragment}
 `;
 
-export const GetSortedGames = gql`
-  query Games($options: GameOptions) {
-    games(options: $options) {
-      id
-      slug
-      title
-      cover
-    }
-  }
-`;
-
-export const GetSortedUsers = gql`
-  query Users($options: UserOptions) {
-    users(options: $options) {
+export const GetHomeInfo = gql`
+  query GetHomeInfo(
+    $userOptions: UserOptions
+    $gamesOptions: GameOptions
+    $reviewsOptions: ReviewOptions
+  ) {
+    users(options: $userOptions) {
       username
       gameListAggregate {
         edge {
@@ -191,5 +175,13 @@ export const GetSortedUsers = gql`
         }
       }
     }
+    games(options: $gamesOptions) {
+      ...SmallGameFragment
+    }
+    reviews(options: $reviewsOptions) {
+      ...ReviewFragment
+    }
   }
+  ${SmallGameFragment}
+  ${ReviewFragment}
 `;

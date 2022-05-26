@@ -8,11 +8,21 @@ import { Status } from '@utils/enums';
 import { useRouter } from 'next/router';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
 import Head from 'next/head';
+import { GetList } from '@graphql/queries';
+import { useQuery } from '@apollo/client';
+import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 
 const { Content, Sider } = Layout;
 
 const GameListPage: NextPage = () => {
   const { username } = useRouter().query;
+  const { loading, data } = useQuery(GetList, {
+    variables: {
+      where: {
+        username,
+      },
+    },
+  });
   return (
     <>
       <Head>
@@ -51,11 +61,32 @@ const GameListPage: NextPage = () => {
         </Sider>
         <Content>
           <UserPageNavBar username={username} index="2" />
-          <GameTable status={Status.Playing} />
-          <GameTable status={Status.Completed} />
-          <GameTable status={Status.Paused} />
-          <GameTable status={Status.Dropped} />
-          <GameTable status={Status.Planning} />
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              <GameTable
+                status={Status.Playing}
+                data={data.users[0].Playing.edges}
+              />
+              <GameTable
+                status={Status.Completed}
+                data={data.users[0].Completed.edges}
+              />
+              <GameTable
+                status={Status.Paused}
+                data={data.users[0].Paused.edges}
+              />
+              <GameTable
+                status={Status.Dropped}
+                data={data.users[0].Dropped.edges}
+              />
+              <GameTable
+                status={Status.Planning}
+                data={data.users[0].Planning.edges}
+              />
+            </>
+          )}
         </Content>
       </Layout>
     </>

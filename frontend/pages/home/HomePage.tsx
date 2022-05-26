@@ -9,47 +9,30 @@ import { ReviewGridType } from '@utils/enums';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import Link from 'next/link';
 import { useQuery } from '@apollo/client';
-import {
-  GetSortedGames,
-  GetSortedReviews,
-  GetSortedUsers,
-} from '@graphql/queries';
+import { GetHomeInfo } from '@graphql/queries';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 const HomePage: NextPage = () => {
-  const { loading: reviewLoading, data: reviewData } = useQuery(
-    GetSortedReviews,
-    {
-      variables: {
-        options: {
-          sort: [
-            {
-              createdAt: 'DESC',
-            },
-          ],
-        },
-      },
-    },
-  );
-
-  const { loading: gameLoading, data: gameData } = useQuery(GetSortedGames, {
+  const { loading, data } = useQuery(GetHomeInfo, {
     variables: {
-      options: {
+      userOptions: {
+        sort: [
+          {
+            createdAt: 'DESC',
+          },
+        ],
+      },
+      gamesOptions: {
         sort: [
           {
             releaseDate: 'DESC',
           },
         ],
       },
-    },
-  });
-
-  const { loading: userLoading, data: userData } = useQuery(GetSortedUsers, {
-    variables: {
-      options: {
+      reviewsOptions: {
         sort: [
           {
             createdAt: 'DESC',
@@ -58,7 +41,9 @@ const HomePage: NextPage = () => {
       },
     },
   });
-  console.log(gameData);
+
+  if (loading) return <LoadingSpinner />;
+
   return (
     <>
       <Head>
@@ -69,45 +54,33 @@ const HomePage: NextPage = () => {
         <Row gutter={[16, 16]}>
           <Col span={8}>
             <Title>Latest Users</Title>
-            {userLoading ? (
-              <LoadingSpinner />
-            ) : (
-              <List
-                className={styles.users}
-                dataSource={userData.users}
-                renderItem={(user: User) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      title={
-                        <Link href={`/user/${user.username}`}>
-                          <a>{user.username}</a>
-                        </Link>
-                      }
-                      description={`Total Hours: ${user.gameListAggregate.edge.hours.sum}`}
-                    />
-                  </List.Item>
-                )}
-              />
-            )}
+
+            <List
+              className={styles.users}
+              dataSource={data.users}
+              renderItem={(user: User) => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={
+                      <Link href={`/user/${user.username}`}>
+                        <a>{user.username}</a>
+                      </Link>
+                    }
+                    description={`Total Hours: ${user.gameListAggregate.edge.hours.sum}`}
+                  />
+                </List.Item>
+              )}
+            />
           </Col>
           <Col span={8}>
             <Title>New Releases</Title>
-            {gameLoading ? (
-              <LoadingSpinner />
-            ) : (
-              <GameGrid games={gameData.games} home />
-            )}
+
+            <GameGrid games={data.games} home />
           </Col>
           <Col span={8}>
             <Title>Recent Reviews</Title>
-            {reviewLoading ? (
-              <LoadingSpinner />
-            ) : (
-              <ReviewGrid
-                reviews={reviewData.reviews}
-                type={ReviewGridType.Home}
-              />
-            )}
+
+            <ReviewGrid reviews={data.reviews} type={ReviewGridType.Home} />
           </Col>
         </Row>
       </Content>

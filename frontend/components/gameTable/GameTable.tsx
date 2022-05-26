@@ -1,9 +1,5 @@
-import { useQuery } from '@apollo/client';
-import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 import { Image, Table, Typography } from 'antd';
-import { GetList } from '@graphql/queries';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { AlignType } from 'rc-table/lib/interface';
 import styles from './GameTable.module.scss';
 import { Game } from '@utils/types';
@@ -12,6 +8,7 @@ const { Title } = Typography;
 
 interface gameTableProps {
   status: string;
+  data: any;
 }
 
 interface ListEntry {
@@ -21,21 +18,7 @@ interface ListEntry {
   node: Game;
 }
 
-const GameTable = ({ status }: gameTableProps) => {
-  const { username } = useRouter().query;
-  const { loading, data } = useQuery(GetList, {
-    variables: {
-      where: {
-        username,
-      },
-      gameListConnectionWhere: {
-        edge: {
-          status,
-        },
-      },
-    },
-  });
-
+const GameTable = ({ status, data }: gameTableProps) => {
   const columns = [
     {
       title: '',
@@ -80,31 +63,23 @@ const GameTable = ({ status }: gameTableProps) => {
   ];
 
   return (
-    <>
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <Table
-          title={() => (
-            <Title level={2} className={styles.title} id={status}>
-              {status}
-            </Title>
-          )}
-          columns={columns}
-          dataSource={data.users[0].gameListConnection.edges.map(
-            (row: ListEntry) => ({
-              key: row.node.id,
-              slug: row.node.slug,
-              title: row.node.title,
-              cover: row.node.cover,
-              score: row.score,
-              hours: row.hours,
-            }),
-          )}
-          pagination={false}
-        />
+    <Table
+      title={() => (
+        <Title level={2} className={styles.title} id={status}>
+          {status}
+        </Title>
       )}
-    </>
+      columns={columns}
+      dataSource={data.map((row: ListEntry) => ({
+        key: row.node.id,
+        slug: row.node.slug,
+        title: row.node.title,
+        cover: row.node.cover,
+        score: row.score,
+        hours: row.hours,
+      }))}
+      pagination={false}
+    />
   );
 };
 

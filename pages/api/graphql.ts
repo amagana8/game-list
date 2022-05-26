@@ -27,6 +27,11 @@ const ogm = new OGM({
   },
 });
 
+async function startOgm() {
+  await ogm.init();
+}
+startOgm();
+
 export const User = ogm.model('User');
 
 export default cors(async (req, res) => {
@@ -53,7 +58,6 @@ export default cors(async (req, res) => {
     },
   });
 
-  await ogm.init();
   const apolloServer = new ApolloServer({
     schema: await neoSchema.getSchema(),
     context: ({ req }) => {

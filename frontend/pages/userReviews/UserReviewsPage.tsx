@@ -3,7 +3,7 @@ import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 import { NavBar } from '@components/navBar/NavBar';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
-import { GetReviews } from '@graphql/queries';
+import { GetUserReviews } from '@graphql/queries';
 import { ReviewGridType } from '@utils/enums';
 import { Content } from 'antd/lib/layout/layout';
 import Head from 'next/head';
@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 
 const UserReviewsPage = () => {
   const { username } = useRouter().query;
-  const { loading, data } = useQuery(GetReviews, {
+  const { loading, data } = useQuery(GetUserReviews, {
     variables: {
       where: {
         username,
