@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  neo4j:
+    image: neo4j:4.4.2
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - $HOME/neo4j/data:/data
+      - $HOME/neo4j/logs:/logs
+      - $HOME/neo4j/import:/var/lib/neo4j/import
+      - $HOME/neo4j/plugins:/plugins
+    environment:
+      - NEO4J_AUTH=${NEO4J_AUTH}
+      - NEO4J_apoc_import_file_enabled=true
+      - NEEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - dbms.security.procedures.unrestricted=apoc.*
+      - NEO4JLABS_PLUGINS=["apoc"]
