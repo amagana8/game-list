@@ -163,15 +163,21 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
         <ul className={styles.list}>
           <li>
             <Text strong>Developers: </Text>
-            <Text>{game.developers.join(', ')}</Text>
+            <Text>
+              {game.developers.map((developer) => developer.name).join(', ')}
+            </Text>
           </li>
           <li>
             <Text strong>Publishers: </Text>
-            <Text>{game.publishers.join(', ')}</Text>
+            <Text>
+              {game.publishers.map((publisher) => publisher.name).join(', ')}
+            </Text>
           </li>
           <li>
             <Text strong>Genre: </Text>
-            <Text className={styles.genre}>{game.genres.join(', ')}</Text>
+            <Text className={styles.genre}>
+              {game.genres.map((genre) => genre.name).join(', ')}
+            </Text>
           </li>
           <li>
             <Text strong>Release Date: </Text>

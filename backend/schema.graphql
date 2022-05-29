@@ -14,14 +14,27 @@ type Game @exclude(operations: [DELETE]) {
   slug: String! @unique
   title: String
   cover: String
-  developers: [String!]!
-  publishers: [String!]!
-  genres: [String!]!
+  developers: [Company!]! @relationship(type: "DEVELOPED_BY", direction: OUT)
+  publishers: [Company!]! @relationship(type: "PUBLISHED_BY", direction: OUT)
+  genres: [Genre!]! @relationship(type: "IN_GENRE", direction: OUT)
   summary: String
-  releaseDate: Date
+  releaseDate: DateTime
   userList: [User!]!
     @relationship(type: "LISTED", properties: "ListEntry", direction: IN)
   userReviews: [Review!]! @relationship(type: "REVIEW_OF", direction: IN)
+}
+
+type Company @exclude(operations: [DELETE]) {
+  id: ID! @id
+  name: String!
+  gamesDeveloped: [Game!]! @relationship(type: "DEVELOPED_BY", direction: IN)
+  gamesPublished: [Game!]! @relationship(type: "PUBLISHED_BY", direction: IN)
+}
+
+type Genre @exclude(operations: [DELETE]) {
+  id: ID! @id
+  name: String!
+  games: [Game!]! @relationship(type: "IN_GENRE", direction: IN)
 }
 
 type Review @exclude(operations: [CONNECT, DISCONNECT]) {
@@ -41,11 +54,11 @@ interface ListEntry @relationshipProperties {
 }
 
 enum Status {
-  playing
-  completed
-  paused
-  dropped
-  planning
+  PLAYING
+  COMPLETED
+  PAUSED
+  DROPPED
+  PLANNING
 }
 
 type Mutation {
@@ -71,6 +84,12 @@ type Query {
 
 extend type Game
   @auth(rules: [{ operations: [CREATE, UPDATE], isAuthenticated: true }])
+
+extend type Company
+  @auth(rules: [{ operations: [CREATE, UPDATE, CONNECT, DISCONNECT], isAuthenticated: true }])
+
+extend type Genre
+  @auth(rules: [{ operations: [CREATE, UPDATE, CONNECT, DISCONNECT], isAuthenticated: true }])
 
 extend type User
   @auth(

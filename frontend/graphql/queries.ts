@@ -14,19 +14,19 @@ import {
 export const GetList = gql`
   query Users($where: UserWhere) {
     users(where: $where) {
-      Playing: gameListConnection(where: { edge: { status: playing } }) {
+      Playing: gameListConnection(where: { edge: { status: PLAYING } }) {
         ...ListFragment
       }
-      Completed: gameListConnection(where: { edge: { status: completed } }) {
+      Completed: gameListConnection(where: { edge: { status: COMPLETED } }) {
         ...ListFragment
       }
-      Paused: gameListConnection(where: { edge: { status: paused } }) {
+      Paused: gameListConnection(where: { edge: { status: PAUSED } }) {
         ...ListFragment
       }
-      Dropped: gameListConnection(where: { edge: { status: dropped } }) {
+      Dropped: gameListConnection(where: { edge: { status: DROPPED } }) {
         ...ListFragment
       }
-      Planning: gameListConnection(where: { edge: { status: planning } }) {
+      Planning: gameListConnection(where: { edge: { status: PLANNING } }) {
         ...ListFragment
       }
     }

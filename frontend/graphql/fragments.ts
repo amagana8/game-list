@@ -6,10 +6,16 @@ export const GameFragment = gql`
     slug
     title
     cover
-    developers
-    publishers
+    developers {
+      name
+    }
+    publishers {
+      name
+    }
     summary
-    genres
+    genres {
+      name
+    }
     releaseDate
   }
 `;
@@ -53,19 +59,19 @@ export const ListFragment = gql`
 
 export const GameStatusDistribution = gql`
   fragment GameStatusDistribution on Game {
-    usersPlaying: userListConnection(where: { edge: { status: playing } }) {
+    usersPlaying: userListConnection(where: { edge: { status: PLAYING } }) {
       totalCount
     }
-    usersCompleted: userListConnection(where: { edge: { status: completed } }) {
+    usersCompleted: userListConnection(where: { edge: { status: COMPLETED } }) {
       totalCount
     }
-    usersPaused: userListConnection(where: { edge: { status: paused } }) {
+    usersPaused: userListConnection(where: { edge: { status: PAUSED } }) {
       totalCount
     }
-    usersDropped: userListConnection(where: { edge: { status: dropped } }) {
+    usersDropped: userListConnection(where: { edge: { status: DROPPED } }) {
       totalCount
     }
-    usersPlanning: userListConnection(where: { edge: { status: planning } }) {
+    usersPlanning: userListConnection(where: { edge: { status: PLANNING } }) {
       totalCount
     }
   }

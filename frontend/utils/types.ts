@@ -15,13 +15,20 @@ export interface Game {
   slug: string;
   title: string;
   cover: string;
-  publishers: string[];
-  developers: string[];
+  publishers: Company[];
+  developers: Company[];
   summary: string;
-  genres: string[];
+  genres: Genre[];
   releaseDate: string;
   userReviews: Review[];
   userListAggregate: { edge: { score: { average: number } } };
+}
+export interface Company {
+  name: string;
+}
+
+export interface Genre {
+  name: string;
 }
 
 export interface User {
