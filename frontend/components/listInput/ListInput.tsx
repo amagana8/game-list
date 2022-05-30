@@ -1,47 +1,43 @@
-import { Button, Input, Tag } from 'antd';
+import { useQuery } from '@apollo/client';
+import { SearchCompanies } from '@graphql/queries';
+import { Select } from 'antd';
 import React, { useState } from 'react';
-import styles from './ListInput.module.scss';
 
-interface listInputProps {
-  inputs: string[];
-  setInputs: React.Dispatch<React.SetStateAction<string[]>>;
-  type: string;
-}
+const ListInput = ({ value, onChange }: any) => {
+  const [input, setInput] = useState('');
+  const [list, setList] = useState([]);
 
-const ListInput = ({ inputs, setInputs, type }: listInputProps) => {
-  const [value, setValue] = useState('');
+  useQuery(SearchCompanies, {
+    variables: {
+      query: input,
+    },
+    onCompleted: (data) => {
+      setList(data.searchCompanies);
+    },
+  });
 
-  const addItem = () => {
-    setInputs((prevState: string[]) => [...prevState, value]);
-    setValue('');
-  };
+  const options = list.map((company: any) => (
+    <Select.Option key={company.id} value={company.id}>
+      {company.name}
+    </Select.Option>
+  ));
 
-  const onClose = (input: string) => {
-    const newState = inputs.filter((item) => item !== input);
-    setInputs(newState);
+  const handleChange = (newValue: string[]) => {
+    setInput('');
+    value = newValue;
+    onChange(value);
   };
 
   return (
-    <>
-      <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onPressEnter={addItem}
-      />
-      {inputs.map((input, index) => (
-        <Tag
-          closable
-          onClose={() => onClose(input)}
-          className={styles.tag}
-          key={index}
-        >
-          {input}
-        </Tag>
-      ))}
-      <div className={styles.addButton}>
-        <Button onClick={addItem}>Add {type}</Button>
-      </div>
-    </>
+    <Select
+      showSearch
+      onSearch={setInput}
+      filterOption={false}
+      mode="multiple"
+      onChange={handleChange}
+    >
+      {options}
+    </Select>
   );
 };
 

@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { NavBar } from '@components/navBar/NavBar';
-import { Button, Form, Input } from 'antd';
+import { Button, DatePicker, Form, Input, Select } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import styles from './AddGamePage.module.scss';
 import Title from 'antd/lib/typography/Title';
@@ -8,24 +8,39 @@ import { useMutation } from '@apollo/client';
 import { NewGame } from '@graphql/mutations';
 import Router from 'next/router';
 import { ListInput } from '@components/listInput/ListInput';
-import { useState } from 'react';
 import Head from 'next/head';
+import { Genre } from '@utils/types';
 
 interface NewGameForm {
   title: string;
   slug: string;
   cover: string;
   summary: string;
+  releaseDate: any;
+  developers: string[];
+  publishers: string[];
+  genres: string[];
 }
 
-const AddGamePage: NextPage = () => {
+interface AddGamePageProps {
+  genres: Genre[];
+}
+
+const AddGamePage: NextPage<AddGamePageProps> = ({
+  genres,
+}: AddGamePageProps) => {
   const [newGame] = useMutation(NewGame);
 
-  const [developers, setDevelopers] = useState<string[]>([]);
-  const [publishers, setPublishers] = useState<string[]>([]);
-  const [genres, setGenres] = useState<string[]>([]);
-
   async function onFinish(input: NewGameForm) {
+    const developerNodes = input.developers.map((devId) => ({
+      where: { node: { id: devId } },
+    }));
+    const publisherNodes = input.publishers.map((pubId) => ({
+      where: { node: { id: pubId } },
+    }));
+    const genreNodes = input.genres.map((genreId) => ({
+      where: { node: { id: genreId } },
+    }));
     try {
       await newGame({
         variables: {
@@ -34,15 +49,16 @@ const AddGamePage: NextPage = () => {
               title: input.title,
               slug: input.slug,
               cover: input.cover,
-              developers: developers,
-              publishers: publishers,
+              releaseDate: input.releaseDate.toISOString(),
+              developers: { connect: developerNodes },
+              publishers: { connect: publisherNodes },
               summary: input.summary,
-              genres: genres,
+              genres: { connect: genreNodes },
             },
           ],
         },
       });
-      Router.push('/browse');
+      Router.push(`/game/${input.slug}`);
     } catch (error) {
       console.log(error);
     }
@@ -75,25 +91,28 @@ const AddGamePage: NextPage = () => {
           <Form.Item label="Cover Image URL" name="cover">
             <Input />
           </Form.Item>
+          <Form.Item label="Release Date" name="releaseDate">
+            <DatePicker format="MMMM D, YYYY" style={{ width: '100%' }} />
+          </Form.Item>
           <Form.Item label="Developers" name="developers">
-            <ListInput
-              inputs={developers}
-              setInputs={setDevelopers}
-              type="Developer"
-            />
+            <ListInput />
           </Form.Item>
           <Form.Item label="Publishers" name="publishers">
-            <ListInput
-              inputs={publishers}
-              setInputs={setPublishers}
-              type="Publisher"
-            />
+            <ListInput />
           </Form.Item>
           <Form.Item label="Genres" name="genres">
-            <ListInput inputs={genres} setInputs={setGenres} type="Genre" />
+            <Select
+              mode="multiple"
+              filterOption={true}
+              optionFilterProp="label"
+              options={genres.map((genre) => ({
+                value: genre.id,
+                label: genre.name,
+              }))}
+            />
           </Form.Item>
           <Form.Item label="Summary" name="summary">
-            <Input.TextArea />
+            <Input.TextArea rows={8} />
           </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button type="primary" htmlType="submit">

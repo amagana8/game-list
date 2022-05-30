@@ -1,9 +1,9 @@
 export enum Status {
-  Playing = 'playing',
-  Completed = 'completed',
-  Paused = 'paused',
-  Dropped = 'dropped',
-  Planning = 'planning',
+  Playing = 'PLAYING',
+  Completed = 'COMPLETED',
+  Paused = 'PAUSED',
+  Dropped = 'DROPPED',
+  Planning = 'PLANNING',
 }
 
 export enum SearchType {

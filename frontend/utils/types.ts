@@ -28,6 +28,7 @@ export interface Company {
 }
 
 export interface Genre {
+  id: string;
   name: string;
 }
 

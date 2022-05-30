@@ -120,6 +120,15 @@ export const SearchUsers = gql`
   }
 `;
 
+export const SearchCompanies = gql`
+  query SearchCompanies($query: String) {
+    searchCompanies(query: $query) {
+      id
+      name
+    }
+  }
+`;
+
 export const GetUserReviews = gql`
   query GameReviews($where: UserWhere) {
     users(where: $where) {
@@ -184,4 +193,13 @@ export const GetHomeInfo = gql`
   }
   ${SmallGameFragment}
   ${ReviewFragment}
+`;
+
+export const GetGenres = gql`
+  query Genres {
+    genres {
+      id
+      name
+    }
+  }
 `;

@@ -12,6 +12,7 @@ type User @exclude(operations: [CREATE, DELETE]) {
 type Game @exclude(operations: [DELETE]) {
   id: ID! @id
   slug: String! @unique
+  createdAt: DateTime @timestamp(operations: [CREATE])
   title: String
   cover: String
   developers: [Company!]! @relationship(type: "DEVELOPED_BY", direction: OUT)
@@ -27,6 +28,7 @@ type Game @exclude(operations: [DELETE]) {
 type Company @exclude(operations: [DELETE]) {
   id: ID! @id
   name: String!
+  createdAt: DateTime @timestamp(operations: [CREATE])
   gamesDeveloped: [Game!]! @relationship(type: "DEVELOPED_BY", direction: IN)
   gamesPublished: [Game!]! @relationship(type: "PUBLISHED_BY", direction: IN)
 }
@@ -34,6 +36,7 @@ type Company @exclude(operations: [DELETE]) {
 type Genre @exclude(operations: [DELETE]) {
   id: ID! @id
   name: String!
+  createdAt: DateTime @timestamp(operations: [CREATE])
   games: [Game!]! @relationship(type: "IN_GENRE", direction: IN)
 }
 
@@ -74,11 +77,15 @@ type Mutation {
 type Query {
   searchUsers(query: String): [User!]!
     @cypher(
-      statement: "MATCH (n:User) WHERE toLower(n.username) CONTAINS toLower($query) RETURN n"
+      statement: "MATCH (n:User) WHERE toLower(n.username) CONTAINS toLower($query) RETURN n LIMIT 50"
     )
   searchGames(query: String): [Game!]!
     @cypher(
-      statement: "MATCH (n:Game) WHERE toLower(n.title) CONTAINS toLower($query) RETURN n"
+      statement: "MATCH (n:Game) WHERE toLower(n.title) CONTAINS toLower($query) RETURN n LIMIT 50"
+    )
+  searchCompanies(query: String): [Company!]!
+    @cypher(
+      statement: "MATCH (c:Company) WHERE toLower(c.name) CONTAINS toLower($query) RETURN c LIMIT 50"
     )
 }
 
