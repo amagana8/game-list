@@ -86,10 +86,24 @@ extend type Game
   @auth(rules: [{ operations: [CREATE, UPDATE], isAuthenticated: true }])
 
 extend type Company
-  @auth(rules: [{ operations: [CREATE, UPDATE, CONNECT, DISCONNECT], isAuthenticated: true }])
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+      }
+    ]
+  )
 
 extend type Genre
-  @auth(rules: [{ operations: [CREATE, UPDATE, CONNECT, DISCONNECT], isAuthenticated: true }])
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+      }
+    ]
+  )
 
 extend type User
   @auth(

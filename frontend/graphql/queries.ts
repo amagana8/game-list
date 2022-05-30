@@ -44,12 +44,12 @@ export const GetGames = gql`
 `;
 
 export const GetGame = gql`
-  query Games($where: GameWhere) {
+  query Games($where: GameWhere, $options: ReviewOptions) {
     games(where: $where) {
       ...GameFragment
       ...GameStatusDistribution
       ...GameScoreDistribution
-      userReviews {
+      userReviews(options: $options) {
         ...ReviewFragment
       }
     }
@@ -151,8 +151,8 @@ export const GetReview = gql`
 `;
 
 export const GetReviews = gql`
-  query Reviews($options: ReviewOptions) {
-    reviews(options: $options) {
+  query Reviews($options: ReviewOptions, $where: ReviewWhere) {
+    reviews(options: $options, where: $where) {
       ...ReviewFragment
     }
   }

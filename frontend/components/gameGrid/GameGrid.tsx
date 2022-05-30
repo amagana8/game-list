@@ -1,13 +1,66 @@
+import { useLazyQuery } from '@apollo/client';
+import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
+import { GetGames } from '@graphql/queries';
+import { GameGridType } from '@utils/enums';
 import { Game } from '@utils/types';
-import { Card, Image, List } from 'antd';
+import { Button, Card, Image, List } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import Link from 'next/link';
+import { useState } from 'react';
+import styles from './GameGrid.module.scss';
 
-const GameGrid = ({ games, home }: any) => {
+interface GameGridProps {
+  games: Game[];
+  type: GameGridType;
+}
+
+const GameGrid = ({ games, type }: GameGridProps) => {
+  const [list, setList] = useState(games);
+  const [reachedEnd, setReachedEnd] = useState(false);
+
+  const [getMoreGames, { loading }] = useLazyQuery(GetGames, {
+    onCompleted: (data) => {
+      setList((prevState) => [...prevState, ...data.games]);
+      if (!data.games.length) setReachedEnd(true);
+    },
+  });
+
+  const onLoadMore = () => {
+    getMoreGames({
+      variables: {
+        options: {
+          offset: list.length,
+          limit: 50,
+          sort: [{ releaseDate: 'DESC' }],
+        },
+      },
+    });
+  };
+
+  const LoadMore = () => {
+    if (type === GameGridType.Search) {
+      return null;
+    } else if (reachedEnd) {
+      return (
+        <div className={styles.loadMore}>
+          <Button disabled>No More Games!</Button>
+        </div>
+      );
+    } else if (loading) {
+      return <LoadingSpinner />;
+    } else {
+      return (
+        <div className={styles.loadMore}>
+          <Button onClick={onLoadMore}>Load More</Button>
+        </div>
+      );
+    }
+  };
+
   return (
     <List
       grid={
-        home
+        type === GameGridType.Home
           ? { column: 2 }
           : {
               gutter: 16,
@@ -19,7 +72,8 @@ const GameGrid = ({ games, home }: any) => {
               xxl: 7,
             }
       }
-      dataSource={games}
+      dataSource={list}
+      loadMore={<LoadMore />}
       renderItem={(game: Game) => (
         <Link href={`/game/${game.slug}`}>
           <a>
@@ -29,9 +83,10 @@ const GameGrid = ({ games, home }: any) => {
                 hoverable
                 cover={
                   <Image
-                    src={game.cover}
+                    src={game.cover ?? 'error'}
                     preview={false}
                     width={198}
+                    height={264}
                     alt={`${game.title} Cover`}
                     fallback="https://i.imgur.com/fac0ifd.png"
                   />

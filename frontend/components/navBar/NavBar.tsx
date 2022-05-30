@@ -8,6 +8,7 @@ import {
   UserOutlined,
   SettingOutlined,
   LogoutOutlined,
+  HeartOutlined,
 } from '@ant-design/icons';
 import { setSearchType, setSearchLoading } from '@slices/searchSlice';
 import { SearchType } from '@utils/enums';
@@ -57,6 +58,14 @@ const NavBar = ({ index }: navBarProps) => {
           </Button>
         </a>
       </Link>
+      <Button
+        className={styles.popoverButton}
+        icon={<HeartOutlined />}
+        href="https://ko-fi.com/amagana8"
+        target="_blank"
+      >
+        Donate
+      </Button>
       <Button
         className={styles.popoverButton}
         icon={<LogoutOutlined />}

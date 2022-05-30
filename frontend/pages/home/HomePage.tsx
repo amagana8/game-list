@@ -5,7 +5,7 @@ import { NavBar } from '@components/navBar/NavBar';
 import styles from './HomePage.module.scss';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { User } from '@utils/types';
-import { ReviewGridType } from '@utils/enums';
+import { GameGridType, ReviewGridType } from '@utils/enums';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import Link from 'next/link';
 import { useQuery } from '@apollo/client';
@@ -19,6 +19,7 @@ const HomePage: NextPage = () => {
   const { loading, data } = useQuery(GetHomeInfo, {
     variables: {
       userOptions: {
+        limit: 20,
         sort: [
           {
             createdAt: 'DESC',
@@ -26,6 +27,7 @@ const HomePage: NextPage = () => {
         ],
       },
       gamesOptions: {
+        limit: 20,
         sort: [
           {
             releaseDate: 'DESC',
@@ -33,6 +35,7 @@ const HomePage: NextPage = () => {
         ],
       },
       reviewsOptions: {
+        limit: 20,
         sort: [
           {
             createdAt: 'DESC',
@@ -75,7 +78,7 @@ const HomePage: NextPage = () => {
           <Col span={8}>
             <Title>New Releases</Title>
 
-            <GameGrid games={data.games} home />
+            <GameGrid games={data.games} type={GameGridType.Home} />
           </Col>
           <Col span={8}>
             <Title>Recent Reviews</Title>

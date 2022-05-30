@@ -11,6 +11,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       where: {
         slug,
       },
+      options: {
+        limit: 10,
+        sort: [{ createdAt: 'DESC' }],
+      },
     },
   });
 

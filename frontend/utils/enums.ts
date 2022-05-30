@@ -17,6 +17,12 @@ export enum ReviewGridType {
   Home = 'home',
 }
 
+export enum GameGridType {
+  Browse,
+  Home,
+  Search,
+}
+
 export const scoreMap = new Map([
   ['ones', '1'],
   ['twos', '2'],

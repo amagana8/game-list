@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useAppDispatch } from '@utils/hooks';
 import { setSearchLoading } from '@slices/searchSlice';
 import { GameGrid } from '@components/gameGrid/GameGrid';
+import { GameGridType } from '@utils/enums';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -29,7 +30,7 @@ const GameSearchPage = ({ games }: GameSearchPageProps) => {
       <NavBar index="" />
       <Content>
         <Title>Games</Title>
-        <GameGrid games={games} />
+        <GameGrid games={games} type={GameGridType.Search} />
       </Content>
     </>
   );

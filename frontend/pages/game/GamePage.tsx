@@ -197,7 +197,11 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           </Row>
           <div>
             <Title>Reviews</Title>
-            <ReviewGrid reviews={game.userReviews} type={ReviewGridType.Game} />
+            <ReviewGrid
+              reviews={game.userReviews}
+              type={ReviewGridType.Game}
+              gameId={game.id}
+            />
           </div>
         </Space>
       </Content>
