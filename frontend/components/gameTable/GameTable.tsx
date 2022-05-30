@@ -66,7 +66,7 @@ const GameTable = ({ status, data }: gameTableProps) => {
     <Table
       title={() => (
         <Title level={2} className={styles.title} id={status}>
-          {status}
+          {status.toLowerCase()}
         </Title>
       )}
       columns={columns}

@@ -190,7 +190,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
               <Title>Status Distribution</Title>
               <DoughnutChart data={statusData} />
             </Col>
-            <Col>
+            <Col span={8} offset={4}>
               <Title>Score Distribution</Title>
               <BarChart data={scoreData} />
             </Col>

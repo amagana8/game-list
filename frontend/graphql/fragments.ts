@@ -121,19 +121,19 @@ export const GameScoreDistribution = gql`
 
 export const UserStatusDistribution = gql`
   fragment UserStatusDistribution on User {
-    gamesPlaying: gameListConnection(where: { edge: { status: playing } }) {
+    gamesPlaying: gameListConnection(where: { edge: { status: PLAYING } }) {
       totalCount
     }
-    gamesCompleted: gameListConnection(where: { edge: { status: completed } }) {
+    gamesCompleted: gameListConnection(where: { edge: { status: COMPLETED } }) {
       totalCount
     }
-    gamesPaused: gameListConnection(where: { edge: { status: paused } }) {
+    gamesPaused: gameListConnection(where: { edge: { status: PAUSED } }) {
       totalCount
     }
-    gamesDropped: gameListConnection(where: { edge: { status: dropped } }) {
+    gamesDropped: gameListConnection(where: { edge: { status: DROPPED } }) {
       totalCount
     }
-    gamesPlanning: gameListConnection(where: { edge: { status: planning } }) {
+    gamesPlanning: gameListConnection(where: { edge: { status: PLANNING } }) {
       totalCount
     }
   }
@@ -177,7 +177,7 @@ export const UserScoreDistribution = gql`
 export const UserStatsSummary = gql`
   fragment UserStatsSummary on User {
     createdAt
-    gameListConnection(where: { edge: { status_NOT: planning } }) {
+    gameListConnection(where: { edge: { status_NOT: PLANNING } }) {
       totalCount
     }
     gameListAggregate {
