@@ -5,6 +5,9 @@ import Head from 'next/head';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import { Game } from '@utils/types';
 import { GameGridType } from '@utils/enums';
+import { GetServerSideProps } from 'next';
+import { GetGames } from '@graphql/queries';
+import { client } from '@frontend/apollo-client';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -12,6 +15,24 @@ const { Title } = Typography;
 interface BrowsePageProps {
   games: Game[];
 }
+
+const getServerSideProps: GetServerSideProps = async () => {
+  const { data } = await client.query({
+    query: GetGames,
+    variables: {
+      options: {
+        limit: 50,
+        sort: [{ releaseDate: 'DESC' }],
+      },
+    },
+  });
+
+  return {
+    props: {
+      games: data.games,
+    },
+  };
+};
 
 const BrowsePage: NextPage<BrowsePageProps> = ({ games }: BrowsePageProps) => {
   return (
@@ -28,4 +49,4 @@ const BrowsePage: NextPage<BrowsePageProps> = ({ games }: BrowsePageProps) => {
   );
 };
 
-export { BrowsePage };
+export { getServerSideProps, BrowsePage };

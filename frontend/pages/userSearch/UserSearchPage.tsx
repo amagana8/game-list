@@ -5,6 +5,9 @@ import { Layout, List, Typography } from 'antd';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { client } from '@frontend/apollo-client';
+import { SearchUsers } from '@graphql/queries';
+import { GetServerSideProps } from 'next';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -16,6 +19,22 @@ interface User {
 interface UserSearchPageProps {
   users: User[];
 }
+
+const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { search } = query;
+  const { data } = await client.query({
+    query: SearchUsers,
+    variables: {
+      query: search,
+    },
+  });
+
+  return {
+    props: {
+      users: data.searchUsers,
+    },
+  };
+};
 
 const UserSearchPage = ({ users }: UserSearchPageProps) => {
   const dispatch = useAppDispatch();
@@ -47,4 +66,4 @@ const UserSearchPage = ({ users }: UserSearchPageProps) => {
   );
 };
 
-export { UserSearchPage };
+export { getServerSideProps, UserSearchPage };

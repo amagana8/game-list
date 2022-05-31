@@ -10,12 +10,38 @@ import styles from './ReviewPage.module.scss';
 import { useMutation } from '@apollo/client';
 import { DeleteReview, UpdateReview } from '@graphql/mutations';
 import Router from 'next/router';
+import { client } from '@frontend/apollo-client';
+import { GetReview } from '@graphql/queries';
+import { GetServerSideProps } from 'next';
 
 const { Title, Paragraph } = Typography;
 
 interface ReviewPageProps {
   review: Review;
 }
+
+const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { username, slug } = query;
+  const { data } = await client.query({
+    query: GetReview,
+    variables: {
+      where: {
+        author: {
+          username,
+        },
+        subject: {
+          slug,
+        },
+      },
+    },
+  });
+
+  return {
+    props: {
+      review: data.reviews[0],
+    },
+  };
+};
 
 const ReviewPage = ({ review }: ReviewPageProps) => {
   const username = useAppSelector((state) => state.user.username);
@@ -144,4 +170,4 @@ const ReviewPage = ({ review }: ReviewPageProps) => {
   );
 };
 
-export { ReviewPage };
+export { getServerSideProps, ReviewPage };

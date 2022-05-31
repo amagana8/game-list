@@ -24,6 +24,9 @@ import Link from 'next/link';
 import { Game, GameConnection } from '@utils/types';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { ReviewGridType } from '@utils/enums';
+import type { GetServerSideProps } from 'next';
+import { client } from '@frontend/apollo-client';
+import { GetGame } from '@graphql/queries';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -41,6 +44,28 @@ const { Title, Text, Paragraph } = Typography;
 interface GameProps {
   game: Game;
 }
+
+const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { slug } = query;
+  const { data } = await client.query({
+    query: GetGame,
+    variables: {
+      where: {
+        slug,
+      },
+      options: {
+        limit: 10,
+        sort: [{ createdAt: 'DESC' }],
+      },
+    },
+  });
+
+  return {
+    props: {
+      game: data.games[0],
+    },
+  };
+};
 
 const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [showModal, setShowModal] = useState(false);
@@ -206,4 +231,4 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   );
 };
 
-export { GamePage };
+export { getServerSideProps, GamePage };

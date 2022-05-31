@@ -1,28 +1,4 @@
-import { GamePage } from '@pages/game/GamePage';
-import type { GetServerSideProps } from 'next';
-import { client } from '@frontend/apollo-client';
-import { GetGame } from '@graphql/queries';
+import { getServerSideProps, GamePage } from '@pages/game/GamePage';
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { slug } = query;
-  const { data } = await client.query({
-    query: GetGame,
-    variables: {
-      where: {
-        slug,
-      },
-      options: {
-        limit: 10,
-        sort: [{ createdAt: 'DESC' }],
-      },
-    },
-  });
-
-  return {
-    props: {
-      game: data.games[0],
-    },
-  };
-};
-
+export { getServerSideProps };
 export default GamePage;
