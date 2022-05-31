@@ -11,11 +11,14 @@ import Link from 'next/link';
 import { useQuery } from '@apollo/client';
 import { GetHomeInfo } from '@graphql/queries';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
+import { useRef } from 'react';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 const HomePage: NextPage = () => {
+  const date = useRef(new Date().toISOString());
+
   const { loading, data } = useQuery(GetHomeInfo, {
     variables: {
       userOptions: {
@@ -25,6 +28,10 @@ const HomePage: NextPage = () => {
             createdAt: 'DESC',
           },
         ],
+      },
+      gameWhere: {
+        releaseDate_LTE: date.current,
+        cover_NOT: '',
       },
       gamesOptions: {
         limit: 20,

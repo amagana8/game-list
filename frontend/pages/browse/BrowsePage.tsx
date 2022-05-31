@@ -17,12 +17,18 @@ interface BrowsePageProps {
 }
 
 const getServerSideProps: GetServerSideProps = async () => {
+  const date = new Date().toISOString();
+
   const { data } = await client.query({
     query: GetGames,
     variables: {
       options: {
         limit: 50,
         sort: [{ releaseDate: 'DESC' }],
+      },
+      where: {
+        releaseDate_LTE: date,
+        cover_NOT: ''
       },
     },
   });

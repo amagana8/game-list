@@ -6,7 +6,7 @@ import { Game } from '@utils/types';
 import { Button, Card, Image, List } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import styles from './GameGrid.module.scss';
 
 interface GameGridProps {
@@ -15,6 +15,7 @@ interface GameGridProps {
 }
 
 const GameGrid = ({ games, type }: GameGridProps) => {
+  const date = useRef(new Date().toISOString());
   const [list, setList] = useState(games);
   const [reachedEnd, setReachedEnd] = useState(false);
 
@@ -32,6 +33,10 @@ const GameGrid = ({ games, type }: GameGridProps) => {
           offset: list.length,
           limit: 50,
           sort: [{ releaseDate: 'DESC' }],
+        },
+        where: {
+          releaseDate_LTE: date.current,
+          cover_NOT: ''
         },
       },
     });

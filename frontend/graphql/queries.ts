@@ -35,8 +35,8 @@ export const GetList = gql`
 `;
 
 export const GetGames = gql`
-  query Games($options: GameOptions) {
-    games(options: $options) {
+  query Games($options: GameOptions, $where: GameWhere) {
+    games(options: $options, where: $where) {
       ...SmallGameFragment
     }
   }
@@ -174,6 +174,7 @@ export const GetReviews = gql`
 
 export const GetHomeInfo = gql`
   query GetHomeInfo(
+    $gameWhere: GameWhere
     $userOptions: UserOptions
     $gamesOptions: GameOptions
     $reviewsOptions: ReviewOptions
@@ -188,7 +189,7 @@ export const GetHomeInfo = gql`
         }
       }
     }
-    games(options: $gamesOptions) {
+    games(options: $gamesOptions, where: $gameWhere) {
       ...SmallGameFragment
     }
     reviews(options: $reviewsOptions) {
