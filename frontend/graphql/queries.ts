@@ -96,6 +96,10 @@ export const GetUserStats = gql`
       ...UserStatusDistribution
       ...UserScoreDistribution
       ...UserStatsSummary
+      genreDistribution {
+        genre
+        amount
+      }
     }
   }
   ${UserStatusDistribution}

@@ -66,13 +66,6 @@ const ProfilePage: NextPage = () => {
       amount: userData[field].totalCount,
     }));
 
-  // const genreData = Object.keys(userData)
-  //   .filter((field) => field.startsWith('genre_'))
-  //   .map((field) => ({
-  //     name: field.replace('genre_', ''),
-  //     value: userData[field].totalCount,
-  //   }));
-
   const hoursPlayed = userData.gameListAggregate.edge.hours.sum;
   const daysPlayed = roundNumber(hoursPlayed / 24);
   const yearsPlayed = roundNumber(daysPlayed / 365);
@@ -140,10 +133,10 @@ const ProfilePage: NextPage = () => {
             <Title level={2}>Score Distribution</Title>
             <BarChart data={scoreData} />
           </Col>
-          {/* <Col>
+          <Col>
             <Title level={2}>Genre Distribution</Title>
-            <TreeMap data={genreData} />
-          </Col> */}
+            <TreeMap data={data.users[0].genreDistribution} />
+          </Col>
         </Row>
       </Content>
     </>

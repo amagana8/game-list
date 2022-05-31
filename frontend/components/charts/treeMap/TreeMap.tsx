@@ -3,19 +3,23 @@ import styles from './TreeMap.module.scss';
 import { Empty } from 'antd';
 
 interface TreeMapProps {
-  data: TreeMapDataObj[];
+  data: GenreCount[];
 }
 
-interface TreeMapDataObj {
-  name: string;
-  value: number;
+interface GenreCount {
+  genre: string;
+  amount: number;
 }
 
 const TreeMap = ({ data }: TreeMapProps) => {
-  const filteredData = data.filter((item: TreeMapDataObj) => item.value);
+  const treeData = data.map((item) => ({
+    name: item.genre,
+    value: item.amount,
+  }));
+
   const tree = {
     name: 'root',
-    children: filteredData,
+    children: treeData,
   };
   const config = {
     data: tree,
@@ -23,7 +27,7 @@ const TreeMap = ({ data }: TreeMapProps) => {
   };
   return (
     <>
-      {filteredData.length ? (
+      {treeData.length ? (
         <Treemap {...config} className={styles.treeMap} />
       ) : (
         <Empty />

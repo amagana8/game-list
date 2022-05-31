@@ -1,7 +1,6 @@
 import { Pie } from '@ant-design/plots';
 import styles from './DoughnutChart.module.scss';
 import { Empty } from 'antd';
-import { Status } from '@utils/enums';
 
 interface DataObj {
   type: string;
@@ -18,19 +17,19 @@ const DoughnutChart = ({ data }: DoughnutChartProps) => {
   const config = {
     color: ({ type }: any) => {
       switch (type) {
-        case Status.Playing: {
+        case 'Playing': {
           return '#177ddc';
         }
-        case Status.Completed: {
+        case 'Completed': {
           return '#389e0d';
         }
-        case Status.Paused: {
+        case 'Paused': {
           return '#d4b106';
         }
-        case Status.Dropped: {
+        case 'Dropped': {
           return '#cf1322';
         }
-        case Status.Planning: {
+        case 'Planning': {
           return '#531dab';
         }
         default: {
