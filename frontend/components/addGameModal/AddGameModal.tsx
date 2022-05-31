@@ -1,23 +1,18 @@
-import { Modal, Form, Select, InputNumber, Button } from 'antd';
+import { Modal, Form, Select, InputNumber, Button, message } from 'antd';
 import { useMutation } from '@apollo/client';
 import { AddGame } from '@graphql/mutations';
 import { useAppSelector } from '@utils/hooks';
 import { Status } from '@utils/enums';
-import { Game } from '@utils/types';
+import { Game, GameConnection } from '@utils/types';
 
 const { Option } = Select;
 
 interface AddGameModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<boolean>;
+  setGameConnection: React.Dispatch<GameConnection>;
   game: Game;
-  initialValues?: AddGameForm;
-}
-
-interface AddGameForm {
-  status: string;
-  hours: number;
-  score: number;
+  initialValues?: GameConnection;
 }
 
 const AddGameModal = ({
@@ -25,10 +20,11 @@ const AddGameModal = ({
   initialValues,
   showModal,
   setShowModal,
+  setGameConnection,
 }: AddGameModalProps) => {
   const [addGame] = useMutation(AddGame);
   const username = useAppSelector((state) => state.user.username);
-  async function onFinish(input: AddGameForm) {
+  async function onFinish(input: GameConnection) {
     try {
       await addGame({
         variables: {
@@ -53,6 +49,8 @@ const AddGameModal = ({
           },
         },
       });
+      setGameConnection(input);
+      message.success('List updated!');
     } catch (error) {
       console.log(error);
     }

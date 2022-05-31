@@ -30,6 +30,11 @@ const ogm = new OGM({
 export const User = ogm.model('User');
 
 export default cors(async (req, res) => {
+  if (req.method === 'OPTIONS') {
+    res.end();
+    return false;
+  }
+
   const neoSchema = new Neo4jGraphQL({
     typeDefs,
     driver,

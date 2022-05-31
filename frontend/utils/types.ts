@@ -45,3 +45,8 @@ export interface Review {
   updatedAt: string;
   createdAt: string;
 }
+export interface GameConnection {
+  status: string;
+  hours: number;
+  score: number;
+}

@@ -21,7 +21,7 @@ import { colorMap, scoreMap } from '@utils/enums';
 import Head from 'next/head';
 import { parseDate, roundNumber } from '@utils/index';
 import Link from 'next/link';
-import { Game } from '@utils/types';
+import { Game, GameConnection } from '@utils/types';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { ReviewGridType } from '@utils/enums';
 
@@ -44,7 +44,7 @@ interface GameProps {
 
 const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [showModal, setShowModal] = useState(false);
-
+  const [gameConnection, setGameConnection] = useState<GameConnection>();
   const username = useAppSelector((state) => state.user.username);
 
   const { loading, data } = useQuery(GetGameStatus, {
@@ -63,9 +63,11 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
         },
       },
     },
+    onCompleted: (data) => {
+      setGameConnection(data.users[0].gameListConnection.edges[0]);
+    },
   });
 
-  const gameConnection = data?.users[0]?.gameListConnection.edges[0];
   const reviewed = data?.users[0]?.gameReviews.length;
 
   const statusData = Object.entries(game)
@@ -137,14 +139,9 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
               <AddGameModal
                 showModal={showModal}
                 setShowModal={setShowModal}
+                setGameConnection={setGameConnection}
                 game={game}
-                initialValues={
-                  gameConnection && {
-                    status: gameConnection.status,
-                    hours: gameConnection.hours,
-                    score: gameConnection.score,
-                  }
-                }
+                initialValues={gameConnection}
               />
             </Space>
           </Col>
