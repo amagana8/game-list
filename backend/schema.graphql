@@ -61,7 +61,7 @@ type Review @exclude(operations: [CONNECT, DISCONNECT]) {
 
 interface ListEntry @relationshipProperties {
   status: Status
-  hours: Int
+  hours: Float
   score: Int
 }
 
