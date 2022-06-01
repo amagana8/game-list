@@ -25,13 +25,20 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { data } = await client.query({
     query: SearchUsers,
     variables: {
-      query: search,
+      fulltext: {
+        userName: {
+          phrase: search,
+        },
+      },
+      options: {
+        limit: 50,
+      },
     },
   });
 
   return {
     props: {
-      users: data.searchUsers,
+      users: data.users,
     },
   };
 };

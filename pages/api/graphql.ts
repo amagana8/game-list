@@ -43,9 +43,10 @@ export default cors(async (req, res) => {
       auth: new Neo4jGraphQLAuthJWTPlugin({ secret: process.env.JWT_SECRET }),
     },
   });
-
+  const schema = await neoSchema.getSchema();
+  await neoSchema.assertIndexesAndConstraints({ options: { create: true } });
   const apolloServer = new ApolloServer({
-    schema: await neoSchema.getSchema(),
+    schema: schema,
     context: ({ req }) => ({ req }),
   });
   await ogm.init();

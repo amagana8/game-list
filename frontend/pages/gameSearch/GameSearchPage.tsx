@@ -23,13 +23,20 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { data } = await client.query({
     query: SearchGames,
     variables: {
-      query: search,
+      fulltext: {
+        GameTitle: {
+          phrase: search,
+        },
+      },
+      options: {
+        limit: 50,
+      },
     },
   });
 
   return {
     props: {
-      games: data.searchGames,
+      games: data.games,
     },
   };
 };

@@ -1,4 +1,6 @@
-type User @exclude(operations: [CREATE, DELETE]) {
+type User
+  @exclude(operations: [CREATE, DELETE])
+  @fulltext(indexes: [{ name: "userName", fields: ["username"] }]) {
   id: ID! @id @auth(rules: [{ allow: { id: "$jwt.sub" } }])
   username: String! @unique @readonly
   email: String! @unique @readonly @auth(rules: [{ allow: { id: "$jwt.sub" } }])
@@ -33,7 +35,9 @@ type GenreCount {
   amount: Int!
 }
 
-type Game @exclude(operations: [DELETE]) {
+type Game
+  @exclude(operations: [DELETE])
+  @fulltext(indexes: [{ name: "GameTitle", fields: ["title"] }]) {
   id: ID! @id
   slug: String! @unique
   createdAt: DateTime @timestamp(operations: [CREATE])
@@ -109,14 +113,6 @@ type Mutation {
 }
 
 type Query {
-  searchUsers(query: String): [User!]!
-    @cypher(
-      statement: "MATCH (n:User) WHERE toLower(n.username) CONTAINS toLower($query) RETURN n LIMIT 50"
-    )
-  searchGames(query: String): [Game!]!
-    @cypher(
-      statement: "MATCH (n:Game) WHERE toLower(n.title) CONTAINS toLower($query) RETURN n LIMIT 50"
-    )
   searchCompanies(query: String): [Company!]!
     @cypher(
       statement: "MATCH (c:Company) WHERE toLower(c.name) CONTAINS toLower($query) RETURN c LIMIT 50"

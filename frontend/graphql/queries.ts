@@ -117,8 +117,8 @@ export const GetUserStats = gql`
 `;
 
 export const SearchGames = gql`
-  query SearchGames($query: String) {
-    searchGames(query: $query) {
+  query Games($fulltext: GameFulltext, $options: GameOptions) {
+    games(fulltext: $fulltext, options: $options) {
       ...SmallGameFragment
     }
   }
@@ -126,8 +126,8 @@ export const SearchGames = gql`
 `;
 
 export const SearchUsers = gql`
-  query SearchUsers($query: String) {
-    searchUsers(query: $query) {
+  query Users($fulltext: UserFulltext, $options: UserOptions) {
+    users(fulltext: $fulltext, options: $options) {
       username
     }
   }
