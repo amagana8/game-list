@@ -53,6 +53,13 @@ const GameTable = ({ status, data }: gameTableProps) => {
       dataIndex: 'score',
       width: '8%',
       align: 'center' as AlignType,
+      render: (score: number) => {
+        if (score === 0) {
+          return '';
+        } else {
+          return score;
+        }
+      },
     },
     {
       title: 'Hours',
