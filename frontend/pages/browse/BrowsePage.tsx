@@ -28,7 +28,7 @@ const getServerSideProps: GetServerSideProps = async () => {
       },
       where: {
         releaseDate_LTE: date,
-        cover_NOT: ''
+        cover_NOT: '',
       },
     },
   });

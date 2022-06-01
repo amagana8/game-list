@@ -102,13 +102,6 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
       value: data.totalCount,
     }));
 
-  const scoreData = Object.entries(game)
-    .filter(([field]) => field.startsWith('score_'))
-    .map(([field, data]) => ({
-      score: scoreMap.get(field.replace('score_', '')),
-      amount: data.totalCount,
-    }));
-
   const meanScore = game.userListAggregate.edge.score.average;
 
   return (
@@ -214,7 +207,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
             </Col>
             <Col span={8} offset={4}>
               <Title>Score Distribution</Title>
-              <BarChart data={scoreData} />
+              <BarChart data={game.scoreDistribution} />
             </Col>
           </Row>
           <div>

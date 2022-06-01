@@ -59,13 +59,6 @@ const ProfilePage: NextPage = () => {
       value: userData[field].totalCount,
     }));
 
-  const scoreData = Object.keys(userData)
-    .filter((field) => field.startsWith('score_'))
-    .map((field) => ({
-      score: scoreMap.get(field.replace('score_', '')),
-      amount: userData[field].totalCount,
-    }));
-
   const hoursPlayed = userData.gameListAggregate.edge.hours.sum;
   const daysPlayed = roundNumber(hoursPlayed / 24);
   const yearsPlayed = roundNumber(daysPlayed / 365);
@@ -131,7 +124,7 @@ const ProfilePage: NextPage = () => {
           </Col>
           <Col>
             <Title level={2}>Score Distribution</Title>
-            <BarChart data={scoreData} />
+            <BarChart data={data.users[0].scoreDistribution} />
           </Col>
           <Col>
             <Title level={2}>Genre Distribution</Title>

@@ -11,6 +11,21 @@ type User @exclude(operations: [CREATE, DELETE]) {
     @cypher(
       statement: "MATCH (this)-[:LISTED]->(:Game)-[:IN_GENRE]->(g:Genre)  WITH g.name AS genreName, COUNT(g) AS genreAmount RETURN ({genre: genreName, amount: genreAmount})"
     )
+  scoreDistribution: [ScoreCount!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[r:LISTED]->(g:Game)
+      WHERE r.score IS NOT NULL
+      WITH round(r.score) AS scoreValue, COUNT(r.score) AS scoreCount
+      ORDER BY scoreValue
+      RETURN ({score: scoreValue, amount: scoreCount})
+      """
+    )
+}
+
+type ScoreCount {
+  score: Float!
+  amount: Int!
 }
 
 type GenreCount {
@@ -32,6 +47,16 @@ type Game @exclude(operations: [DELETE]) {
   userList: [User!]!
     @relationship(type: "LISTED", properties: "ListEntry", direction: IN)
   userReviews: [Review!]! @relationship(type: "REVIEW_OF", direction: IN)
+  scoreDistribution: [ScoreCount!]!
+    @cypher(
+      statement: """
+      MATCH (this)<-[r:LISTED]-(u:User)
+      WHERE r.score IS NOT NULL
+      WITH round(r.score) AS scoreValue, COUNT(r.score) AS scoreCount
+      ORDER BY scoreValue
+      RETURN ({score: scoreValue, amount: scoreCount})
+      """
+    )
 }
 
 type Company @exclude(operations: [DELETE]) {

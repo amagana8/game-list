@@ -22,6 +22,12 @@ export interface Game {
   releaseDate: string;
   userReviews: Review[];
   userListAggregate: { edge: { score: { average: number } } };
+  scoreDistribution: ScoreCount[];
+}
+
+interface ScoreCount {
+  score: number;
+  amount: number;
 }
 export interface Company {
   name: string;

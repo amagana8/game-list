@@ -8,12 +8,11 @@ interface BarChartProps {
 }
 
 interface ScoreData {
-  score: string | undefined;
+  score: number;
   amount: number;
 }
 
 const BarChart = ({ data }: BarChartProps) => {
-  const isEmpty = data.every((entry) => entry.amount === 0);
   const config = {
     color: ({ score }: any) => {
       return colorMap.get(Number(score)) ?? '#177ddc';
@@ -36,7 +35,11 @@ const BarChart = ({ data }: BarChartProps) => {
   };
   return (
     <>
-      {isEmpty ? <Empty /> : <Column {...config} className={styles.barChart} />}
+      {data.length ? (
+        <Column {...config} className={styles.barChart} />
+      ) : (
+        <Empty />
+      )}
     </>
   );
 };

@@ -2,9 +2,7 @@ import { gql } from '@apollo/client';
 import {
   GameFragment,
   GameStatusDistribution,
-  GameScoreDistribution,
   UserStatusDistribution,
-  UserScoreDistribution,
   UserStatsSummary,
   SmallGameFragment,
   ReviewFragment,
@@ -48,7 +46,17 @@ export const GetGame = gql`
     games(where: $where) {
       ...GameFragment
       ...GameStatusDistribution
-      ...GameScoreDistribution
+      userListAggregate {
+        edge {
+          score {
+            average
+          }
+        }
+      }
+      scoreDistribution {
+        score
+        amount
+      }
       userReviews(options: $options) {
         ...ReviewFragment
       }
@@ -56,7 +64,6 @@ export const GetGame = gql`
   }
   ${GameFragment}
   ${GameStatusDistribution}
-  ${GameScoreDistribution}
   ${ReviewFragment}
 `;
 
@@ -94,8 +101,11 @@ export const GetUserStats = gql`
   query Users($where: UserWhere) {
     users(where: $where) {
       ...UserStatusDistribution
-      ...UserScoreDistribution
       ...UserStatsSummary
+      scoreDistribution {
+        score
+        amount
+      }
       genreDistribution {
         genre
         amount
@@ -103,7 +113,6 @@ export const GetUserStats = gql`
     }
   }
   ${UserStatusDistribution}
-  ${UserScoreDistribution}
   ${UserStatsSummary}
 `;
 
