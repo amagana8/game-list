@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { AlignType } from 'rc-table/lib/interface';
 import styles from './GameTable.module.scss';
 import { Game } from '@utils/types';
+import { ColumnsType } from 'antd/es/table';
 
 const { Title } = Typography;
 
@@ -18,8 +19,17 @@ interface ListEntry {
   node: Game;
 }
 
+interface TableEntry {
+  key: number;
+  slug: string;
+  title: string;
+  cover: string;
+  score: number;
+  hours: number;
+}
+
 const GameTable = ({ status, data }: gameTableProps) => {
-  const columns = [
+  const columns: ColumnsType<TableEntry> = [
     {
       title: '',
       key: 'action',
@@ -42,6 +52,7 @@ const GameTable = ({ status, data }: gameTableProps) => {
       title: 'Title',
       key: 'action',
       width: '78%',
+      sorter: (a: TableEntry, b: TableEntry) => a.title.localeCompare(b.title),
       render: (game: Game) => (
         <Link href={`/game/${game.slug}`}>
           <a>{game.title}</a>
@@ -60,14 +71,25 @@ const GameTable = ({ status, data }: gameTableProps) => {
           return score;
         }
       },
+      sorter: (a: TableEntry, b: TableEntry) => a.score - b.score,
     },
     {
       title: 'Hours',
       dataIndex: 'hours',
       width: '8%',
       align: 'center' as AlignType,
+      sorter: (a: TableEntry, b: TableEntry) => a.hours - b.hours,
     },
   ];
+
+  const tableData: TableEntry[] = data.map((row: ListEntry) => ({
+    key: row.node.id,
+    slug: row.node.slug,
+    title: row.node.title,
+    cover: row.node.cover,
+    score: row.score,
+    hours: row.hours,
+  }));
 
   return (
     <Table
@@ -77,14 +99,7 @@ const GameTable = ({ status, data }: gameTableProps) => {
         </Title>
       )}
       columns={columns}
-      dataSource={data.map((row: ListEntry) => ({
-        key: row.node.id,
-        slug: row.node.slug,
-        title: row.node.title,
-        cover: row.node.cover,
-        score: row.score,
-        hours: row.hours,
-      }))}
+      dataSource={tableData}
       pagination={false}
     />
   );
