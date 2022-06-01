@@ -96,6 +96,11 @@ const AddGameModal = ({
     setShowModal(false);
   };
 
+  const parseScore = (num: any) => {
+    if (num < 0) return 0;
+    return Math.round(num / 0.5) * 0.5;
+  };
+
   return (
     <Modal
       title={game.title}
@@ -139,11 +144,7 @@ const AddGameModal = ({
           <InputNumber min={0} precision={1} />
         </Form.Item>
         <Form.Item label="Score" name="score">
-          <InputNumber
-            min={1}
-            max={10}
-            parser={(num: any) => Math.round(num / 0.5) * 0.5}
-          />
+          <InputNumber max={10} parser={parseScore} />
         </Form.Item>
       </Form>
     </Modal>
