@@ -1,16 +1,25 @@
-import { Modal, Form, Select, InputNumber, Button, message } from 'antd';
+import {
+  Modal,
+  Form,
+  Select,
+  InputNumber,
+  Button,
+  message,
+  Popconfirm,
+} from 'antd';
 import { useMutation } from '@apollo/client';
-import { AddGame } from '@graphql/mutations';
+import { AddGame, RemoveGame } from '@graphql/mutations';
 import { useAppSelector } from '@utils/hooks';
 import { Status } from '@utils/enums';
 import { Game, GameConnection } from '@utils/types';
+import styles from './AddGameModal.module.scss';
 
 const { Option } = Select;
 
 interface AddGameModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<boolean>;
-  setGameConnection: React.Dispatch<GameConnection>;
+  setGameConnection: React.Dispatch<any>;
   game: Game;
   initialValues?: GameConnection;
 }
@@ -56,11 +65,53 @@ const AddGameModal = ({
     }
     setShowModal(false);
   }
+
+  const [removeGame] = useMutation(RemoveGame);
+  const onConfirm = async () => {
+    try {
+      await removeGame({
+        variables: {
+          where: {
+            username,
+          },
+          disconnect: {
+            gameList: [
+              {
+                where: {
+                  node: {
+                    id: game.id,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      });
+      setGameConnection(null);
+      message.success('Removed Game!');
+    } catch (error) {
+      message.error('Failed to remove game.');
+      console.log(error);
+    }
+    setShowModal(false);
+  };
+
   return (
     <Modal
       title={game.title}
       visible={showModal}
       footer={[
+        <Popconfirm
+          key="delete"
+          title="Are you sure you want to remove this game from your list?"
+          okText="Delete"
+          okType="danger"
+          onConfirm={onConfirm}
+        >
+          <Button danger={true} type="primary" className={styles.removeButton}>
+            Delete Game
+          </Button>
+        </Popconfirm>,
         <Button key="cancel" onClick={() => setShowModal(false)}>
           Cancel
         </Button>,
@@ -85,10 +136,14 @@ const AddGameModal = ({
           </Select>
         </Form.Item>
         <Form.Item label="Hours" name="hours">
-          <InputNumber precision={1} />
+          <InputNumber min={0} precision={1} />
         </Form.Item>
         <Form.Item label="Score" name="score">
-          <InputNumber min={1} max={10} parser={(num: any) => Math.round(num/0.5)*0.5} />
+          <InputNumber
+            min={1}
+            max={10}
+            parser={(num: any) => Math.round(num / 0.5) * 0.5}
+          />
         </Form.Item>
       </Form>
     </Modal>

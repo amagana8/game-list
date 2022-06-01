@@ -69,7 +69,7 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [showModal, setShowModal] = useState(false);
-  const [gameConnection, setGameConnection] = useState<GameConnection>();
+  const [gameConnection, setGameConnection] = useState<any>();
   const username = useAppSelector((state) => state.user.username);
 
   const { loading, data } = useQuery(GetGameStatus, {

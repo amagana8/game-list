@@ -23,6 +23,16 @@ export const AddGame = gql`
   }
 `;
 
+export const RemoveGame = gql`
+  mutation UpdateUsers($where: UserWhere, $disconnect: UserDisconnectInput) {
+    updateUsers(where: $where, disconnect: $disconnect) {
+      info {
+        relationshipsDeleted
+      }
+    }
+  }
+`;
+
 export const NewGame = gql`
   mutation CreateGames($input: [GameCreateInput!]!) {
     createGames(input: $input) {
