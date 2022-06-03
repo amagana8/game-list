@@ -21,6 +21,8 @@
       "@graphql/*": ["frontend/graphql/*"],
       "@utils/*": ["frontend/utils/*"],
       "@slices/*": ["frontend/slices/*"],
+      "@schema/*": ["backend/schema/*"],
+      "@resolvers/*": ["backend/resolvers/*"],
       "@frontend/*": ["frontend/*"],
       "@backend/*": ["backend/*"]
     }
