@@ -13,6 +13,7 @@ import Router from 'next/router';
 import { client } from '@frontend/apollo-client';
 import { GetReview } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
+import Link from 'next/link';
 
 const { Title, Paragraph } = Typography;
 
@@ -101,7 +102,11 @@ const ReviewPage = ({ review }: ReviewPageProps) => {
       </Head>
       <NavBar />
       <Content>
-        <Title className={styles.title}>{review.subject.title}</Title>
+        <Title className={styles.titleLink}>
+          <Link href={`/game/${review.subject.slug}`}>
+            <a>{review.subject.title}</a>
+          </Link>
+        </Title>
         {showEditButton && !editing && (
           <Button
             type="primary"
@@ -130,7 +135,12 @@ const ReviewPage = ({ review }: ReviewPageProps) => {
             {review.summary}
           </Title>
         )}
-        <Title level={5}>By {review.author.username}</Title>
+        <Title level={5} className={styles.titleLink}>
+          By{' '}
+          <Link href={`/user/${review.author.username}`}>
+            <a>{review.author.username}</a>
+          </Link>
+        </Title>
         <Title type="secondary" level={5}>
           Posted: {parseDate(review.createdAt)}
         </Title>
