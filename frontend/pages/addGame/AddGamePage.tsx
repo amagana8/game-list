@@ -10,6 +10,9 @@ import Router from 'next/router';
 import { ListInput } from '@components/listInput/ListInput';
 import Head from 'next/head';
 import { Genre } from '@utils/types';
+import { client } from '@frontend/apollo-client';
+import { GetGenres } from '@graphql/queries';
+import { GetStaticProps } from 'next';
 
 interface NewGameForm {
   title: string;
@@ -25,6 +28,16 @@ interface NewGameForm {
 interface AddGamePageProps {
   genres: Genre[];
 }
+
+const getStaticProps: GetStaticProps = async () => {
+  const { data } = await client.query({ query: GetGenres });
+
+  return {
+    props: {
+      genres: data.genres,
+    },
+  };
+};
 
 const AddGamePage: NextPage<AddGamePageProps> = ({
   genres,
@@ -125,4 +138,4 @@ const AddGamePage: NextPage<AddGamePageProps> = ({
   );
 };
 
-export { AddGamePage };
+export { getStaticProps, AddGamePage };

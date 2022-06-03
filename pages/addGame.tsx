@@ -1,16 +1,4 @@
-import { client } from '@frontend/apollo-client';
-import { GetGenres } from '@graphql/queries';
-import { AddGamePage } from '@pages/addGame/AddGamePage';
-import { GetStaticProps } from 'next';
+import { getStaticProps, AddGamePage } from '@pages/addGame/AddGamePage';
 
-export const getStaticProps: GetStaticProps = async () => {
-  const { data } = await client.query({ query: GetGenres });
-
-  return {
-    props: {
-      genres: data.genres,
-    },
-  };
-};
-
+export { getStaticProps };
 export default AddGamePage;
