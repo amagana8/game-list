@@ -19,13 +19,17 @@ interface BarChartEntry {
 }
 
 const BarChart = ({ data }: BarChartProps) => {
+  const isEmpty = !data.length || data.every((item) => item.score === 0);
   const [barData, setBarData] = useState<BarChartEntry[]>([]);
   useEffect(() => {
     const newData = [];
     for (let i = 1; i < 11; i++) {
       const currItem = data.find((item) => item.score === i);
       if (currItem) {
-        newData.push({ score: currItem.score.toString(), amount: currItem.amount });
+        newData.push({
+          score: currItem.score.toString(),
+          amount: currItem.amount,
+        });
       } else {
         newData.push({ score: i.toString(), amount: 0 });
       }
@@ -54,11 +58,7 @@ const BarChart = ({ data }: BarChartProps) => {
   };
   return (
     <>
-      {data.length ? (
-        <Column {...config} className={styles.barChart} />
-      ) : (
-        <Empty />
-      )}
+      {isEmpty ? <Empty /> : <Column {...config} className={styles.barChart} />}
     </>
   );
 };
