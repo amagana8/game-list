@@ -96,3 +96,23 @@ export const DeleteReview = gql`
     }
   }
 `;
+
+export const AddFavoriteGame = gql`
+  mutation UpdateUsers($where: UserWhere, $connect: UserConnectInput) {
+    updateUsers(where: $where, connect: $connect) {
+      info {
+        relationshipsCreated
+      }
+    }
+  }
+`;
+
+export const RemoveFavoriteGame = gql`
+  mutation UpdateUsers($where: UserWhere, $disconnect: UserDisconnectInput) {
+    updateUsers(where: $where, disconnect: $disconnect) {
+      info {
+        relationshipsDeleted
+      }
+    }
+  }
+`;

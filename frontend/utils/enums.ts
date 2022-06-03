@@ -21,6 +21,7 @@ export enum GameGridType {
   Browse,
   Home,
   Search,
+  Favorites,
 }
 
 export const scoreMap = new Map([

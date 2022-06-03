@@ -1,17 +1,17 @@
 import { useQuery } from '@apollo/client';
+import { GameGrid } from '@components/gameGrid/GameGrid';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 import { NavBar } from '@components/navBar/NavBar';
-import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
-import { GetUserReviews } from '@graphql/queries';
-import { ReviewGridType } from '@utils/enums';
+import { GetFavoriteGames } from '@graphql/queries';
+import { GameGridType } from '@utils/enums';
 import { Content } from 'antd/lib/layout/layout';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-const UserReviewsPage = () => {
+const FavoritesPage = () => {
   const { username } = useRouter().query;
-  const { loading, data } = useQuery(GetUserReviews, {
+  const { loading, data } = useQuery(GetFavoriteGames, {
     variables: {
       where: {
         username,
@@ -22,17 +22,17 @@ const UserReviewsPage = () => {
   return (
     <>
       <Head>
-        <title>{`${username}'s Reviews · GameList`}</title>
+        <title>{`${username}'s Favorite Games · GameList`}</title>
       </Head>
       <NavBar />
       <Content>
-        <UserPageNavBar username={username} index="4" />
+        <UserPageNavBar username={username} index="3" />
         {loading ? (
           <LoadingSpinner />
         ) : (
-          <ReviewGrid
-            reviews={data.users[0].gameReviews}
-            type={ReviewGridType.User}
+          <GameGrid
+            games={data.users[0].favoriteGames}
+            type={GameGridType.Favorites}
           />
         )}
       </Content>
@@ -40,4 +40,4 @@ const UserReviewsPage = () => {
   );
 };
 
-export { UserReviewsPage };
+export { FavoritesPage };

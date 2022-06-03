@@ -9,12 +9,13 @@ import {
   Space,
   Progress,
   Image,
+  message,
 } from 'antd';
 import { NavBar } from '@components/navBar/NavBar';
 import { AddGameModal } from '@components/addGameModal/AddGameModal';
 import React, { useState } from 'react';
 import styles from './GamePage.module.scss';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useAppSelector } from '@utils/hooks';
 import dynamic from 'next/dynamic';
 import { colorMap, scoreMap } from '@utils/enums';
@@ -27,6 +28,8 @@ import { ReviewGridType } from '@utils/enums';
 import type { GetServerSideProps } from 'next';
 import { client } from '@frontend/apollo-client';
 import { GetGame } from '@graphql/queries';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { AddFavoriteGame, RemoveFavoriteGame } from '@graphql/mutations';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -70,9 +73,11 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
 const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [showModal, setShowModal] = useState(false);
   const [gameConnection, setGameConnection] = useState<any>();
+  const [reviewed, setReviewed] = useState(false);
+  const [favorited, setFavorited] = useState(false);
   const username = useAppSelector((state) => state.user.username);
 
-  const { loading, data } = useQuery(GetGameStatus, {
+  const { loading } = useQuery(GetGameStatus, {
     variables: {
       where: {
         username,
@@ -87,13 +92,16 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           id: game.id,
         },
       },
+      favoriteGamesWhere: {
+        id: game.id,
+      },
     },
     onCompleted: (data) => {
       setGameConnection(data.users[0].gameListConnection.edges[0]);
+      setFavorited(data.users[0].favoriteGames.length);
+      setReviewed(data.users[0].gameReviews.length);
     },
   });
-
-  const reviewed = data?.users[0]?.gameReviews.length;
 
   const statusData = Object.entries(game)
     .filter(([field]) => field.startsWith('users'))
@@ -103,6 +111,62 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
     }));
 
   const meanScore = game.userListAggregate.edge.score.average;
+
+  const [addFavoriteGame] = useMutation(AddFavoriteGame);
+  const favoriteGame = async () => {
+    try {
+      await addFavoriteGame({
+        variables: {
+          where: {
+            username,
+          },
+          connect: {
+            favoriteGames: [
+              {
+                where: {
+                  node: {
+                    id: game.id,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      });
+      setFavorited(true);
+      message.success('Added Game to Favorites!');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [removeFavoriteGame] = useMutation(RemoveFavoriteGame);
+  const unfavoriteGame = async () => {
+    try {
+      await removeFavoriteGame({
+        variables: {
+          where: {
+            username,
+          },
+          disconnect: {
+            favoriteGames: [
+              {
+                where: {
+                  node: {
+                    id: game.id,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      });
+      setFavorited(false);
+      message.success('Removed Game from Favorites!');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -130,7 +194,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
                   <p>Mean Score</p>
                 </Row>
               </div>
-              <Space direction="vertical" size="large">
+              <Space direction="vertical" size="middle">
                 <Button
                   type="primary"
                   className={styles.button}
@@ -140,6 +204,25 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
                     ? 'Edit List Entry'
                     : 'Add to List'}
                 </Button>
+                {favorited ? (
+                  <Button
+                    type="primary"
+                    className={styles.favorite}
+                    icon={<HeartFilled />}
+                    onClick={() => unfavoriteGame()}
+                  >
+                    Unfavorite
+                  </Button>
+                ) : (
+                  <Button
+                    type="primary"
+                    className={styles.favorite}
+                    icon={<HeartOutlined />}
+                    onClick={() => favoriteGame()}
+                  >
+                    Favorite
+                  </Button>
+                )}
                 {reviewed ? (
                   <Link href={`/user/${username}/reviews/${game.slug}`}>
                     <a>

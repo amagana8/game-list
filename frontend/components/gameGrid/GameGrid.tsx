@@ -46,7 +46,7 @@ const GameGrid = ({ games, type }: GameGridProps) => {
   };
 
   const LoadMore = () => {
-    if (type === GameGridType.Search) {
+    if (type === GameGridType.Search || type === GameGridType.Favorites) {
       return null;
     } else if (reachedEnd) {
       return (
@@ -67,6 +67,9 @@ const GameGrid = ({ games, type }: GameGridProps) => {
 
   return (
     <List
+      className={
+        type === GameGridType.Favorites ? styles.favoritesGrid : styles.gameGrid
+      }
       grid={
         type === GameGridType.Home
           ? { column: 2 }

@@ -81,6 +81,7 @@ export const GetGameStatus = gql`
     $where: UserWhere
     $gameListConnectionWhere: UserGameListConnectionWhere
     $gameReviewsWhere: ReviewWhere
+    $favoriteGamesWhere: GameWhere
   ) {
     users(where: $where) {
       gameListConnection(where: $gameListConnectionWhere) {
@@ -91,6 +92,9 @@ export const GetGameStatus = gql`
         }
       }
       gameReviews(where: $gameReviewsWhere) {
+        id
+      }
+      favoriteGames(where: $favoriteGamesWhere) {
         id
       }
     }
@@ -216,4 +220,15 @@ export const GetGenres = gql`
       name
     }
   }
+`;
+
+export const GetFavoriteGames = gql`
+  query FavoriteGames($where: UserWhere) {
+    users(where: $where) {
+      favoriteGames {
+        ...SmallGameFragment
+      }
+    }
+  }
+  ${SmallGameFragment}
 `;

@@ -1,6 +1,20 @@
+$favorite-color: #ff5e5b;
+
 .button {
   top: -1.5rem;
   width: 8.3rem;
+}
+
+.favorite {
+  @extend .button;
+  color: white;
+  background: $favorite-color;
+  border: black;
+
+  &:focus,
+  &:hover {
+    background: $favorite-color;
+  }
 }
 
 .list {
