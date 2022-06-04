@@ -2,9 +2,14 @@ import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { useMemo } from 'react';
 
-const HOST_URL = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? 'https://game-list-preview.vercel.app'
-  : 'http://localhost:3000';
+let HOST_URL;
+if (process.env.NETLIFY) {
+  HOST_URL = 'https://game-list-preview.netlify.app';
+} else if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+  HOST_URL = 'https://game-list-preview.vercel.app';
+} else {
+  HOST_URL = 'http://localhost:3000';
+}
 
 const httpLink = createHttpLink({
   uri: `${HOST_URL}/api/graphql`,
