@@ -1,17 +1,23 @@
-import { useQuery } from '@apollo/client';
 import { GameGrid } from '@components/gameGrid/GameGrid';
-import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 import { NavBar } from '@components/navBar/NavBar';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
+import { client } from '@frontend/apollo-client';
 import { GetFavoriteGames } from '@graphql/queries';
 import { GameGridType } from '@utils/enums';
+import { Game } from '@utils/types';
 import { Content } from 'antd/lib/layout/layout';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 
-const FavoritesPage = () => {
-  const { username } = useRouter().query;
-  const { loading, data } = useQuery(GetFavoriteGames, {
+interface FavoritesPageProps {
+  username: string;
+  favoriteGames: Game[];
+}
+
+const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { username } = query;
+  const { data } = await client.query({
+    query: GetFavoriteGames,
     variables: {
       where: {
         username,
@@ -19,6 +25,18 @@ const FavoritesPage = () => {
     },
   });
 
+  return {
+    props: {
+      username,
+      favoriteGames: data.users[0].favoriteGames,
+    },
+  };
+};
+
+const FavoritesPage: NextPage<FavoritesPageProps> = ({
+  username,
+  favoriteGames,
+}: FavoritesPageProps) => {
   return (
     <>
       <Head>
@@ -27,17 +45,10 @@ const FavoritesPage = () => {
       <NavBar />
       <Content>
         <UserPageNavBar username={username} index="3" />
-        {loading ? (
-          <LoadingSpinner />
-        ) : (
-          <GameGrid
-            games={data.users[0].favoriteGames}
-            type={GameGridType.Favorites}
-          />
-        )}
+        <GameGrid games={favoriteGames} type={GameGridType.Favorites} />
       </Content>
     </>
   );
 };
 
-export { FavoritesPage };
+export { getServerSideProps, FavoritesPage };

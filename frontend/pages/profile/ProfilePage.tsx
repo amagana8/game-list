@@ -1,17 +1,14 @@
 import { NavBar } from '@components/navBar/NavBar';
 import { Content } from 'antd/lib/layout/layout';
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import { Col, Row, Statistic, Typography } from 'antd';
-import { useRouter } from 'next/router';
-import { useQuery } from '@apollo/client';
 import { GetUserStats } from '@graphql/queries';
-import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 import styles from './ProfilePage.module.scss';
 import dynamic from 'next/dynamic';
-import { scoreMap } from '@utils/enums';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
 import Head from 'next/head';
 import { parseDate, roundNumber } from '@utils/index';
+import { client } from '@frontend/apollo-client';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -28,10 +25,10 @@ const TreeMap = dynamic(() => import('@components/charts/treeMap/TreeMap'), {
 
 const { Title } = Typography;
 
-const ProfilePage: NextPage = () => {
-  const { username } = useRouter().query;
-
-  const { loading, data } = useQuery(GetUserStats, {
+const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { username } = query;
+  const { data } = await client.query({
+    query: GetUserStats,
     variables: {
       where: {
         username,
@@ -39,19 +36,15 @@ const ProfilePage: NextPage = () => {
     },
   });
 
-  if (loading)
-    return (
-      <>
-        <NavBar index="" />
-        <Content>
-          <UserPageNavBar username={username} index="1" />
-          <LoadingSpinner />
-        </Content>
-      </>
-    );
+  return {
+    props: {
+      username,
+      userData: data.users[0],
+    },
+  };
+};
 
-  const userData = data.users[0];
-
+const ProfilePage: NextPage = ({ username, userData }: any) => {
   const statusData = Object.keys(userData)
     .filter((field) => field.startsWith('games'))
     .map((field) => ({
@@ -124,11 +117,11 @@ const ProfilePage: NextPage = () => {
           </Col>
           <Col>
             <Title level={2}>Score Distribution</Title>
-            <BarChart data={data.users[0].scoreDistribution} />
+            <BarChart data={userData.scoreDistribution} />
           </Col>
           <Col>
             <Title level={2}>Genre Distribution</Title>
-            <TreeMap data={data.users[0].genreDistribution} />
+            <TreeMap data={userData.genreDistribution} />
           </Col>
         </Row>
       </Content>
@@ -136,4 +129,4 @@ const ProfilePage: NextPage = () => {
   );
 };
 
-export { ProfilePage };
+export { getServerSideProps, ProfilePage };

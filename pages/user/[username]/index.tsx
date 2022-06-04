@@ -1,3 +1,4 @@
-import { ProfilePage } from '@pages/profile/ProfilePage';
+import { getServerSideProps, ProfilePage } from '@pages/profile/ProfilePage';
 
+export { getServerSideProps };
 export default ProfilePage;

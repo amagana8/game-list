@@ -1,17 +1,23 @@
-import { useQuery } from '@apollo/client';
-import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 import { NavBar } from '@components/navBar/NavBar';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
+import { client } from '@frontend/apollo-client';
 import { GetUserReviews } from '@graphql/queries';
 import { ReviewGridType } from '@utils/enums';
+import { Review } from '@utils/types';
 import { Content } from 'antd/lib/layout/layout';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 
-const UserReviewsPage = () => {
-  const { username } = useRouter().query;
-  const { loading, data } = useQuery(GetUserReviews, {
+interface UserReviewsPageProps {
+  username: string;
+  reviews: Review[];
+}
+
+const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { username } = query;
+  const { data } = await client.query({
+    query: GetUserReviews,
     variables: {
       where: {
         username,
@@ -19,6 +25,18 @@ const UserReviewsPage = () => {
     },
   });
 
+  return {
+    props: {
+      username,
+      reviews: data.users[0].gameReviews,
+    },
+  };
+};
+
+const UserReviewsPage: NextPage<UserReviewsPageProps> = ({
+  username,
+  reviews,
+}: UserReviewsPageProps) => {
   return (
     <>
       <Head>
@@ -27,17 +45,10 @@ const UserReviewsPage = () => {
       <NavBar />
       <Content>
         <UserPageNavBar username={username} index="4" />
-        {loading ? (
-          <LoadingSpinner />
-        ) : (
-          <ReviewGrid
-            reviews={data.users[0].gameReviews}
-            type={ReviewGridType.User}
-          />
-        )}
+        <ReviewGrid reviews={reviews} type={ReviewGridType.User} />
       </Content>
     </>
   );
 };
 
-export { UserReviewsPage };
+export { getServerSideProps, UserReviewsPage };

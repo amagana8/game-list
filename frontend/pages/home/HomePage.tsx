@@ -1,25 +1,29 @@
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { Col, Layout, List, Row, Typography } from 'antd';
 import { NavBar } from '@components/navBar/NavBar';
 import styles from './HomePage.module.scss';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
-import { User } from '@utils/types';
+import { Game, Review, User } from '@utils/types';
 import { GameGridType, ReviewGridType } from '@utils/enums';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import Link from 'next/link';
-import { useQuery } from '@apollo/client';
 import { GetHomeInfo } from '@graphql/queries';
-import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
-import { useRef } from 'react';
+import { client } from '@frontend/apollo-client';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
-const HomePage: NextPage = () => {
-  const date = useRef(new Date().toISOString());
+interface HomePageProps {
+  users: User[];
+  games: Game[];
+  reviews: Review[];
+}
 
-  const { loading, data } = useQuery(GetHomeInfo, {
+const getServerSideProps: GetServerSideProps = async () => {
+  const date = new Date();
+  const { data } = await client.query({
+    query: GetHomeInfo,
     variables: {
       userOptions: {
         limit: 20,
@@ -30,7 +34,7 @@ const HomePage: NextPage = () => {
         ],
       },
       gameWhere: {
-        releaseDate_LTE: date.current,
+        releaseDate_LTE: date.toISOString(),
         cover_NOT: '',
       },
       gamesOptions: {
@@ -52,8 +56,20 @@ const HomePage: NextPage = () => {
     },
   });
 
-  if (loading) return <LoadingSpinner />;
+  return {
+    props: {
+      users: data.users,
+      games: data.games,
+      reviews: data.reviews,
+    },
+  };
+};
 
+const HomePage: NextPage<HomePageProps> = ({
+  users,
+  games,
+  reviews,
+}: HomePageProps) => {
   return (
     <>
       <Head>
@@ -67,7 +83,7 @@ const HomePage: NextPage = () => {
 
             <List
               className={styles.users}
-              dataSource={data.users}
+              dataSource={users}
               renderItem={(user: User) => (
                 <List.Item>
                   <List.Item.Meta
@@ -84,13 +100,11 @@ const HomePage: NextPage = () => {
           </Col>
           <Col span={8}>
             <Title>New Releases</Title>
-
-            <GameGrid games={data.games} type={GameGridType.Home} />
+            <GameGrid games={games} type={GameGridType.Home} />
           </Col>
           <Col span={8}>
             <Title>Recent Reviews</Title>
-
-            <ReviewGrid reviews={data.reviews} type={ReviewGridType.Home} />
+            <ReviewGrid reviews={reviews} type={ReviewGridType.Home} />
           </Col>
         </Row>
       </Content>
@@ -98,4 +112,4 @@ const HomePage: NextPage = () => {
   );
 };
 
-export { HomePage };
+export { getServerSideProps, HomePage };
