@@ -1,5 +1,3 @@
-import { NavBar } from '@components/navBar/NavBar';
-import { Content } from 'antd/lib/layout/layout';
 import { Button, Input, Typography, Space, Popconfirm, message } from 'antd';
 import Head from 'next/head';
 import { parseDate } from '@utils/index';
@@ -101,82 +99,76 @@ const ReviewPage = ({ review }: ReviewPageProps) => {
       <Head>
         <title>{`${review.author.username}'s Review of ${review.subject.title} · GameList`}</title>
       </Head>
-      <NavBar />
-      <Content>
-        <Title className={styles.titleLink}>
-          <Link href={`/game/${review.subject.slug}`}>
-            <a>{review.subject.title}</a>
-          </Link>
+      <Title className={styles.titleLink}>
+        <Link href={`/game/${review.subject.slug}`}>
+          <a>{review.subject.title}</a>
+        </Link>
+      </Title>
+      {showEditButton && !editing && (
+        <Button
+          type="primary"
+          className={styles.editButton}
+          onClick={() => setEditing(true)}
+        >
+          Edit Review
+        </Button>
+      )}
+      {showEditButton && editing && (
+        <Button className={styles.editButton} onClick={() => setEditing(false)}>
+          Cancel Edit
+        </Button>
+      )}
+      {editing ? (
+        <Input.TextArea
+          value={summary}
+          onChange={(e) => setSummary(e.target.value)}
+          autoSize={true}
+        />
+      ) : (
+        <Title type="secondary" level={2}>
+          {review.summary}
         </Title>
-        {showEditButton && !editing && (
-          <Button
-            type="primary"
-            className={styles.editButton}
-            onClick={() => setEditing(true)}
-          >
-            Edit Review
+      )}
+      <Title level={5} className={styles.titleLink}>
+        By{' '}
+        <Link href={`/user/${review.author.username}`}>
+          <a>{review.author.username}</a>
+        </Link>
+      </Title>
+      <Title type="secondary" level={5}>
+        Posted: {parseDate(review.createdAt)}
+      </Title>
+      {review.updatedAt && (
+        <Title type="secondary" level={5} className={styles.editedDate}>
+          Last edited: {parseDate(review.updatedAt)}
+        </Title>
+      )}
+      {editing ? (
+        <Input.TextArea
+          value={reviewBody}
+          onChange={(e) => setReviewBody(e.target.value)}
+          autoSize={true}
+        />
+      ) : (
+        <Paragraph>{review.body}</Paragraph>
+      )}
+      {editing && (
+        <Space className={styles.mutationButtons} size="large">
+          <Button type="primary" onClick={() => submitReview()}>
+            Update Review
           </Button>
-        )}
-        {showEditButton && editing && (
-          <Button
-            className={styles.editButton}
-            onClick={() => setEditing(false)}
+          <Popconfirm
+            title="Are you sure you want to delete this review?"
+            okText="Delete"
+            okType="danger"
+            onConfirm={onConfirm}
           >
-            Cancel Edit
-          </Button>
-        )}
-        {editing ? (
-          <Input.TextArea
-            value={summary}
-            onChange={(e) => setSummary(e.target.value)}
-            autoSize={true}
-          />
-        ) : (
-          <Title type="secondary" level={2}>
-            {review.summary}
-          </Title>
-        )}
-        <Title level={5} className={styles.titleLink}>
-          By{' '}
-          <Link href={`/user/${review.author.username}`}>
-            <a>{review.author.username}</a>
-          </Link>
-        </Title>
-        <Title type="secondary" level={5}>
-          Posted: {parseDate(review.createdAt)}
-        </Title>
-        {review.updatedAt && (
-          <Title type="secondary" level={5} className={styles.editedDate}>
-            Last edited: {parseDate(review.updatedAt)}
-          </Title>
-        )}
-        {editing ? (
-          <Input.TextArea
-            value={reviewBody}
-            onChange={(e) => setReviewBody(e.target.value)}
-            autoSize={true}
-          />
-        ) : (
-          <Paragraph>{review.body}</Paragraph>
-        )}
-        {editing && (
-          <Space className={styles.mutationButtons} size="large">
-            <Button type="primary" onClick={() => submitReview()}>
-              Update Review
+            <Button danger={true} type="primary">
+              Delete Review
             </Button>
-            <Popconfirm
-              title="Are you sure you want to delete this review?"
-              okText="Delete"
-              okType="danger"
-              onConfirm={onConfirm}
-            >
-              <Button danger={true} type="primary">
-                Delete Review
-              </Button>
-            </Popconfirm>
-          </Space>
-        )}
-      </Content>
+          </Popconfirm>
+        </Space>
+      )}
     </>
   );
 };

@@ -1,5 +1,4 @@
-import { NavBar } from '@components/navBar/NavBar';
-import { Layout, Typography } from 'antd';
+import { Typography } from 'antd';
 import Head from 'next/head';
 import { Game } from '@utils/types';
 import { useEffect } from 'react';
@@ -11,7 +10,6 @@ import { initializeApollo } from '@frontend/apollo-client';
 import { SearchGames } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
 
-const { Content } = Layout;
 const { Title } = Typography;
 
 interface GameSearchPageProps {
@@ -54,11 +52,8 @@ const GameSearchPage = ({ games }: GameSearchPageProps) => {
       <Head>
         <title>Search Games · GameList</title>
       </Head>
-      <NavBar index="" />
-      <Content>
-        <Title>Games</Title>
-        <GameGrid games={games} type={GameGridType.Search} />
-      </Content>
+      <Title>Games</Title>
+      <GameGrid games={games} type={GameGridType.Search} />
     </>
   );
 };

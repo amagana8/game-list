@@ -1,7 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { NavBar } from '@components/navBar/NavBar';
 import { Button, DatePicker, Form, Input, Select } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
 import styles from './AddGamePage.module.scss';
 import Title from 'antd/lib/typography/Title';
 import { useMutation } from '@apollo/client';
@@ -87,53 +85,50 @@ const AddGamePage: NextPage<AddGamePageProps> = ({
       <Head>
         <title>Submit New Game · GameList</title>
       </Head>
-      <NavBar index="4" />
-      <Content>
-        <Title className={styles.title}>Add a New Game</Title>
-        <Form
-          {...layout}
-          onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
-          onFinish={onFinish}
-        >
-          <Form.Item label="Title" name="title">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Slug" name="slug">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Cover Image URL" name="cover">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Release Date" name="releaseDate">
-            <DatePicker format="MMMM D, YYYY" style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item label="Developers" name="developers">
-            <ListInput />
-          </Form.Item>
-          <Form.Item label="Publishers" name="publishers">
-            <ListInput />
-          </Form.Item>
-          <Form.Item label="Genres" name="genres">
-            <Select
-              mode="multiple"
-              filterOption={true}
-              optionFilterProp="label"
-              options={genres.map((genre) => ({
-                value: genre.id,
-                label: genre.name,
-              }))}
-            />
-          </Form.Item>
-          <Form.Item label="Summary" name="summary">
-            <Input.TextArea rows={8} />
-          </Form.Item>
-          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      </Content>
+      <Title className={styles.title}>Add a New Game</Title>
+      <Form
+        {...layout}
+        onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+        onFinish={onFinish}
+      >
+        <Form.Item label="Title" name="title">
+          <Input />
+        </Form.Item>
+        <Form.Item label="Slug" name="slug">
+          <Input />
+        </Form.Item>
+        <Form.Item label="Cover Image URL" name="cover">
+          <Input />
+        </Form.Item>
+        <Form.Item label="Release Date" name="releaseDate">
+          <DatePicker format="MMMM D, YYYY" style={{ width: '100%' }} />
+        </Form.Item>
+        <Form.Item label="Developers" name="developers">
+          <ListInput />
+        </Form.Item>
+        <Form.Item label="Publishers" name="publishers">
+          <ListInput />
+        </Form.Item>
+        <Form.Item label="Genres" name="genres">
+          <Select
+            mode="multiple"
+            filterOption={true}
+            optionFilterProp="label"
+            options={genres.map((genre) => ({
+              value: genre.id,
+              label: genre.name,
+            }))}
+          />
+        </Form.Item>
+        <Form.Item label="Summary" name="summary">
+          <Input.TextArea rows={8} />
+        </Form.Item>
+        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
     </>
   );
 };

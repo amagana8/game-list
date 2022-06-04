@@ -1,6 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { Anchor, Layout } from 'antd';
-import { NavBar } from '@components/navBar/NavBar';
+import { Anchor } from 'antd';
 import { GameTable } from '@components/gameTable/GameTable';
 import styles from './GameListPage.module.scss';
 import { Status } from '@utils/enums';
@@ -10,7 +9,6 @@ import { GetList } from '@graphql/queries';
 import { useRef } from 'react';
 import { initializeApollo } from '@frontend/apollo-client';
 
-const { Content } = Layout;
 const { Link } = Anchor;
 
 interface GameListPageProps {
@@ -49,7 +47,6 @@ const GameListPage: NextPage<GameListPageProps> = ({
       <Head>
         <title>{`${username}'s List · GameList`}</title>
       </Head>
-      <NavBar index="3" />
       <Anchor
         className={styles.anchor}
         getContainer={gameListRef.current}
@@ -62,19 +59,14 @@ const GameListPage: NextPage<GameListPageProps> = ({
         <Link href="#planning" title="Planning" />
       </Anchor>
 
-      <Content>
-        <UserPageNavBar username={username} index="2" />
-        <div ref={gameListRef}>
-          <GameTable status={Status.Playing} data={gameList.Playing.edges} />
-          <GameTable
-            status={Status.Completed}
-            data={gameList.Completed.edges}
-          />
-          <GameTable status={Status.Paused} data={gameList.Paused.edges} />
-          <GameTable status={Status.Dropped} data={gameList.Dropped.edges} />
-          <GameTable status={Status.Planning} data={gameList.Planning.edges} />
-        </div>
-      </Content>
+      <UserPageNavBar username={username} index="2" />
+      <div ref={gameListRef}>
+        <GameTable status={Status.Playing} data={gameList.Playing.edges} />
+        <GameTable status={Status.Completed} data={gameList.Completed.edges} />
+        <GameTable status={Status.Paused} data={gameList.Paused.edges} />
+        <GameTable status={Status.Dropped} data={gameList.Dropped.edges} />
+        <GameTable status={Status.Planning} data={gameList.Planning.edges} />
+      </div>
     </>
   );
 };

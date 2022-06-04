@@ -1,6 +1,5 @@
 import type { NextPage } from 'next';
-import { Layout, Typography } from 'antd';
-import { NavBar } from '@components/navBar/NavBar';
+import { Typography } from 'antd';
 import Head from 'next/head';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import { Game } from '@utils/types';
@@ -9,7 +8,6 @@ import { GetServerSideProps } from 'next';
 import { GetGames } from '@graphql/queries';
 import { initializeApollo } from '@frontend/apollo-client';
 
-const { Content } = Layout;
 const { Title } = Typography;
 
 interface BrowsePageProps {
@@ -47,11 +45,8 @@ const BrowsePage: NextPage<BrowsePageProps> = ({ games }: BrowsePageProps) => {
       <Head>
         <title>Browse Games · GameList</title>
       </Head>
-      <NavBar index="2" />
-      <Content>
-        <Title>Browse</Title>
-        <GameGrid games={games} type={GameGridType.Browse} />
-      </Content>
+      <Title>Browse</Title>
+      <GameGrid games={games} type={GameGridType.Browse} />
     </>
   );
 };

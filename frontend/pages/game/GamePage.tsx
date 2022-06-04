@@ -2,7 +2,6 @@ import type { NextPage } from 'next';
 import { GetGameStatus } from '@graphql/queries';
 import {
   Typography,
-  Layout,
   Button,
   Row,
   Col,
@@ -11,18 +10,17 @@ import {
   Image,
   message,
 } from 'antd';
-import { NavBar } from '@components/navBar/NavBar';
 import { AddGameModal } from '@components/addGameModal/AddGameModal';
 import React, { useState } from 'react';
 import styles from './GamePage.module.scss';
 import { useMutation, useQuery } from '@apollo/client';
 import { useAppSelector } from '@utils/hooks';
 import dynamic from 'next/dynamic';
-import { colorMap, scoreMap } from '@utils/enums';
+import { colorMap } from '@utils/enums';
 import Head from 'next/head';
 import { parseDate, roundNumber } from '@utils/index';
 import Link from 'next/link';
-import { Game, GameConnection } from '@utils/types';
+import { Game } from '@utils/types';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { ReviewGridType } from '@utils/enums';
 import type { GetServerSideProps } from 'next';
@@ -41,7 +39,6 @@ const BarChart = dynamic(() => import('@components/charts/barChart/BarChart'), {
   ssr: false,
 });
 
-const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
 interface GameProps {
@@ -174,136 +171,131 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
       <Head>
         <title>{game.title} · GameList</title>
       </Head>
-      <NavBar />
-      <Content>
-        <Row justify="space-between">
-          <Col>
-            <Title className={styles.gameTitle}>{game.title}</Title>
-          </Col>
-          <Col>
-            <Space>
-              <div className={styles.meter}>
-                <Row>
-                  <Progress
-                    type="circle"
-                    strokeColor={colorMap.get(Math.round(meanScore))}
-                    percent={roundNumber(meanScore) * 10}
-                    format={(percent) => (percent ? percent / 10 : 'No Data')}
-                  />
-                </Row>
-                <Row>
-                  <p>Mean Score</p>
-                </Row>
-              </div>
-              <Space direction="vertical" size="middle">
+      <Row justify="space-between">
+        <Col>
+          <Title className={styles.gameTitle}>{game.title}</Title>
+        </Col>
+        <Col>
+          <Space>
+            <div className={styles.meter}>
+              <Row>
+                <Progress
+                  type="circle"
+                  strokeColor={colorMap.get(Math.round(meanScore))}
+                  percent={roundNumber(meanScore) * 10}
+                  format={(percent) => (percent ? percent / 10 : 'No Data')}
+                />
+              </Row>
+              <Row>
+                <p>Mean Score</p>
+              </Row>
+            </div>
+            <Space direction="vertical" size="middle">
+              <Button
+                type="primary"
+                className={styles.button}
+                onClick={() => setShowModal(true)}
+              >
+                {!loading && gameConnection ? 'Edit List Entry' : 'Add to List'}
+              </Button>
+              {favorited ? (
                 <Button
                   type="primary"
-                  className={styles.button}
-                  onClick={() => setShowModal(true)}
+                  className={styles.favorite}
+                  icon={<HeartFilled />}
+                  onClick={() => unfavoriteGame()}
                 >
-                  {!loading && gameConnection
-                    ? 'Edit List Entry'
-                    : 'Add to List'}
+                  Unfavorite
                 </Button>
-                {favorited ? (
-                  <Button
-                    type="primary"
-                    className={styles.favorite}
-                    icon={<HeartFilled />}
-                    onClick={() => unfavoriteGame()}
-                  >
-                    Unfavorite
-                  </Button>
-                ) : (
-                  <Button
-                    type="primary"
-                    className={styles.favorite}
-                    icon={<HeartOutlined />}
-                    onClick={() => favoriteGame()}
-                  >
-                    Favorite
-                  </Button>
-                )}
-                {reviewed ? (
-                  <Link href={`/user/${username}/reviews/${game.slug}`}>
-                    <a>
-                      <Button className={styles.button}>See Your Review</Button>
-                    </a>
-                  </Link>
-                ) : (
-                  <Link href={`/game/${game.slug}/review`}>
-                    <a>
-                      <Button className={styles.button}>Submit Review</Button>
-                    </a>
-                  </Link>
-                )}
-              </Space>
-              <AddGameModal
-                showModal={showModal}
-                setShowModal={setShowModal}
-                setGameConnection={setGameConnection}
-                game={game}
-                initialValues={gameConnection}
-              />
+              ) : (
+                <Button
+                  type="primary"
+                  className={styles.favorite}
+                  icon={<HeartOutlined />}
+                  onClick={() => favoriteGame()}
+                >
+                  Favorite
+                </Button>
+              )}
+              {reviewed ? (
+                <Link href={`/user/${username}/reviews/${game.slug}`}>
+                  <a>
+                    <Button className={styles.button}>See Your Review</Button>
+                  </a>
+                </Link>
+              ) : (
+                <Link href={`/game/${game.slug}/review`}>
+                  <a>
+                    <Button className={styles.button}>Submit Review</Button>
+                  </a>
+                </Link>
+              )}
             </Space>
+            <AddGameModal
+              showModal={showModal}
+              setShowModal={setShowModal}
+              setGameConnection={setGameConnection}
+              game={game}
+              initialValues={gameConnection}
+            />
+          </Space>
+        </Col>
+      </Row>
+      <Space>
+        <Image
+          src={game.cover}
+          preview={false}
+          width={264}
+          alt={`${game.title} Cover`}
+          fallback="https://i.imgur.com/fac0ifd.png"
+          className={styles.cover}
+        />
+        <Paragraph className={styles.summary}>{game.summary}</Paragraph>
+      </Space>
+      <ul className={styles.list}>
+        <li>
+          <Text strong>Developers: </Text>
+          <Text>
+            {game.developers.map((developer) => developer.name).join(', ')}
+          </Text>
+        </li>
+        <li>
+          <Text strong>Publishers: </Text>
+          <Text>
+            {game.publishers.map((publisher) => publisher.name).join(', ')}
+          </Text>
+        </li>
+        <li>
+          <Text strong>Genre: </Text>
+          <Text className={styles.genre}>
+            {game.genres.map((genre) => genre.name).join(', ')}
+          </Text>
+        </li>
+        <li>
+          <Text strong>Release Date: </Text>
+          <Text>{parseDate(game.releaseDate)}</Text>
+        </li>
+      </ul>
+      <Space direction="vertical" size="large">
+        <Row>
+          <Col span={8}>
+            <Title>Status Distribution</Title>
+            <DoughnutChart data={statusData} />
+          </Col>
+          <Col span={8} offset={4}>
+            <Title>Score Distribution</Title>
+            <BarChart data={game.scoreDistribution} />
           </Col>
         </Row>
-        <Space>
-          <Image
-            src={game.cover}
-            preview={false}
-            width={264}
-            alt={`${game.title} Cover`}
-            fallback="https://i.imgur.com/fac0ifd.png"
-            className={styles.cover}
+        <div>
+          <Title>Reviews</Title>
+          <ReviewGrid
+            reviews={game.userReviews}
+            type={ReviewGridType.Game}
+            gameId={game.id}
           />
-          <Paragraph className={styles.summary}>{game.summary}</Paragraph>
-        </Space>
-        <ul className={styles.list}>
-          <li>
-            <Text strong>Developers: </Text>
-            <Text>
-              {game.developers.map((developer) => developer.name).join(', ')}
-            </Text>
-          </li>
-          <li>
-            <Text strong>Publishers: </Text>
-            <Text>
-              {game.publishers.map((publisher) => publisher.name).join(', ')}
-            </Text>
-          </li>
-          <li>
-            <Text strong>Genre: </Text>
-            <Text className={styles.genre}>
-              {game.genres.map((genre) => genre.name).join(', ')}
-            </Text>
-          </li>
-          <li>
-            <Text strong>Release Date: </Text>
-            <Text>{parseDate(game.releaseDate)}</Text>
-          </li>
-        </ul>
-        <Space direction="vertical" size="large">
-          <Row>
-            <Col span={8}>
-              <Title>Status Distribution</Title>
-              <DoughnutChart data={statusData} />
-            </Col>
-            <Col span={8} offset={4}>
-              <Title>Score Distribution</Title>
-              <BarChart data={game.scoreDistribution} />
-            </Col>
-          </Row>
-          <div>
-            <Title>Reviews</Title>
-            <ReviewGrid
-              reviews={game.userReviews}
-              type={ReviewGridType.Game}
-              gameId={game.id}
-            />
-          </div>
-        </Space>
-      </Content>
+        </div>
+      </Space>
     </>
   );
 };

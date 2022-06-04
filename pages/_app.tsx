@@ -10,6 +10,9 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { NavBar } from '@components/navBar/NavBar';
+
+const { Header, Content } = Layout;
 
 NProgress.configure({
   minimum: 0.3,
@@ -48,7 +51,12 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <Layout>
-              <Component {...pageProps} />
+              <Header>
+                <NavBar />
+              </Header>
+              <Content>
+                <Component {...pageProps} />
+              </Content>
             </Layout>
           </PersistGate>
         </Provider>

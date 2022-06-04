@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button, Layout, Menu, Popover, Space, Input, Select } from 'antd';
+import { Button, Menu, Popover, Space, Input, Select } from 'antd';
 import styles from './NavBar.module.scss';
 import { useAppDispatch, useAppSelector } from '@utils/hooks';
 import { logout } from '@slices/userSlice';
@@ -14,19 +14,10 @@ import { setSearchType, setSearchLoading } from '@slices/searchSlice';
 import { SearchType } from '@utils/enums';
 import Image from 'next/image';
 
-const { Header } = Layout;
 const { Search } = Input;
 const { Option } = Select;
 
-type navBarProps = {
-  index: string;
-};
-
-const defaultProps: navBarProps = {
-  index: '',
-};
-
-const NavBar = ({ index }: navBarProps) => {
+const NavBar = () => {
   const username = useAppSelector((state) => state.user.username);
   const searchType = useAppSelector((state) => state.search.type);
   const searchLoading = useAppSelector((state) => state.search.loading);
@@ -87,76 +78,67 @@ const NavBar = ({ index }: navBarProps) => {
   );
 
   return (
-    <Header>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[index]}>
-        <div className={styles.logo}>
-          <Link href="/">
-            <a>
-              <Image
-                src="/logo.png"
-                width={36}
-                height={36}
-                alt="GameList Logo"
-              />
-            </a>
-          </Link>
-        </div>
-        <Menu.Item key="1">
-          <Link href="/">
-            <a>Home</a>
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="2">
-          <Link href="/browse">
-            <a>Browse</a>
-          </Link>
-        </Menu.Item>
-        {username && (
+    <Menu theme="dark" mode="horizontal">
+      <div className={styles.logo}>
+        <Link href="/">
+          <a>
+            <Image src="/logo.png" width={36} height={36} alt="GameList Logo" />
+          </a>
+        </Link>
+      </div>
+      <Menu.Item key="1">
+        <Link href="/">
+          <a>Home</a>
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Link href="/browse">
+          <a>Browse</a>
+        </Link>
+      </Menu.Item>
+      {username && (
+        <>
+          <Menu.Item key="3">
+            <Link href={`/user/${username}/gamelist`}>
+              <a>My List</a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="4">
+            <Link href="/addGame">
+              <a>New Game</a>
+            </Link>
+          </Menu.Item>
+        </>
+      )}
+      <Space size="large" className={styles.right}>
+        <Search
+          onSearch={onSearch}
+          className={styles.search}
+          addonBefore={searchTypeSelect}
+          loading={searchLoading}
+          enterButton
+        />
+        {username ? (
+          <Popover content={content} trigger="click">
+            <UserOutlined className={styles.profileIcon} />
+          </Popover>
+        ) : (
           <>
-            <Menu.Item key="3">
-              <Link href={`/user/${username}/gamelist`}>
-                <a>My List</a>
+            <Button>
+              <Link href="/login">
+                <a>Login</a>
               </Link>
-            </Menu.Item>
-            <Menu.Item key="4">
-              <Link href="/addGame">
-                <a>New Game</a>
+            </Button>
+            <Button type="primary">
+              <Link href="/signup">
+                <a>Sign Up</a>
               </Link>
-            </Menu.Item>
+            </Button>
           </>
         )}
-        <Space size="large" className={styles.right}>
-          <Search
-            onSearch={onSearch}
-            className={styles.search}
-            addonBefore={searchTypeSelect}
-            loading={searchLoading}
-            enterButton
-          />
-          {username ? (
-            <Popover content={content} trigger="click">
-              <UserOutlined className={styles.profileIcon} />
-            </Popover>
-          ) : (
-            <>
-              <Button>
-                <Link href="/login">
-                  <a>Login</a>
-                </Link>
-              </Button>
-              <Button type="primary">
-                <Link href="/signup">
-                  <a>Sign Up</a>
-                </Link>
-              </Button>
-            </>
-          )}
-        </Space>
-      </Menu>
-    </Header>
+      </Space>
+    </Menu>
   );
 };
-
-NavBar.defaultProps = defaultProps;
 
 export { NavBar };

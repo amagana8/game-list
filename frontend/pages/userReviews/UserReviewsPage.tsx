@@ -1,11 +1,9 @@
-import { NavBar } from '@components/navBar/NavBar';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
 import { initializeApollo } from '@frontend/apollo-client';
 import { GetUserReviews } from '@graphql/queries';
 import { ReviewGridType } from '@utils/enums';
 import { Review } from '@utils/types';
-import { Content } from 'antd/lib/layout/layout';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 
@@ -43,11 +41,8 @@ const UserReviewsPage: NextPage<UserReviewsPageProps> = ({
       <Head>
         <title>{`${username}'s Reviews · GameList`}</title>
       </Head>
-      <NavBar />
-      <Content>
-        <UserPageNavBar username={username} index="4" />
-        <ReviewGrid reviews={reviews} type={ReviewGridType.User} />
-      </Content>
+      <UserPageNavBar username={username} index="4" />
+      <ReviewGrid reviews={reviews} type={ReviewGridType.User} />
     </>
   );
 };

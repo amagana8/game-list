@@ -1,9 +1,7 @@
 import { useMutation } from '@apollo/client';
-import { NavBar } from '@components/navBar/NavBar';
 import { NewReview } from '@graphql/mutations';
 import { useAppSelector } from '@utils/hooks';
 import { Button, Form, Input } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
 import Title from 'antd/lib/typography/Title';
 import Head from 'next/head';
 import Router, { useRouter } from 'next/router';
@@ -64,23 +62,20 @@ const AddReviewPage = () => {
       <Head>
         <title>Submit Review · GameList</title>
       </Head>
-      <NavBar index="" />
-      <Content>
-        <Title className={styles.title}>Submit a review</Title>
-        <Form {...layout} onFinish={onFinish}>
-          <Form.Item label="Review Summary" name="summary">
-            <Input.TextArea rows={3} />
-          </Form.Item>
-          <Form.Item label="Review" name="body">
-            <Input.TextArea rows={25} />
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 4 }}>
-            <Button type="primary" htmlType="submit">
-              Submit Review
-            </Button>
-          </Form.Item>
-        </Form>
-      </Content>
+      <Title className={styles.title}>Submit a review</Title>
+      <Form {...layout} onFinish={onFinish}>
+        <Form.Item label="Review Summary" name="summary">
+          <Input.TextArea rows={3} />
+        </Form.Item>
+        <Form.Item label="Review" name="body">
+          <Input.TextArea rows={25} />
+        </Form.Item>
+        <Form.Item wrapperCol={{ offset: 4 }}>
+          <Button type="primary" htmlType="submit">
+            Submit Review
+          </Button>
+        </Form.Item>
+      </Form>
     </>
   );
 };

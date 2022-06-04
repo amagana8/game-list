@@ -1,5 +1,3 @@
-import { NavBar } from '@components/navBar/NavBar';
-import { Content } from 'antd/lib/layout/layout';
 import type { GetServerSideProps, NextPage } from 'next';
 import { Col, Row, Statistic, Typography } from 'antd';
 import { GetUserStats } from '@graphql/queries';
@@ -62,70 +60,67 @@ const ProfilePage: NextPage = ({ username, userData }: any) => {
       <Head>
         <title>{`${username}'s Profile · GameList`}</title>
       </Head>
-      <NavBar index="" />
-      <Content>
-        <UserPageNavBar username={username} index="1" />
-        <p className={styles.joinDate}>
-          Joined GameList on {parseDate(userData.createdAt)}
-        </p>
-        <div className={styles.stats}>
-          <div className={styles.summary}>
-            <Title level={2}>Summary</Title>
-            <Row gutter={16}>
-              <Col>
-                <Statistic
-                  title="Total Games"
-                  value={userData.gameListConnection.totalCount}
-                />
-              </Col>
-              <Col>
-                <Statistic
-                  title="Mean Score"
-                  value={roundNumber(
-                    userData.gameListAggregate.edge.score.average,
-                  )}
-                />
-              </Col>
-              <Col>
-                <Statistic
-                  title="Mean Hours"
-                  value={roundNumber(
-                    userData.gameListAggregate.edge.hours.average,
-                  )}
-                />
-              </Col>
-            </Row>
-          </div>
-          <div>
-            <Title level={2}>Hours Spent</Title>
-            <Row gutter={16}>
-              <Col>
-                <Statistic title="Hours Played" value={hoursPlayed} />
-              </Col>
-              <Col>
-                <Statistic title="Days Played" value={daysPlayed} />
-              </Col>
-              <Col>
-                <Statistic title="Years Played" value={yearsPlayed} />
-              </Col>
-            </Row>
-          </div>
+      <UserPageNavBar username={username} index="1" />
+      <p className={styles.joinDate}>
+        Joined GameList on {parseDate(userData.createdAt)}
+      </p>
+      <div className={styles.stats}>
+        <div className={styles.summary}>
+          <Title level={2}>Summary</Title>
+          <Row gutter={16}>
+            <Col>
+              <Statistic
+                title="Total Games"
+                value={userData.gameListConnection.totalCount}
+              />
+            </Col>
+            <Col>
+              <Statistic
+                title="Mean Score"
+                value={roundNumber(
+                  userData.gameListAggregate.edge.score.average,
+                )}
+              />
+            </Col>
+            <Col>
+              <Statistic
+                title="Mean Hours"
+                value={roundNumber(
+                  userData.gameListAggregate.edge.hours.average,
+                )}
+              />
+            </Col>
+          </Row>
         </div>
-        <Row gutter={64}>
-          <Col>
-            <Title level={2}>Status Distribution</Title>
-            <DoughnutChart data={statusData} />
-          </Col>
-          <Col>
-            <Title level={2}>Score Distribution</Title>
-            <BarChart data={userData.scoreDistribution} />
-          </Col>
-          <Col>
-            <Title level={2}>Genre Distribution</Title>
-            <TreeMap data={userData.genreDistribution} />
-          </Col>
-        </Row>
-      </Content>
+        <div>
+          <Title level={2}>Hours Spent</Title>
+          <Row gutter={16}>
+            <Col>
+              <Statistic title="Hours Played" value={hoursPlayed} />
+            </Col>
+            <Col>
+              <Statistic title="Days Played" value={daysPlayed} />
+            </Col>
+            <Col>
+              <Statistic title="Years Played" value={yearsPlayed} />
+            </Col>
+          </Row>
+        </div>
+      </div>
+      <Row gutter={64}>
+        <Col>
+          <Title level={2}>Status Distribution</Title>
+          <DoughnutChart data={statusData} />
+        </Col>
+        <Col>
+          <Title level={2}>Score Distribution</Title>
+          <BarChart data={userData.scoreDistribution} />
+        </Col>
+        <Col>
+          <Title level={2}>Genre Distribution</Title>
+          <TreeMap data={userData.genreDistribution} />
+        </Col>
+      </Row>
     </>
   );
 };
