@@ -1,4 +1,4 @@
-import { getStaticProps, AddGamePage } from '@pages/addGame/AddGamePage';
+import { getServerSideProps, AddGamePage } from '@pages/addGame/AddGamePage';
 
-export { getStaticProps };
+export { getServerSideProps };
 export default AddGamePage;

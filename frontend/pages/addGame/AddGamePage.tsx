@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import { NavBar } from '@components/navBar/NavBar';
 import { Button, DatePicker, Form, Input, Select } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
@@ -12,7 +12,6 @@ import Head from 'next/head';
 import { Genre } from '@utils/types';
 import { initializeApollo } from '@frontend/apollo-client';
 import { GetGenres } from '@graphql/queries';
-import { GetStaticProps } from 'next';
 
 interface NewGameForm {
   title: string;
@@ -29,7 +28,7 @@ interface AddGamePageProps {
   genres: Genre[];
 }
 
-const getStaticProps: GetStaticProps = async () => {
+const getServerSideProps: GetServerSideProps = async () => {
   const client = initializeApollo();
   const { data } = await client.query({ query: GetGenres });
 
@@ -139,4 +138,4 @@ const AddGamePage: NextPage<AddGamePageProps> = ({
   );
 };
 
-export { getStaticProps, AddGamePage };
+export { getServerSideProps, AddGamePage };
