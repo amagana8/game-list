@@ -26,7 +26,7 @@ import { Game, GameConnection } from '@utils/types';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { ReviewGridType } from '@utils/enums';
 import type { GetServerSideProps } from 'next';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 import { GetGame } from '@graphql/queries';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { AddFavoriteGame, RemoveFavoriteGame } from '@graphql/mutations';
@@ -49,6 +49,7 @@ interface GameProps {
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const client = initializeApollo();
   const { slug } = query;
   const { data } = await client.query({
     query: GetGame,

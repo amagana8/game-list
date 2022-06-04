@@ -1,7 +1,7 @@
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import { NavBar } from '@components/navBar/NavBar';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 import { GetFavoriteGames } from '@graphql/queries';
 import { GameGridType } from '@utils/enums';
 import { Game } from '@utils/types';
@@ -15,6 +15,7 @@ interface FavoritesPageProps {
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const client = initializeApollo();
   const { username } = query;
   const { data } = await client.query({
     query: GetFavoriteGames,

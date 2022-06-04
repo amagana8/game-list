@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
 import Head from 'next/head';
 import { parseDate, roundNumber } from '@utils/index';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -26,6 +26,7 @@ const TreeMap = dynamic(() => import('@components/charts/treeMap/TreeMap'), {
 const { Title } = Typography;
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const client = initializeApollo();
   const { username } = query;
   const { data } = await client.query({
     query: GetUserStats,

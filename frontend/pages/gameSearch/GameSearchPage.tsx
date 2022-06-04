@@ -7,7 +7,7 @@ import { useAppDispatch } from '@utils/hooks';
 import { setSearchLoading } from '@slices/searchSlice';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import { GameGridType } from '@utils/enums';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 import { SearchGames } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
 
@@ -19,6 +19,7 @@ interface GameSearchPageProps {
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const client = initializeApollo();
   const { search } = query;
   const { data } = await client.query({
     query: SearchGames,

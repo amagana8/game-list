@@ -1,7 +1,7 @@
 import { NavBar } from '@components/navBar/NavBar';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 import { GetUserReviews } from '@graphql/queries';
 import { ReviewGridType } from '@utils/enums';
 import { Review } from '@utils/types';
@@ -15,6 +15,7 @@ interface UserReviewsPageProps {
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const client = initializeApollo();
   const { username } = query;
   const { data } = await client.query({
     query: GetUserReviews,

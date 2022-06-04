@@ -4,7 +4,7 @@ import { Layout } from 'antd';
 import { ApolloProvider } from '@apollo/client';
 import { Provider } from 'react-redux';
 import { store, persistor } from '@frontend/store';
-import { client } from '@frontend/apollo-client';
+import { useApollo } from '@frontend/apollo-client';
 import { PersistGate } from 'redux-persist/integration/react';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -39,6 +39,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeError', handleStop);
     };
   }, [router]);
+
+  const client = useApollo(pageProps.initialApolloState);
 
   return (
     <>

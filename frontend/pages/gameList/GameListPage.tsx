@@ -8,7 +8,7 @@ import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
 import Head from 'next/head';
 import { GetList } from '@graphql/queries';
 import { useRef } from 'react';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 
 const { Content } = Layout;
 const { Link } = Anchor;
@@ -19,6 +19,8 @@ interface GameListPageProps {
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const client = initializeApollo();
+
   const { username } = query;
   const { data } = await client.query({
     query: GetList,

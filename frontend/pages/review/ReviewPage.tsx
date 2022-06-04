@@ -10,7 +10,7 @@ import styles from './ReviewPage.module.scss';
 import { useMutation } from '@apollo/client';
 import { DeleteReview, UpdateReview } from '@graphql/mutations';
 import Router from 'next/router';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 import { GetReview } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
@@ -22,6 +22,7 @@ interface ReviewPageProps {
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const client = initializeApollo();
   const { username, slug } = query;
   const { data } = await client.query({
     query: GetReview,

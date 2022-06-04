@@ -5,7 +5,7 @@ import { Layout, List, Typography } from 'antd';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 import { SearchUsers } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
 
@@ -21,6 +21,7 @@ interface UserSearchPageProps {
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const client = initializeApollo();
   const { search } = query;
   const { data } = await client.query({
     query: SearchUsers,

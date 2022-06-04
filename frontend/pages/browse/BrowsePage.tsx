@@ -7,7 +7,7 @@ import { Game } from '@utils/types';
 import { GameGridType } from '@utils/enums';
 import { GetServerSideProps } from 'next';
 import { GetGames } from '@graphql/queries';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -17,6 +17,7 @@ interface BrowsePageProps {
 }
 
 const getServerSideProps: GetServerSideProps = async () => {
+  const client = initializeApollo();
   const date = new Date().toISOString();
 
   const { data } = await client.query({

@@ -10,7 +10,7 @@ import Router from 'next/router';
 import { ListInput } from '@components/listInput/ListInput';
 import Head from 'next/head';
 import { Genre } from '@utils/types';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 import { GetGenres } from '@graphql/queries';
 import { GetStaticProps } from 'next';
 
@@ -30,6 +30,7 @@ interface AddGamePageProps {
 }
 
 const getStaticProps: GetStaticProps = async () => {
+  const client = initializeApollo();
   const { data } = await client.query({ query: GetGenres });
 
   return {

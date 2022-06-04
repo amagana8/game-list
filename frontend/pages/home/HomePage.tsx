@@ -9,7 +9,7 @@ import { GameGridType, ReviewGridType } from '@utils/enums';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import Link from 'next/link';
 import { GetHomeInfo } from '@graphql/queries';
-import { client } from '@frontend/apollo-client';
+import { initializeApollo } from '@frontend/apollo-client';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -21,6 +21,7 @@ interface HomePageProps {
 }
 
 const getServerSideProps: GetServerSideProps = async () => {
+  const client = initializeApollo();
   const date = new Date();
   const { data } = await client.query({
     query: GetHomeInfo,
