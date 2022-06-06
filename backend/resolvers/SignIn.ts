@@ -1,11 +1,20 @@
 import { Source } from 'graphql';
 import { UserForm } from '@utils/types';
-import { sign } from 'jsonwebtoken';
+import {
+  createRefreshToken,
+  createAccessToken,
+} from '@backend/auth/tokenCreators';
 import argon2 from 'argon2';
 import { User } from '@backend/server';
+import { MyContext } from '@backend/utils/MyContext';
+import { sendRefreshToken } from '@backend/auth/sendRefreshToken';
 
 export const signIn = {
-  signIn: async (_source: Source, { email, password }: UserForm) => {
+  signIn: async (
+    _source: Source,
+    { email, password }: UserForm,
+    context: MyContext,
+  ) => {
     const [user] = await User.find({
       where: {
         email,
@@ -22,9 +31,8 @@ export const signIn = {
       throw new Error(`Incorrect password for user with email ${email}!`);
     }
 
-    return sign(
-      { sub: user.id, username: user.username },
-      process.env.JWT_SECRET,
-    );
+    sendRefreshToken(context.res, createRefreshToken(user));
+
+    return createAccessToken(user);
   },
 };

@@ -16,6 +16,7 @@ export const userTypeDef = gql`
       @readonly
       @auth(rules: [{ allow: { id: "$jwt.sub" } }])
     password: String! @private
+    tokenVersion: Int! @default(value: 0)
     createdAt: DateTime! @timestamp(operations: [CREATE])
     gameList: [Game!]!
       @relationship(type: "LISTED", properties: "ListEntry", direction: OUT)
