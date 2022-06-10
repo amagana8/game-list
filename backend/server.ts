@@ -18,6 +18,7 @@ import { mutations } from '@schema/Mutations';
 import { signUp } from '@resolvers/SignUp';
 import { signIn } from '@resolvers/SignIn';
 import { updateUser } from '@resolvers/UpdateUser';
+import { AuthResponseTypeDef } from '@schema/types/AuthResponse';
 
 const cors = Cors();
 
@@ -31,6 +32,7 @@ const typeDefs = [
   userTypeDef,
   statusTypeDef,
   listEntryTypeDef,
+  AuthResponseTypeDef,
   queries,
   mutations,
 ];

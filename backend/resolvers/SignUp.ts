@@ -4,9 +4,19 @@ import argon2 from 'argon2';
 import { UserForm } from '@utils/types';
 import { User } from '@backend/server';
 import { usernameRegex, emailRegex, passwordRegex } from '@backend/utils/regex';
+import { MyContext } from '@backend/utils/MyContext';
+import { sendRefreshToken } from '@backend/auth/sendRefreshToken';
+import {
+  createAccessToken,
+  createRefreshToken,
+} from '@backend/auth/tokenCreators';
 
 export const signUp = {
-  signUp: async (_source: Source, { username, email, password }: UserForm) => {
+  signUp: async (
+    _source: Source,
+    { username, email, password }: UserForm,
+    context: MyContext,
+  ) => {
     if (!usernameRegex.test(username)) {
       throw new Error('Invalid username!');
     }
@@ -53,9 +63,11 @@ export const signUp = {
       ],
     });
 
-    return sign(
-      { sub: users[0].id, username: users[0].username },
-      process.env.JWT_SECRET,
-    );
+    sendRefreshToken(context.res, createRefreshToken(users[0]));
+
+    return {
+      username: users[0].username,
+      accessToken: createAccessToken(users[0]),
+    };
   },
 };

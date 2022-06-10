@@ -33,6 +33,9 @@ export const signIn = {
 
     sendRefreshToken(context.res, createRefreshToken(user));
 
-    return createAccessToken(user);
+    return {
+      username: user.username,
+      accessToken: createAccessToken(user),
+    };
   },
 };
