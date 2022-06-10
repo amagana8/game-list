@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { useMemo } from 'react';
+import { getUser } from '@frontend/user';
 
 let HOST_URL;
 if (process.env.NETLIFY) {
@@ -19,26 +20,19 @@ const httpLink = createHttpLink({
   },
 });
 
-// setup authorization header
-const authLink = setContext((_, { headers }) => {
-  let token = '';
-  if (typeof window !== 'undefined') {
-    const storeString = localStorage.getItem('persist:root');
-    if (storeString) {
-      const store = JSON.parse(storeString);
-      token = JSON.parse(store.user).token;
-    }
-  }
-
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : '',
-    },
-  };
-});
-
 function createApolloClient() {
+  // setup authorization header
+  const authLink = setContext((_, { headers }) => {
+    const token = getUser().accessToken;
+
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    };
+  });
+
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
     link: authLink.concat(httpLink),

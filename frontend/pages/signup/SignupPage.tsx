@@ -6,15 +6,11 @@ import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import styles from './SignupPage.module.scss';
 import { ApolloError, useMutation } from '@apollo/client';
 import { SignUp } from '@graphql/mutations';
-import { decode } from 'jsonwebtoken';
-import { JwtPayload } from '@neo4j/graphql/dist/types';
-import { useAppDispatch } from '@utils/hooks';
-import { login } from '@slices/userSlice';
 import { UserForm } from '@utils/types';
+import { setUser } from '@frontend/user';
 
 const SignUpPage: NextPage = () => {
   const [signUp] = useMutation(SignUp);
-  const dispatch = useAppDispatch();
 
   async function onFinish(values: UserForm) {
     try {
@@ -25,12 +21,7 @@ const SignUpPage: NextPage = () => {
           password: values.password,
         },
       });
-      const decoded = decode(data.signUp) as JwtPayload;
-      const user = {
-        username: decoded.username,
-        token: data.signUp,
-      };
-      dispatch(login(user));
+      setUser(data.signUp);
       Router.push('/');
     } catch (error) {
       if (error instanceof ApolloError) {

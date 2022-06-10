@@ -14,7 +14,6 @@ import { AddGameModal } from '@components/addGameModal/AddGameModal';
 import React, { useState } from 'react';
 import styles from './GamePage.module.scss';
 import { useMutation, useQuery } from '@apollo/client';
-import { useAppSelector } from '@utils/hooks';
 import dynamic from 'next/dynamic';
 import { colorMap } from '@utils/enums';
 import Head from 'next/head';
@@ -28,6 +27,7 @@ import { initializeApollo } from '@frontend/apollo-client';
 import { GetGame } from '@graphql/queries';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { AddFavoriteGame, RemoveFavoriteGame } from '@graphql/mutations';
+import { getUser } from '@frontend/user';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -73,7 +73,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [gameConnection, setGameConnection] = useState<any>();
   const [reviewed, setReviewed] = useState(false);
   const [favorited, setFavorited] = useState(false);
-  const username = useAppSelector((state) => state.user.username);
+  const username = getUser().username;
 
   const { loading } = useQuery(GetGameStatus, {
     variables: {

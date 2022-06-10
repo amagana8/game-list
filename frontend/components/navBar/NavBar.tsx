@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { Button, Menu, Popover, Space, Input, Select } from 'antd';
 import styles from './NavBar.module.scss';
-import { useAppDispatch, useAppSelector } from '@utils/hooks';
-import { logout } from '@slices/userSlice';
 import Router from 'next/router';
 import {
   UserOutlined,
@@ -10,26 +8,24 @@ import {
   LogoutOutlined,
   HeartOutlined,
 } from '@ant-design/icons';
-import { setSearchType, setSearchLoading } from '@slices/searchSlice';
 import { SearchType } from '@utils/enums';
 import Image from 'next/image';
+import { useState } from 'react';
+import { getUser, setUser } from '@frontend/user';
 
 const { Search } = Input;
 const { Option } = Select;
 
 const NavBar = () => {
-  const username = useAppSelector((state) => state.user.username);
-  const searchType = useAppSelector((state) => state.search.type);
-  const searchLoading = useAppSelector((state) => state.search.loading);
-  const dispatch = useAppDispatch();
+  const username = getUser().username;
+  const [searchType, setSearchType] = useState(SearchType.Games);
 
   const onSearch = (query: string) => {
-    dispatch(setSearchLoading(true));
     Router.push(`/search/${searchType}?search=${query}`);
   };
 
   const handleLogout = () => {
-    dispatch(logout());
+    setUser({ username: '', accessToken: '' });
     Router.push('/');
   };
 
@@ -70,7 +66,7 @@ const NavBar = () => {
   const searchTypeSelect = (
     <Select
       defaultValue={searchType}
-      onChange={(option) => dispatch(setSearchType(option))}
+      onChange={(option) => setSearchType(option)}
     >
       <Option value={SearchType.Games}>Games</Option>
       <Option value={SearchType.Users}>Users</Option>
@@ -115,7 +111,6 @@ const NavBar = () => {
           onSearch={onSearch}
           className={styles.search}
           addonBefore={searchTypeSelect}
-          loading={searchLoading}
           enterButton
         />
         {username ? (
