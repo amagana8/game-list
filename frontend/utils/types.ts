@@ -56,3 +56,8 @@ export interface GameConnection {
   hours: number;
   score: number;
 }
+
+export interface UserState {
+  username: string;
+  accessToken: string;
+}

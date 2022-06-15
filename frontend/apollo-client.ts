@@ -1,9 +1,17 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  ApolloLink,
+  NormalizedCacheObject,
+} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { useMemo } from 'react';
-import { getUser } from '@frontend/user';
+import { TokenRefreshLink } from 'apollo-link-token-refresh';
+import { getAccessToken, setAccessToken } from '@frontend/user';
+import { decode } from 'jsonwebtoken';
 
-let HOST_URL;
+let HOST_URL = '';
 if (process.env.NETLIFY) {
   HOST_URL = 'https://game-list-preview.netlify.app';
 } else if (process.env.NEXT_PUBLIC_VERCEL_URL) {
@@ -21,9 +29,45 @@ const httpLink = createHttpLink({
 });
 
 function createApolloClient() {
+  // create token refresh link
+  const refreshLink = new TokenRefreshLink({
+    accessTokenField: 'accessToken',
+    isTokenValidOrUndefined: () => {
+      const token = getAccessToken();
+
+      if (!token) {
+        return true;
+      }
+
+      try {
+        const { exp } = decode(token) as any;
+        if (Date.now() >= exp * 1000) {
+          return false;
+        } else {
+          return true;
+        }
+      } catch {
+        return false;
+      }
+    },
+    fetchAccessToken: () => {
+      return fetch(`${HOST_URL}/api/refresh_token`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    },
+    handleFetch: (accessToken) => {
+      setAccessToken(accessToken);
+    },
+    handleError: (err) => {
+      console.warn('Your refresh token is invalid. Try to re-login');
+      console.error(err);
+    },
+  });
+
   // setup authorization header
   const authLink = setContext((_, { headers }) => {
-    const token = getUser().accessToken;
+    const token = getAccessToken();
 
     return {
       headers: {
@@ -35,12 +79,12 @@ function createApolloClient() {
 
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
-    link: authLink.concat(httpLink),
+    link: ApolloLink.from([refreshLink, authLink, httpLink]),
     cache: new InMemoryCache(),
   });
 }
 
-let apolloClient: any;
+let apolloClient: ApolloClient<NormalizedCacheObject>;
 
 export function initializeApollo(initialState: any = null) {
   const _apolloClient = apolloClient ?? createApolloClient();

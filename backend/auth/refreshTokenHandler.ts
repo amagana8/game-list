@@ -12,13 +12,13 @@ async function initOgm() {
 }
 initOgm();
 
-const emptyRes = { ok: false, accessToken: '' };
+const emptyRes = { username: '', accessToken: '' };
 
 export const refreshTokenHandler = async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const token = req.cookies['refresh-token'];
+  const token = req.cookies.refreshToken;
   if (!token) {
     return res.send(emptyRes);
   }
@@ -44,5 +44,8 @@ export const refreshTokenHandler = async function handler(
 
   sendRefreshToken(res, createRefreshToken(user));
 
-  return res.send({ ok: true, accessToken: createAccessToken(user) });
+  return res.send({
+    username: user.username,
+    accessToken: createAccessToken(user),
+  });
 };

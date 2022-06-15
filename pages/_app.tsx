@@ -8,6 +8,7 @@ import 'nprogress/nprogress.css';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { NavBar } from '@components/navBar/NavBar';
+import { withAuth } from '@frontend/withAuth';
 
 const { Header, Content } = Layout;
 
@@ -56,4 +57,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default withAuth(MyApp);
