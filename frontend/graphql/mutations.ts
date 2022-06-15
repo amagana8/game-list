@@ -19,6 +19,12 @@ export const SignIn = gql`
   }
 `;
 
+export const SignOut = gql`
+  mutation SignOut {
+    signOut
+  }
+`;
+
 export const AddGame = gql`
   mutation UpdateUsers($where: UserWhere, $connect: UserConnectInput) {
     updateUsers(where: $where, connect: $connect) {

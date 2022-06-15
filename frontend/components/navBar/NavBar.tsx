@@ -12,6 +12,8 @@ import { SearchType } from '@utils/enums';
 import Image from 'next/image';
 import { useState } from 'react';
 import { getUser, setUser } from '@frontend/user';
+import { useMutation } from '@apollo/client';
+import { SignOut } from '@graphql/mutations';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -19,13 +21,15 @@ const { Option } = Select;
 const NavBar = () => {
   const username = getUser().username;
   const [searchType, setSearchType] = useState(SearchType.Games);
+  const [signOut] = useMutation(SignOut);
 
   const onSearch = (query: string) => {
     Router.push(`/search/${searchType}?search=${query}`);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setUser({ username: '', accessToken: '' });
+    await signOut();
     Router.push('/');
   };
 

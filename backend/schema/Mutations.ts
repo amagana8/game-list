@@ -9,5 +9,6 @@ export const mutations = gql`
       newUsername: String
       newEmail: String
     ): String!
+    signOut: Boolean!
   }
 `;
