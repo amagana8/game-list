@@ -43,13 +43,13 @@ const NavBar = () => {
           </Button>
         </a>
       </Link>
-      <Link href="/settings">
-        <a>
-          <Button className={styles.popoverButton} icon={<SettingOutlined />}>
-            Settings
-          </Button>
-        </a>
-      </Link>
+      <Button
+        href="/settings"
+        className={styles.popoverButton}
+        icon={<SettingOutlined />}
+      >
+        Settings
+      </Button>
       <Button
         className={styles.popoverButton}
         icon={<HeartOutlined />}

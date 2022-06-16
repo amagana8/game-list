@@ -4,7 +4,7 @@ export const createRefreshToken = (user: any) => {
   return sign(
     { sub: user.id, tokenVersion: user.tokenVersion },
     process.env.REFRESH_JWT_SECRET,
-    { expiresIn: '15min' },
+    { expiresIn: '7d' },
   );
 };
 

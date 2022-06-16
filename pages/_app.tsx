@@ -8,7 +8,10 @@ import 'nprogress/nprogress.css';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { NavBar } from '@components/navBar/NavBar';
-import { withAuth } from '@frontend/withAuth';
+import { useAuthStore } from '@frontend/authStore';
+import App from 'next/app';
+import { sendRefreshToken } from '@backend/auth/sendRefreshToken';
+import { isServer } from '@utils/isServer';
 
 const { Header, Content } = Layout;
 
@@ -19,7 +22,9 @@ NProgress.configure({
   showSpinner: false,
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps, serverUser }: any) {
+  const setUser = useAuthStore((state) => state.setUser);
+  setUser(serverUser);
   const router = useRouter();
 
   useEffect(() => {
@@ -57,4 +62,34 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default withAuth(MyApp);
+MyApp.getInitialProps = async (appContext: any) => {
+  const appProps = await App.getInitialProps(appContext);
+
+  let serverUser = { username: '', accessToken: '' };
+  if (isServer()) {
+    const cookies = appContext.ctx.req.cookies;
+    if (cookies.refreshToken) {
+      const response = await fetch(
+        'http://localhost:3000/api/refresh_token',
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            cookie: `refreshToken=${cookies.refreshToken}`,
+          },
+        },
+      );
+      const data = await response.json();
+      const newTokenCookie = response.headers.get('set-cookie');
+      if (newTokenCookie) {
+        appContext.ctx.res.setHeader('Set-Cookie', newTokenCookie);
+      } else {
+        sendRefreshToken(appContext.ctx.res, '');
+      }
+      serverUser = data;
+    }
+  }
+  return { ...appProps, serverUser };
+};
+
+export default MyApp;
