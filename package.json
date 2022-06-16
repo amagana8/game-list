@@ -13,8 +13,8 @@
     "@neo4j/graphql": "3.1.0",
     "@neo4j/graphql-ogm": "3.1.0",
     "@neo4j/graphql-plugin-auth": "1.0.0",
-    "@reduxjs/toolkit": "1.8.1",
     "antd": "4.20.0",
+    "apollo-link-token-refresh": "^0.4.0",
     "apollo-server-micro": "3.6.7",
     "argon2": "0.28.5",
     "graphql": "16.2.0",
@@ -26,9 +26,8 @@
     "nprogress": "^0.2.0",
     "react": "18.0.0",
     "react-dom": "18.0.0",
-    "react-redux": "8.0.1",
-    "redux-persist": "6.0.0",
-    "sass": "1.50.1"
+    "sass": "1.50.1",
+    "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
     "@types/micro-cors": "0.1.2",

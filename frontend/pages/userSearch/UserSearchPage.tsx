@@ -1,9 +1,6 @@
-import { setSearchLoading } from '@slices/searchSlice';
-import { useAppDispatch } from '@utils/hooks';
 import { List, Typography } from 'antd';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useEffect } from 'react';
 import { initializeApollo } from '@frontend/apollo-client';
 import { SearchUsers } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
@@ -43,12 +40,6 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 const UserSearchPage = ({ users }: UserSearchPageProps) => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(setSearchLoading(false));
-  }, [users, dispatch]);
-
   return (
     <>
       <Head>

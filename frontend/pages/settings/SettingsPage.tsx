@@ -4,21 +4,20 @@ import { MailOutlined, UserOutlined } from '@ant-design/icons';
 import Head from 'next/head';
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { GetUser } from '@graphql/queries';
-import { useAppDispatch, useAppSelector } from '@utils/hooks';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 import { Typography } from 'antd';
 import styles from './SettingsPage.module.scss';
 import { UpdateUserForm } from '@utils/types';
 import { UpdateUserDetails } from '@graphql/mutations';
-import { updateUsername } from '@slices/userSlice';
+import { useAuthStore } from '@frontend/authStore';
 
 const { Title } = Typography;
 
 const SettingsPage: NextPage = () => {
-  const username = useAppSelector((state) => state.user.username);
-  const [updateUserDetails] = useMutation(UpdateUserDetails);
-  const dispatch = useAppDispatch();
+  const username = useAuthStore((state) => state.username);
+  const setUsername = useAuthStore((state) => state.setUsername);
 
+  const [updateUserDetails] = useMutation(UpdateUserDetails);
   const { loading, data } = useQuery(GetUser, {
     variables: {
       where: {
@@ -42,7 +41,7 @@ const SettingsPage: NextPage = () => {
         },
       });
       if (data.updateUserDetails) {
-        dispatch(updateUsername(data.updateUserDetails));
+        setUsername(data.updateUserDetails);
       }
       message.success('User updated successfully!');
     } catch (error) {

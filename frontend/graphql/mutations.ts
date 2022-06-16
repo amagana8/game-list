@@ -3,13 +3,25 @@ import { GameFragment } from './fragments';
 
 export const SignUp = gql`
   mutation SignUp($username: String!, $email: String!, $password: String!) {
-    signUp(username: $username, email: $email, password: $password)
+    signUp(username: $username, email: $email, password: $password) {
+      username
+      accessToken
+    }
   }
 `;
 
 export const SignIn = gql`
   mutation SignIn($email: String!, $password: String!) {
-    signIn(email: $email, password: $password)
+    signIn(email: $email, password: $password) {
+      username
+      accessToken
+    }
+  }
+`;
+
+export const SignOut = gql`
+  mutation SignOut {
+    signOut
   }
 `;
 

@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { parseDate } from '@utils/index';
 import { Review } from '@utils/types';
 import { useEffect, useState } from 'react';
-import { useAppSelector } from '@utils/hooks';
 import styles from './ReviewPage.module.scss';
 import { useMutation } from '@apollo/client';
 import { DeleteReview, UpdateReview } from '@graphql/mutations';
@@ -12,6 +11,7 @@ import { initializeApollo } from '@frontend/apollo-client';
 import { GetReview } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
+import { useAuthStore } from '@frontend/authStore';
 
 const { Title, Paragraph } = Typography;
 
@@ -44,7 +44,7 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 const ReviewPage = ({ review }: ReviewPageProps) => {
-  const username = useAppSelector((state) => state.user.username);
+  const username = useAuthStore((state) => state.username);
   const [showEditButton, setShowEditButton] = useState(false);
   const [editing, setEditing] = useState(false);
   const [summary, setSummary] = useState(review.summary);

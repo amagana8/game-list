@@ -18,6 +18,8 @@ import { mutations } from '@schema/Mutations';
 import { signUp } from '@resolvers/SignUp';
 import { signIn } from '@resolvers/SignIn';
 import { updateUser } from '@resolvers/UpdateUser';
+import { AuthResponseTypeDef } from '@schema/types/AuthResponse';
+import { signOut } from '@resolvers/SignOut';
 
 const cors = Cors();
 
@@ -31,6 +33,7 @@ const typeDefs = [
   userTypeDef,
   statusTypeDef,
   listEntryTypeDef,
+  AuthResponseTypeDef,
   queries,
   mutations,
 ];
@@ -40,6 +43,7 @@ const resolvers = {
     ...signUp,
     ...signIn,
     ...updateUser,
+    ...signOut,
   },
 };
 
@@ -48,7 +52,7 @@ const driver = neo4j.driver(
   neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD),
 );
 
-const ogm = new OGM({
+export const ogm = new OGM({
   typeDefs,
   driver,
   config: {
@@ -69,14 +73,16 @@ export const server = cors(async (req, res) => {
     driver,
     resolvers,
     plugins: {
-      auth: new Neo4jGraphQLAuthJWTPlugin({ secret: process.env.JWT_SECRET }),
+      auth: new Neo4jGraphQLAuthJWTPlugin({
+        secret: process.env.ACCESS_JWT_SECRET,
+      }),
     },
   });
   const schema = await neoSchema.getSchema();
   await neoSchema.assertIndexesAndConstraints({ options: { create: true } });
   const apolloServer = new ApolloServer({
     schema: schema,
-    context: ({ req }) => ({ req }),
+    context: ({ req, res }) => ({ req, res }),
   });
   await ogm.init();
   await apolloServer.start();

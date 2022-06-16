@@ -1,9 +1,6 @@
 import { Typography } from 'antd';
 import Head from 'next/head';
 import { Game } from '@utils/types';
-import { useEffect } from 'react';
-import { useAppDispatch } from '@utils/hooks';
-import { setSearchLoading } from '@slices/searchSlice';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import { GameGridType } from '@utils/enums';
 import { initializeApollo } from '@frontend/apollo-client';
@@ -41,12 +38,6 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 const GameSearchPage = ({ games }: GameSearchPageProps) => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(setSearchLoading(false));
-  }, [games, dispatch]);
-
   return (
     <>
       <Head>

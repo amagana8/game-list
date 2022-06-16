@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { Button, Menu, Popover, Space, Input, Select } from 'antd';
 import styles from './NavBar.module.scss';
-import { useAppDispatch, useAppSelector } from '@utils/hooks';
-import { logout } from '@slices/userSlice';
 import Router from 'next/router';
 import {
   UserOutlined,
@@ -10,26 +8,29 @@ import {
   LogoutOutlined,
   HeartOutlined,
 } from '@ant-design/icons';
-import { setSearchType, setSearchLoading } from '@slices/searchSlice';
 import { SearchType } from '@utils/enums';
 import Image from 'next/image';
+import { useState } from 'react';
+import { useAuthStore } from '@frontend/authStore';
+import { useMutation } from '@apollo/client';
+import { SignOut } from '@graphql/mutations';
 
 const { Search } = Input;
 const { Option } = Select;
 
 const NavBar = () => {
-  const username = useAppSelector((state) => state.user.username);
-  const searchType = useAppSelector((state) => state.search.type);
-  const searchLoading = useAppSelector((state) => state.search.loading);
-  const dispatch = useAppDispatch();
+  const username = useAuthStore((state) => state.username);
+  const setUser = useAuthStore((state) => state.setUser);
+  const [searchType, setSearchType] = useState(SearchType.Games);
+  const [signOut] = useMutation(SignOut);
 
   const onSearch = (query: string) => {
-    dispatch(setSearchLoading(true));
     Router.push(`/search/${searchType}?search=${query}`);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    setUser({ username: '', accessToken: '' });
+    await signOut();
     Router.push('/');
   };
 
@@ -42,13 +43,13 @@ const NavBar = () => {
           </Button>
         </a>
       </Link>
-      <Link href="/settings">
-        <a>
-          <Button className={styles.popoverButton} icon={<SettingOutlined />}>
-            Settings
-          </Button>
-        </a>
-      </Link>
+      <Button
+        href="/settings"
+        className={styles.popoverButton}
+        icon={<SettingOutlined />}
+      >
+        Settings
+      </Button>
       <Button
         className={styles.popoverButton}
         icon={<HeartOutlined />}
@@ -70,7 +71,7 @@ const NavBar = () => {
   const searchTypeSelect = (
     <Select
       defaultValue={searchType}
-      onChange={(option) => dispatch(setSearchType(option))}
+      onChange={(option) => setSearchType(option)}
     >
       <Option value={SearchType.Games}>Games</Option>
       <Option value={SearchType.Users}>Users</Option>
@@ -115,7 +116,6 @@ const NavBar = () => {
           onSearch={onSearch}
           className={styles.search}
           addonBefore={searchTypeSelect}
-          loading={searchLoading}
           enterButton
         />
         {username ? (
