@@ -73,7 +73,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [gameConnection, setGameConnection] = useState<any>();
   const [reviewed, setReviewed] = useState(false);
   const [favorited, setFavorited] = useState(false);
-  const username = useAuthStore(state => state.username);
+  const username = useAuthStore((state) => state.username);
 
   const { loading } = useQuery(GetGameStatus, {
     variables: {

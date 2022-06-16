@@ -11,7 +11,7 @@ import { UserForm } from '@utils/types';
 import { useAuthStore } from '@frontend/authStore';
 
 const LoginPage: NextPage = () => {
-  const setUser = useAuthStore(state => state.setUser);
+  const setUser = useAuthStore((state) => state.setUser);
   const [signIn] = useMutation(SignIn);
 
   async function onFinish(values: UserForm) {

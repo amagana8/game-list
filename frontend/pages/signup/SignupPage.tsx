@@ -10,7 +10,7 @@ import { UserForm } from '@utils/types';
 import { useAuthStore } from '@frontend/authStore';
 
 const SignUpPage: NextPage = () => {
-  const setUser = useAuthStore(state => state.setUser);
+  const setUser = useAuthStore((state) => state.setUser);
 
   const [signUp] = useMutation(SignUp);
   async function onFinish(values: UserForm) {

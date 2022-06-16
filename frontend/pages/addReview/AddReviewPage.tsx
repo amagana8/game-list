@@ -14,7 +14,7 @@ interface ReviewForm {
 
 const AddReviewPage = () => {
   const { slug } = useRouter().query;
-  const username = useAuthStore(state => state.username);
+  const username = useAuthStore((state) => state.username);
   const layout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 16 },

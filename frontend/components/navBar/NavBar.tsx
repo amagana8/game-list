@@ -19,8 +19,8 @@ const { Search } = Input;
 const { Option } = Select;
 
 const NavBar = () => {
-  const username = useAuthStore(state => state.username);
-  const setUser = useAuthStore(state => state.setUser);
+  const username = useAuthStore((state) => state.username);
+  const setUser = useAuthStore((state) => state.setUser);
   const [searchType, setSearchType] = useState(SearchType.Games);
   const [signOut] = useMutation(SignOut);
 

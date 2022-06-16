@@ -32,7 +32,7 @@ const AddGameModal = ({
   setGameConnection,
 }: AddGameModalProps) => {
   const [addGame] = useMutation(AddGame);
-  const username = useAuthStore(state => state.username);
+  const username = useAuthStore((state) => state.username);
   async function onFinish(input: GameConnection) {
     try {
       await addGame({

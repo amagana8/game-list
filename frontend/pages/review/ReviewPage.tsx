@@ -44,7 +44,7 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 const ReviewPage = ({ review }: ReviewPageProps) => {
-  const username = useAuthStore(state => state.username);
+  const username = useAuthStore((state) => state.username);
   const [showEditButton, setShowEditButton] = useState(false);
   const [editing, setEditing] = useState(false);
   const [summary, setSummary] = useState(review.summary);

@@ -73,7 +73,9 @@ export const server = cors(async (req, res) => {
     driver,
     resolvers,
     plugins: {
-      auth: new Neo4jGraphQLAuthJWTPlugin({ secret: process.env.ACCESS_JWT_SECRET }),
+      auth: new Neo4jGraphQLAuthJWTPlugin({
+        secret: process.env.ACCESS_JWT_SECRET,
+      }),
     },
   });
   const schema = await neoSchema.getSchema();
