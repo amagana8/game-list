@@ -10,15 +10,7 @@ import { useMemo } from 'react';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import { useAuthStore } from '@frontend/authStore';
 import { decode } from 'jsonwebtoken';
-
-let HOST_URL = '';
-if (process.env.NETLIFY) {
-  HOST_URL = 'https://game-list-preview.netlify.app';
-} else if (process.env.NEXT_PUBLIC_VERCEL_URL) {
-  HOST_URL = 'https://game-list-preview.vercel.app';
-} else {
-  HOST_URL = 'http://localhost:3000';
-}
+import { HOST_URL } from '@utils/hostUrl';
 
 const httpLink = createHttpLink({
   uri: `${HOST_URL}/api/graphql`,

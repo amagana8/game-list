@@ -12,6 +12,7 @@ import { useAuthStore } from '@frontend/authStore';
 import App from 'next/app';
 import { sendRefreshToken } from '@backend/auth/sendRefreshToken';
 import { isServer } from '@utils/isServer';
+import { HOST_URL } from '@utils/hostUrl';
 
 const { Header, Content } = Layout;
 
@@ -69,16 +70,13 @@ MyApp.getInitialProps = async (appContext: any) => {
   if (isServer()) {
     const cookies = appContext.ctx.req.cookies;
     if (cookies.refreshToken) {
-      const response = await fetch(
-        'http://localhost:3000/api/refresh_token',
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            cookie: `refreshToken=${cookies.refreshToken}`,
-          },
+      const response = await fetch(`${HOST_URL}/api/refresh_token`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          cookie: `refreshToken=${cookies.refreshToken}`,
         },
-      );
+      });
       const data = await response.json();
       const newTokenCookie = response.headers.get('set-cookie');
       if (newTokenCookie) {
