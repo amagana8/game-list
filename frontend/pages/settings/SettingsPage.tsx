@@ -9,17 +9,15 @@ import { Typography } from 'antd';
 import styles from './SettingsPage.module.scss';
 import { UpdateUserForm } from '@utils/types';
 import { UpdateUserDetails } from '@graphql/mutations';
-import { getUser, setUser } from '@frontend/user';
-import { useState } from 'react';
+import { useAuthStore } from '@frontend/authStore';
 
 const { Title } = Typography;
 
 const SettingsPage: NextPage = () => {
-  const user = getUser();
+  const username = useAuthStore((state) => state.username);
+  const setUsername = useAuthStore((state) => state.setUsername);
 
-  const [username, setUsername] = useState(user.username);
   const [updateUserDetails] = useMutation(UpdateUserDetails);
-
   const { loading, data } = useQuery(GetUser, {
     variables: {
       where: {
@@ -43,7 +41,6 @@ const SettingsPage: NextPage = () => {
         },
       });
       if (data.updateUserDetails) {
-        setUser({ ...user, username: data.updateUserDetails });
         setUsername(data.updateUserDetails);
       }
       message.success('User updated successfully!');

@@ -11,7 +11,7 @@ import { initializeApollo } from '@frontend/apollo-client';
 import { GetReview } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
-import { getUser } from '@frontend/user';
+import { useAuthStore } from '@frontend/authStore';
 
 const { Title, Paragraph } = Typography;
 
@@ -44,7 +44,7 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 const ReviewPage = ({ review }: ReviewPageProps) => {
-  const username = getUser().username;
+  const username = useAuthStore(state => state.username);
   const [showEditButton, setShowEditButton] = useState(false);
   const [editing, setEditing] = useState(false);
   const [summary, setSummary] = useState(review.summary);

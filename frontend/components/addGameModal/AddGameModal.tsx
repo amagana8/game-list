@@ -12,7 +12,7 @@ import { AddGame, RemoveGame } from '@graphql/mutations';
 import { Status } from '@utils/enums';
 import { Game, GameConnection } from '@utils/types';
 import styles from './AddGameModal.module.scss';
-import { getUser } from '@frontend/user';
+import { useAuthStore } from '@frontend/authStore';
 
 const { Option } = Select;
 
@@ -32,7 +32,7 @@ const AddGameModal = ({
   setGameConnection,
 }: AddGameModalProps) => {
   const [addGame] = useMutation(AddGame);
-  const username = getUser().username;
+  const username = useAuthStore(state => state.username);
   async function onFinish(input: GameConnection) {
     try {
       await addGame({

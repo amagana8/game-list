@@ -8,7 +8,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { useMemo } from 'react';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
-import { getAccessToken, setAccessToken } from '@frontend/user';
+import { useAuthStore } from '@frontend/authStore';
 import { decode } from 'jsonwebtoken';
 
 let HOST_URL = '';
@@ -33,7 +33,7 @@ function createApolloClient() {
   const refreshLink = new TokenRefreshLink({
     accessTokenField: 'accessToken',
     isTokenValidOrUndefined: () => {
-      const token = getAccessToken();
+      const token = useAuthStore.getState().accessToken;
 
       if (!token) {
         return true;
@@ -57,7 +57,7 @@ function createApolloClient() {
       });
     },
     handleFetch: (accessToken) => {
-      setAccessToken(accessToken);
+      useAuthStore.setState((state) => ({ ...state, accessToken }));
     },
     handleError: (err) => {
       console.warn('Your refresh token is invalid. Try to re-login');
@@ -67,7 +67,7 @@ function createApolloClient() {
 
   // setup authorization header
   const authLink = setContext((_, { headers }) => {
-    const token = getAccessToken();
+    const token = useAuthStore.getState().accessToken;
 
     return {
       headers: {

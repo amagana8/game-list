@@ -11,7 +11,7 @@ import {
 import { SearchType } from '@utils/enums';
 import Image from 'next/image';
 import { useState } from 'react';
-import { getUser, setUser } from '@frontend/user';
+import { useAuthStore } from '@frontend/authStore';
 import { useMutation } from '@apollo/client';
 import { SignOut } from '@graphql/mutations';
 
@@ -19,7 +19,8 @@ const { Search } = Input;
 const { Option } = Select;
 
 const NavBar = () => {
-  const username = getUser().username;
+  const username = useAuthStore(state => state.username);
+  const setUser = useAuthStore(state => state.setUser);
   const [searchType, setSearchType] = useState(SearchType.Games);
   const [signOut] = useMutation(SignOut);
 

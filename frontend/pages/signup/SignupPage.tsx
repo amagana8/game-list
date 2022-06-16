@@ -7,11 +7,12 @@ import styles from './SignupPage.module.scss';
 import { ApolloError, useMutation } from '@apollo/client';
 import { SignUp } from '@graphql/mutations';
 import { UserForm } from '@utils/types';
-import { setUser } from '@frontend/user';
+import { useAuthStore } from '@frontend/authStore';
 
 const SignUpPage: NextPage = () => {
-  const [signUp] = useMutation(SignUp);
+  const setUser = useAuthStore(state => state.setUser);
 
+  const [signUp] = useMutation(SignUp);
   async function onFinish(values: UserForm) {
     try {
       const { data } = await signUp({

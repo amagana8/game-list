@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { getUser } from '@frontend/user';
+import { useAuthStore } from '@frontend/authStore';
 import { NewReview } from '@graphql/mutations';
 import { Button, Form, Input } from 'antd';
 import Title from 'antd/lib/typography/Title';
@@ -14,7 +14,7 @@ interface ReviewForm {
 
 const AddReviewPage = () => {
   const { slug } = useRouter().query;
-  const username = getUser().username;
+  const username = useAuthStore(state => state.username);
   const layout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 16 },

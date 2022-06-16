@@ -1,10 +1,14 @@
 import { isServer } from '@utils/isServer';
-import { setUser } from '@frontend/user';
+import { useAuthStore } from './authStore';
 import App from 'next/app';
+import { sendRefreshToken } from '@backend/auth/sendRefreshToken';
 
 export function withAuth(PageComponent: any) {
   const WithAuth = ({ serverUser, ...pageProps }: any) => {
-    setUser(serverUser);
+    const setUser = useAuthStore((state) => state.setUser);
+    if (serverUser.accessToken) {
+      setUser(serverUser);
+    }
     return <PageComponent {...pageProps} />;
   };
 
@@ -26,6 +30,12 @@ export function withAuth(PageComponent: any) {
           },
         );
         const data = await response.json();
+        const newTokenCookie = response.headers.get('set-cookie');
+        if (newTokenCookie) {
+          appContext.ctx.res.setHeader('Set-Cookie', newTokenCookie);
+        } else {
+          sendRefreshToken(appContext.ctx.res, '');
+        }
         serverUser = data;
       }
     }

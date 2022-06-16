@@ -8,9 +8,10 @@ import styles from './LoginPage.module.scss';
 import { ApolloError, useMutation } from '@apollo/client';
 import { SignIn } from '@graphql/mutations';
 import { UserForm } from '@utils/types';
-import { setUser } from '@frontend/user';
+import { useAuthStore } from '@frontend/authStore';
 
 const LoginPage: NextPage = () => {
+  const setUser = useAuthStore(state => state.setUser);
   const [signIn] = useMutation(SignIn);
 
   async function onFinish(values: UserForm) {

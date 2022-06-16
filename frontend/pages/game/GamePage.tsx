@@ -27,7 +27,7 @@ import { initializeApollo } from '@frontend/apollo-client';
 import { GetGame } from '@graphql/queries';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { AddFavoriteGame, RemoveFavoriteGame } from '@graphql/mutations';
-import { getUser } from '@frontend/user';
+import { useAuthStore } from '@frontend/authStore';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -73,7 +73,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [gameConnection, setGameConnection] = useState<any>();
   const [reviewed, setReviewed] = useState(false);
   const [favorited, setFavorited] = useState(false);
-  const username = getUser().username;
+  const username = useAuthStore(state => state.username);
 
   const { loading } = useQuery(GetGameStatus, {
     variables: {
