@@ -24,7 +24,7 @@ const getServerSideProps: GetServerSideProps = async () => {
     query: GetHomeInfo,
     variables: {
       userOptions: {
-        limit: 20,
+        limit: 10,
         sort: [
           {
             createdAt: 'DESC',
@@ -36,7 +36,7 @@ const getServerSideProps: GetServerSideProps = async () => {
         cover_NOT: '',
       },
       gamesOptions: {
-        limit: 20,
+        limit: 10,
         sort: [
           {
             releaseDate: 'DESC',
@@ -44,7 +44,7 @@ const getServerSideProps: GetServerSideProps = async () => {
         ],
       },
       reviewsOptions: {
-        limit: 20,
+        limit: 10,
         sort: [
           {
             createdAt: 'DESC',
