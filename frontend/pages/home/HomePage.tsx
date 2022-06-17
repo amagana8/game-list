@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
-import { Col, List, Row, Typography } from 'antd';
+import { Col, List, Row } from 'antd';
 import styles from './HomePage.module.scss';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { Game, Review, User } from '@utils/types';
@@ -9,8 +9,7 @@ import { GameGrid } from '@components/gameGrid/GameGrid';
 import Link from 'next/link';
 import { GetHomeInfo } from '@graphql/queries';
 import { initializeApollo } from '@frontend/apollo-client';
-
-const { Title } = Typography;
+import Title from 'antd/lib/typography/Title';
 
 interface HomePageProps {
   users: User[];

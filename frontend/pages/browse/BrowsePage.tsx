@@ -1,5 +1,4 @@
 import type { NextPage } from 'next';
-import { Typography } from 'antd';
 import Head from 'next/head';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import { Game } from '@utils/types';
@@ -7,8 +6,7 @@ import { GameGridType } from '@utils/enums';
 import { GetServerSideProps } from 'next';
 import { GetGames } from '@graphql/queries';
 import { initializeApollo } from '@frontend/apollo-client';
-
-const { Title } = Typography;
+import Title from 'antd/lib/typography/Title';
 
 interface BrowsePageProps {
   games: Game[];

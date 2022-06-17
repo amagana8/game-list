@@ -5,13 +5,11 @@ import Head from 'next/head';
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { GetUser } from '@graphql/queries';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
-import { Typography } from 'antd';
 import styles from './SettingsPage.module.scss';
 import { UpdateUserForm } from '@utils/types';
 import { UpdateUserDetails } from '@graphql/mutations';
 import { useAuthStore } from '@frontend/authStore';
-
-const { Title } = Typography;
+import Title from 'antd/lib/typography/Title';
 
 const SettingsPage: NextPage = () => {
   const username = useAuthStore((state) => state.username);

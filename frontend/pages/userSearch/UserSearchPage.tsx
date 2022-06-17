@@ -1,11 +1,10 @@
-import { List, Typography } from 'antd';
+import { List } from 'antd';
 import Head from 'next/head';
 import Link from 'next/link';
 import { initializeApollo } from '@frontend/apollo-client';
 import { SearchUsers } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
-
-const { Title } = Typography;
+import Title from 'antd/lib/typography/Title';
 
 interface User {
   username: string;

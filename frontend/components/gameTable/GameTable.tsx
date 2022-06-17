@@ -1,11 +1,10 @@
-import { Image, Table, Typography } from 'antd';
+import { Image, Table } from 'antd';
 import Link from 'next/link';
 import { AlignType } from 'rc-table/lib/interface';
 import styles from './GameTable.module.scss';
 import { Game } from '@utils/types';
 import { ColumnsType } from 'antd/es/table';
-
-const { Title } = Typography;
+import Title from 'antd/lib/typography/Title';
 
 interface gameTableProps {
   status: string;

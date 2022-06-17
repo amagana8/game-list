@@ -1,7 +1,6 @@
-import { Menu, Typography } from 'antd';
+import { Menu } from 'antd';
+import Title from 'antd/lib/typography/Title';
 import Link from 'next/link';
-
-const { Title } = Typography;
 
 const UserPageNavBar = ({ username, index }: any) => (
   <>

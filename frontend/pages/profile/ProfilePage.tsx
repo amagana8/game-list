@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { Col, Row, Statistic, Typography } from 'antd';
+import { Col, Row, Statistic } from 'antd';
 import { GetUserStats } from '@graphql/queries';
 import styles from './ProfilePage.module.scss';
 import dynamic from 'next/dynamic';
@@ -7,6 +7,7 @@ import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
 import Head from 'next/head';
 import { parseDate, roundNumber } from '@utils/index';
 import { initializeApollo } from '@frontend/apollo-client';
+import Title from 'antd/lib/typography/Title';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -20,8 +21,6 @@ const BarChart = dynamic(() => import('@components/charts/barChart/BarChart'), {
 const TreeMap = dynamic(() => import('@components/charts/treeMap/TreeMap'), {
   ssr: false,
 });
-
-const { Title } = Typography;
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const client = initializeApollo();
