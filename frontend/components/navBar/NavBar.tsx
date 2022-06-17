@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button, Menu, Popover, Space, Input, Select } from 'antd';
+import { Button, Menu, Popover, Space, Select } from 'antd';
 import styles from './NavBar.module.scss';
 import Router from 'next/router';
 import {
@@ -14,13 +14,11 @@ import { useState } from 'react';
 import { useAuthStore } from '@frontend/authStore';
 import { useMutation } from '@apollo/client';
 import { SignOut } from '@graphql/mutations';
-
-const { Search } = Input;
-const { Option } = Select;
+import Search from 'antd/lib/input/Search';
 
 const NavBar = () => {
   const username = useAuthStore((state) => state.username);
-  const setUser = useAuthStore((state) => state.setUser);
+  const resetUser = useAuthStore((state) => state.resetUser);
   const [searchType, setSearchType] = useState(SearchType.Games);
   const [signOut] = useMutation(SignOut);
 
@@ -29,7 +27,7 @@ const NavBar = () => {
   };
 
   const handleLogout = async () => {
-    setUser({ username: '', accessToken: '' });
+    resetUser();
     await signOut();
     Router.push('/');
   };
@@ -73,13 +71,55 @@ const NavBar = () => {
       defaultValue={searchType}
       onChange={(option) => setSearchType(option)}
     >
-      <Option value={SearchType.Games}>Games</Option>
-      <Option value={SearchType.Users}>Users</Option>
+      <Select.Option value={SearchType.Games}>Games</Select.Option>
+      <Select.Option value={SearchType.Users}>Users</Select.Option>
     </Select>
   );
 
+  let items = [
+    {
+      label: (
+        <Link href="/">
+          <a>Home</a>
+        </Link>
+      ),
+      key: 'home',
+    },
+    {
+      label: (
+        <Link href="/browse">
+          <a>Browse</a>
+        </Link>
+      ),
+      key: 'browse',
+    },
+  ];
+
+  const loggedInItems = [
+    {
+      label: (
+        <Link href={`/user/${username}/gamelist`}>
+          <a>My List</a>
+        </Link>
+      ),
+      key: 'game-list',
+    },
+    {
+      label: (
+        <Link href="/addGame">
+          <a>New Game</a>
+        </Link>
+      ),
+      key: 'add-game',
+    },
+  ];
+
+  if (username) {
+    items = items.concat(loggedInItems);
+  }
+
   return (
-    <Menu theme="dark" mode="horizontal">
+    <>
       <div className={styles.logo}>
         <Link href="/">
           <a>
@@ -87,30 +127,7 @@ const NavBar = () => {
           </a>
         </Link>
       </div>
-      <Menu.Item key="1">
-        <Link href="/">
-          <a>Home</a>
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="2">
-        <Link href="/browse">
-          <a>Browse</a>
-        </Link>
-      </Menu.Item>
-      {username && (
-        <>
-          <Menu.Item key="3">
-            <Link href={`/user/${username}/gamelist`}>
-              <a>My List</a>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="4">
-            <Link href="/addGame">
-              <a>New Game</a>
-            </Link>
-          </Menu.Item>
-        </>
-      )}
+      <Menu theme="dark" mode="horizontal" items={items} />
       <Space size="large" className={styles.right}>
         <Search
           onSearch={onSearch}
@@ -137,7 +154,7 @@ const NavBar = () => {
           </>
         )}
       </Space>
-    </Menu>
+    </>
   );
 };
 
