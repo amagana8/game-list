@@ -3,25 +3,25 @@ import Head from 'next/head';
 import { Col, List, Row } from 'antd';
 import styles from './HomePage.module.scss';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
-import { Game, Review, User } from '@utils/types';
+import { User } from '@utils/types';
 import { GameGridType, ReviewGridType } from '@utils/enums';
 import { GameGrid } from '@components/gameGrid/GameGrid';
 import Link from 'next/link';
 import { GetHomeInfo } from '@graphql/queries';
-import { initializeApollo } from '@frontend/apollo-client';
 import Title from 'antd/lib/typography/Title';
-
-interface HomePageProps {
-  users: User[];
-  games: Game[];
-  reviews: Review[];
-}
+import { useQuery } from '@apollo/client';
+import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
+import { useMemo } from 'react';
 
 const getServerSideProps: GetServerSideProps = async () => {
-  const client = initializeApollo();
-  const date = new Date();
-  const { data } = await client.query({
-    query: GetHomeInfo,
+  return {
+    props: {},
+  };
+};
+
+const HomePage: NextPage = () => {
+  const date = useMemo(() => new Date(), []);
+  const { data, loading } = useQuery(GetHomeInfo, {
     variables: {
       userOptions: {
         limit: 10,
@@ -54,20 +54,10 @@ const getServerSideProps: GetServerSideProps = async () => {
     },
   });
 
-  return {
-    props: {
-      users: data.users,
-      games: data.games,
-      reviews: data.reviews,
-    },
-  };
-};
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
-const HomePage: NextPage<HomePageProps> = ({
-  users,
-  games,
-  reviews,
-}: HomePageProps) => {
   return (
     <>
       <Head>
@@ -79,7 +69,7 @@ const HomePage: NextPage<HomePageProps> = ({
 
           <List
             className={styles.users}
-            dataSource={users}
+            dataSource={data.users}
             renderItem={(user: User) => (
               <List.Item>
                 <List.Item.Meta
@@ -96,11 +86,11 @@ const HomePage: NextPage<HomePageProps> = ({
         </Col>
         <Col span={8}>
           <Title>New Releases</Title>
-          <GameGrid games={games} type={GameGridType.Home} />
+          <GameGrid games={data.games} type={GameGridType.Home} />
         </Col>
         <Col span={8}>
           <Title>Recent Reviews</Title>
-          <ReviewGrid reviews={reviews} type={ReviewGridType.Home} />
+          <ReviewGrid reviews={data.reviews} type={ReviewGridType.Home} />
         </Col>
       </Row>
     </>
