@@ -195,41 +195,34 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
                 type="primary"
                 className={styles.button}
                 onClick={() => setShowModal(true)}
+                loading={loading}
               >
-                {!loading && gameConnection ? 'Edit List Entry' : 'Add to List'}
+                {gameConnection ? 'Edit List Entry' : 'Add to List'}
               </Button>
-              {favorited ? (
-                <Button
-                  type="primary"
-                  className={styles.favorite}
-                  icon={<HeartFilled />}
-                  onClick={() => unfavoriteGame()}
-                >
-                  Unfavorite
-                </Button>
-              ) : (
-                <Button
-                  type="primary"
-                  className={styles.favorite}
-                  icon={<HeartOutlined />}
-                  onClick={() => favoriteGame()}
-                >
-                  Favorite
-                </Button>
-              )}
-              {reviewed ? (
-                <Link href={`/user/${username}/reviews/${game.slug}`}>
-                  <a>
-                    <Button className={styles.button}>See Your Review</Button>
-                  </a>
-                </Link>
-              ) : (
-                <Link href={`/game/${game.slug}/review`}>
-                  <a>
-                    <Button className={styles.button}>Submit Review</Button>
-                  </a>
-                </Link>
-              )}
+              <Button
+                type="primary"
+                className={styles.favorite}
+                icon={<HeartFilled />}
+                onClick={
+                  favorited ? () => unfavoriteGame() : () => favoriteGame()
+                }
+                loading={loading}
+              >
+                {favorited ? 'Favorite' : 'Unfavorite'}
+              </Button>
+              <Link
+                href={
+                  reviewed
+                    ? `/user/${username}/reviews/${game.slug}`
+                    : `/game/${game.slug}/review`
+                }
+              >
+                <a>
+                  <Button className={styles.button} loading={loading}>
+                    {reviewed ? 'See Your Review' : 'Submit Review'}
+                  </Button>
+                </a>
+              </Link>
             </Space>
             <AddGameModal
               showModal={showModal}
