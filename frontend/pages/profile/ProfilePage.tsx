@@ -59,7 +59,7 @@ const ProfilePage: NextPage = ({ username, userData }: any) => {
       <Head>
         <title>{`${username}'s Profile · GameList`}</title>
       </Head>
-      <UserPageNavBar username={username} index="1" />
+      <UserPageNavBar username={username} index="Profile" />
       <p className={styles.joinDate}>
         Joined GameList on {parseDate(userData.createdAt)}
       </p>

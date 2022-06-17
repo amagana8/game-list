@@ -2,32 +2,58 @@ import { Menu } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import Link from 'next/link';
 
-const UserPageNavBar = ({ username, index }: any) => (
-  <>
-    <Title>{username}</Title>
-    <Menu mode="horizontal" defaultSelectedKeys={[index]}>
-      <Menu.Item key="1">
+interface UserPageNavBarProps {
+  username: string;
+  index: string;
+}
+
+const UserPageNavBar = ({ username, index }: UserPageNavBarProps) => {
+  const items = [
+    {
+      label: (
         <Link href={`/user/${username}`}>
           <a>Profile</a>
         </Link>
-      </Menu.Item>
-      <Menu.Item key="2">
+      ),
+      key: 'Profile',
+    },
+    {
+      label: (
         <Link href={`/user/${username}/gamelist`}>
           <a>Game List</a>
         </Link>
-      </Menu.Item>
-      <Menu.Item key="3">
+      ),
+      key: 'Game List',
+    },
+    {
+      label: (
         <Link href={`/user/${username}/favorites`}>
           <a>Favorites</a>
         </Link>
-      </Menu.Item>
-      <Menu.Item key="4">
+      ),
+      key: 'Favorites',
+    },
+    {
+      label: (
         <Link href={`/user/${username}/reviews`}>
           <a>Reviews</a>
         </Link>
-      </Menu.Item>
-    </Menu>
-  </>
-);
+      ),
+      key: 'Reviews',
+    },
+  ];
+
+  const currentItem = items.find((item) => item.key === index);
+  if (currentItem) {
+    currentItem.label = <>{currentItem.key}</>;
+  }
+
+  return (
+    <>
+      <Title>{username}</Title>
+      <Menu mode="horizontal" defaultSelectedKeys={[index]} items={items} />
+    </>
+  );
+};
 
 export { UserPageNavBar };

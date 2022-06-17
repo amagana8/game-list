@@ -59,7 +59,7 @@ const GameListPage: NextPage<GameListPageProps> = ({
         <Link href="#planning" title="Planning" />
       </Anchor>
 
-      <UserPageNavBar username={username} index="2" />
+      <UserPageNavBar username={username} index="Game List" />
       <div ref={gameListRef}>
         <GameTable status={Status.Playing} data={gameList.Playing.edges} />
         <GameTable status={Status.Completed} data={gameList.Completed.edges} />

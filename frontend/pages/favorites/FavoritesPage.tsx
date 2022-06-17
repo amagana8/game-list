@@ -41,7 +41,7 @@ const FavoritesPage: NextPage<FavoritesPageProps> = ({
       <Head>
         <title>{`${username}'s Favorite Games · GameList`}</title>
       </Head>
-      <UserPageNavBar username={username} index="3" />
+      <UserPageNavBar username={username} index="Favorites" />
       <GameGrid games={favoriteGames} type={GameGridType.Favorites} />
     </>
   );

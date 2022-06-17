@@ -41,7 +41,7 @@ const UserReviewsPage: NextPage<UserReviewsPageProps> = ({
       <Head>
         <title>{`${username}'s Reviews · GameList`}</title>
       </Head>
-      <UserPageNavBar username={username} index="4" />
+      <UserPageNavBar username={username} index="Reviews" />
       <ReviewGrid reviews={reviews} type={ReviewGridType.User} />
     </>
   );
