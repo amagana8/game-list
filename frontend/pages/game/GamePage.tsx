@@ -94,6 +94,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
         id: game.id,
       },
     },
+    skip: !username,
     onCompleted: (data) => {
       setGameConnection(data.users[0].gameListConnection.edges[0]);
       setFavorited(data.users[0].favoriteGames.length);
@@ -173,7 +174,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
       </Head>
       <Row justify="space-between">
         <Col>
-          <Title className={styles.gameTitle}>{game.title}</Title>
+          <Title>{game.title}</Title>
         </Col>
         <Col>
           <Space>
@@ -202,13 +203,13 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
               <Button
                 type="primary"
                 className={styles.favorite}
-                icon={<HeartFilled />}
+                icon={favorited ? <HeartFilled />: <HeartOutlined />}
                 onClick={
                   favorited ? () => unfavoriteGame() : () => favoriteGame()
                 }
                 loading={loading}
               >
-                {favorited ? 'Favorite' : 'Unfavorite'}
+                {favorited ? 'Unfavorite' : 'Favorite'}
               </Button>
               <Link
                 href={
@@ -234,41 +235,46 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           </Space>
         </Col>
       </Row>
-      <Space>
-        <Image
-          src={game.cover}
-          preview={false}
-          width={264}
-          alt={`${game.title} Cover`}
-          fallback="https://i.imgur.com/fac0ifd.png"
-          className={styles.cover}
-        />
-        <Paragraph className={styles.summary}>{game.summary}</Paragraph>
-      </Space>
-      <ul className={styles.list}>
-        <li>
-          <Text strong>Developers: </Text>
-          <Text>
-            {game.developers.map((developer) => developer.name).join(', ')}
-          </Text>
-        </li>
-        <li>
-          <Text strong>Publishers: </Text>
-          <Text>
-            {game.publishers.map((publisher) => publisher.name).join(', ')}
-          </Text>
-        </li>
-        <li>
-          <Text strong>Genre: </Text>
-          <Text className={styles.genre}>
-            {game.genres.map((genre) => genre.name).join(', ')}
-          </Text>
-        </li>
-        <li>
-          <Text strong>Release Date: </Text>
-          <Text>{parseDate(game.releaseDate)}</Text>
-        </li>
-      </ul>
+      <Row gutter={16} className={styles.gameInfo}>
+        <Col span={6}>
+          <Image
+            src={game.cover}
+            preview={false}
+            width={264}
+            alt={`${game.title} Cover`}
+            fallback="https://i.imgur.com/fac0ifd.png"
+          />
+          <ul className={styles.list}>
+            <li>
+              <Text strong>Developers: </Text>
+              <Text>
+                {game.developers.map((developer) => developer.name).join(', ')}
+              </Text>
+            </li>
+            <li>
+              <Text strong>Publishers: </Text>
+              <Text>
+                {game.publishers.map((publisher) => publisher.name).join(', ')}
+              </Text>
+            </li>
+            <li>
+              <Text strong>Genre: </Text>
+              <Text className={styles.genre}>
+                {game.genres.map((genre) => genre.name).join(', ')}
+              </Text>
+            </li>
+            <li>
+              <Text strong>Release Date: </Text>
+              <Text>{parseDate(game.releaseDate)}</Text>
+            </li>
+          </ul>
+        </Col>
+        <Col span={12}>
+          <Paragraph ellipsis={{ expandable: true, rows: 20 }}>
+            {game.summary}
+          </Paragraph>
+        </Col>
+      </Row>
       <Space direction="vertical" size="large">
         <Row>
           <Col span={8}>
