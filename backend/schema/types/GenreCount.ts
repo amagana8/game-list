@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-micro';
 
 export const GenreCountTypeDef = gql`
-  type GenreCount {
+  type GenreCount @exclude {
     genre: String!
     amount: Int!
   }
