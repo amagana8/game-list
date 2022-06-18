@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-micro';
 export const gameTypeDef = gql`
   type Game
     @exclude(operations: [DELETE])
-    @fulltext(indexes: [{ name: "GameTitle", fields: ["title"] }])
+    @fulltext(indexes: [{ name: "GameTitle", fields: ["title", "slug"] }])
     @auth(rules: [{ operations: [CREATE, UPDATE], isAuthenticated: true }]) {
     id: ID! @id
     slug: String! @unique
