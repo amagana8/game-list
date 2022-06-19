@@ -72,7 +72,7 @@ const GameGrid = ({ games, type }: GameGridProps) => {
       }
       grid={
         type === GameGridType.Home
-          ? { column: 2 }
+          ? { xs: 1, sm: 1, md: 1, lg: 1, xl: 1, xxl: 2 }
           : {
               gutter: 16,
               xs: 1,

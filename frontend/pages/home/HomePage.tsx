@@ -62,11 +62,15 @@ const HomePage: NextPage = () => {
     <>
       <Head>
         <title>Home · GameList</title>
+        <meta
+          name="description"
+          content="Keep track of all the games you've played, share your list with
+          friends, see stats on your playtime, and discover new games."
+        />
       </Head>
-      <Row gutter={[16, 16]}>
+      <Row gutter={16}>
         <Col span={8}>
           <Title>Latest Users</Title>
-
           <List
             className={styles.users}
             dataSource={data.users}
