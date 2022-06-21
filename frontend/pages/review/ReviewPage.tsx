@@ -12,11 +12,12 @@ import { GetReview } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useAuthStore } from '@frontend/authStore';
+import Error from 'next/error';
 
 const { Title, Paragraph } = Typography;
 
 interface ReviewPageProps {
-  review: Review;
+  review?: Review;
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -36,6 +37,12 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   });
 
+  if (!data.reviews.length) {
+    return {
+      props: {},
+    };
+  }
+
   return {
     props: {
       review: data.reviews[0],
@@ -47,17 +54,21 @@ const ReviewPage = ({ review }: ReviewPageProps) => {
   const username = useAuthStore((state) => state.username);
   const [showEditButton, setShowEditButton] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [summary, setSummary] = useState(review.summary);
-  const [reviewBody, setReviewBody] = useState(review.body);
+  const [summary, setSummary] = useState(review?.summary);
+  const [reviewBody, setReviewBody] = useState(review?.body);
 
   useEffect(() => {
-    if (username === review.author.username) {
+    if (username === review?.author.username) {
       setShowEditButton(true);
     }
   }, [username, review]);
 
   const [updateReview] = useMutation(UpdateReview);
   const [deleteReview] = useMutation(DeleteReview);
+
+  if (!review) {
+    return <Error statusCode={404} />;
+  }
 
   const submitReview = async () => {
     try {

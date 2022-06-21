@@ -6,10 +6,11 @@ import { GameGridType } from '@utils/enums';
 import { Game } from '@utils/types';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import Error from 'next/error';
 
 interface FavoritesPageProps {
-  username: string;
-  favoriteGames: Game[];
+  username?: string;
+  favoriteGames?: Game[];
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -24,6 +25,12 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   });
 
+  if (!data.users.length) {
+    return {
+      props: {},
+    };
+  }
+
   return {
     props: {
       username,
@@ -36,6 +43,10 @@ const FavoritesPage: NextPage<FavoritesPageProps> = ({
   username,
   favoriteGames,
 }: FavoritesPageProps) => {
+  if (!username || !favoriteGames) {
+    return <Error statusCode={404} />;
+  }
+
   return (
     <>
       <Head>

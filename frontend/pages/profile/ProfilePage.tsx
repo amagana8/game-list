@@ -8,6 +8,7 @@ import Head from 'next/head';
 import { parseDate, roundNumber } from '@utils/index';
 import { initializeApollo } from '@frontend/apollo-client';
 import Title from 'antd/lib/typography/Title';
+import Error from 'next/error';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -22,6 +23,11 @@ const TreeMap = dynamic(() => import('@components/charts/treeMap/TreeMap'), {
   ssr: false,
 });
 
+interface ProfilePageProps {
+  username?: string;
+  userData?: any;
+}
+
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const client = initializeApollo();
   const { username } = query;
@@ -34,6 +40,12 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   });
 
+  if (!data.users.length) {
+    return {
+      props: {},
+    };
+  }
+
   return {
     props: {
       username,
@@ -42,7 +54,14 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
   };
 };
 
-const ProfilePage: NextPage = ({ username, userData }: any) => {
+const ProfilePage: NextPage<ProfilePageProps> = ({
+  username,
+  userData,
+}: ProfilePageProps) => {
+  if (!username) {
+    return <Error statusCode={404} />;
+  }
+
   const statusData = Object.keys(userData)
     .filter((field) => field.startsWith('games'))
     .map((field) => ({

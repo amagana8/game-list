@@ -8,12 +8,13 @@ import Head from 'next/head';
 import { GetList } from '@graphql/queries';
 import { useRef } from 'react';
 import { initializeApollo } from '@frontend/apollo-client';
+import Error from 'next/error';
 
 const { Link } = Anchor;
 
 interface GameListPageProps {
-  gameList: any;
-  username: string;
+  gameList?: any;
+  username?: string;
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -29,6 +30,12 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   });
 
+  if (!data.users.length) {
+    return {
+      props: {},
+    };
+  }
+
   return {
     props: {
       username,
@@ -42,6 +49,10 @@ const GameListPage: NextPage<GameListPageProps> = ({
   gameList,
 }: GameListPageProps) => {
   const gameListRef = useRef<any>(null);
+  if (!username) {
+    return <Error statusCode={404} />;
+  }
+
   return (
     <>
       <Head>

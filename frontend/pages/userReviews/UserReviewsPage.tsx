@@ -6,10 +6,11 @@ import { ReviewGridType } from '@utils/enums';
 import { Review } from '@utils/types';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import Error from 'next/error';
 
 interface UserReviewsPageProps {
-  username: string;
-  reviews: Review[];
+  username?: string;
+  reviews?: Review[];
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -24,6 +25,12 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   });
 
+  if (!data.users.length) {
+    return {
+      props: {},
+    };
+  }
+
   return {
     props: {
       username,
@@ -36,6 +43,9 @@ const UserReviewsPage: NextPage<UserReviewsPageProps> = ({
   username,
   reviews,
 }: UserReviewsPageProps) => {
+  if (!username || !reviews) {
+    return <Error statusCode={404} />;
+  }
   return (
     <>
       <Head>

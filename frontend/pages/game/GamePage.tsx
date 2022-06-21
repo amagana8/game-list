@@ -28,6 +28,7 @@ import { GetGame } from '@graphql/queries';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { AddFavoriteGame, RemoveFavoriteGame } from '@graphql/mutations';
 import { useAuthStore } from '@frontend/authStore';
+import Error from 'next/error';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -42,7 +43,7 @@ const BarChart = dynamic(() => import('@components/charts/barChart/BarChart'), {
 const { Title, Text, Paragraph } = Typography;
 
 interface GameProps {
-  game: Game;
+  game?: Game;
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -61,6 +62,12 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   });
 
+  if (!data.games.length) {
+    return {
+      props: {},
+    };
+  }
+
   return {
     props: {
       game: data.games[0],
@@ -74,6 +81,8 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [reviewed, setReviewed] = useState(false);
   const [favorited, setFavorited] = useState(false);
   const username = useAuthStore((state) => state.username);
+  const [addFavoriteGame] = useMutation(AddFavoriteGame);
+  const [removeFavoriteGame] = useMutation(RemoveFavoriteGame);
 
   const { loading } = useQuery(GetGameStatus, {
     variables: {
@@ -82,25 +91,29 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
       },
       gameListConnectionWhere: {
         node: {
-          id: game.id,
+          id: game?.id,
         },
       },
       gameReviewsWhere: {
         subject: {
-          id: game.id,
+          id: game?.id,
         },
       },
       favoriteGamesWhere: {
-        id: game.id,
+        id: game?.id,
       },
     },
-    skip: !username,
+    skip: !username || !game,
     onCompleted: (data) => {
       setGameConnection(data.users[0].gameListConnection.edges[0]);
       setFavorited(data.users[0].favoriteGames.length);
       setReviewed(data.users[0].gameReviews.length);
     },
   });
+
+  if (!game) {
+    return <Error statusCode={404} />;
+  }
 
   const statusData = Object.entries(game)
     .filter(([field]) => field.startsWith('users'))
@@ -111,7 +124,6 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
 
   const meanScore = game.userListAggregate.edge.score.average;
 
-  const [addFavoriteGame] = useMutation(AddFavoriteGame);
   const favoriteGame = async () => {
     try {
       await addFavoriteGame({
@@ -139,7 +151,6 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
     }
   };
 
-  const [removeFavoriteGame] = useMutation(RemoveFavoriteGame);
   const unfavoriteGame = async () => {
     try {
       await removeFavoriteGame({
