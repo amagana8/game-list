@@ -2,6 +2,7 @@ import { Source } from 'graphql';
 import { UpdateUserForm } from '@utils/types';
 import { User } from '@backend/server';
 import { usernameRegex, emailRegex } from '@backend/utils/regex';
+import { verify } from 'jsonwebtoken';
 
 export const updateUser = {
   updateUserDetails: async (
@@ -15,7 +16,18 @@ export const updateUser = {
       },
     });
 
-    if (!context.auth.jwt || user.id !== context.auth.jwt.sub) {
+    if (!context.auth.jwt) {
+      throw new Error('Unauthorized request. Please login and try again.');
+    }
+    let payload: any;
+    try {
+      payload = verify(context.auth.jwt, process.env.ACCESS_JWT_SECRET);
+    } catch (err) {
+      console.log(err);
+      throw new Error('Unauthorized request. Please login and try again.');
+    }
+
+    if (user.id !== payload.sub) {
       throw new Error('Unauthorized request. Please login and try again.');
     }
 
