@@ -8,6 +8,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { SignUp } from '@graphql/mutations';
 import { UserForm } from '@utils/types';
 import { useAuthStore } from '@frontend/authStore';
+import Title from 'antd/lib/typography/Title';
 
 const SignUpPage: NextPage = () => {
   const setUser = useAuthStore((state) => state.setUser);
@@ -38,6 +39,9 @@ const SignUpPage: NextPage = () => {
       <Head>
         <title>Sign up for GameList · GameList</title>
       </Head>
+      <Title className={styles.title} level={2}>
+        Sign up for GameList
+      </Title>
       <Form
         className={styles.form}
         initialValues={{ remember: true }}
@@ -76,11 +80,7 @@ const SignUpPage: NextPage = () => {
             },
           ]}
         >
-          <Input
-            prefix={<LockOutlined />}
-            type="password"
-            placeholder="Password"
-          />
+          <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: 100 }}>

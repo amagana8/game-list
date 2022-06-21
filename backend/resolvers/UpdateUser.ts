@@ -51,7 +51,7 @@ export const updateUser = {
           `User with username ${newUsername.toLowerCase()} already exists!`,
         );
       } else {
-        User.update({
+        await User.update({
           where: {
             username,
           },
@@ -74,7 +74,7 @@ export const updateUser = {
           `User with email ${newEmail.toString()} already exists!`,
         );
       } else {
-        User.update({
+        await User.update({
           where: {
             username,
           },

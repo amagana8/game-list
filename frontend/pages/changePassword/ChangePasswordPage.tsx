@@ -7,6 +7,7 @@ import { ChangePassword } from '@graphql/mutations';
 import { useAuthStore } from '@frontend/authStore';
 import Head from 'next/head';
 import styles from './ChangePassword.module.scss';
+import Title from 'antd/lib/typography/Title';
 
 interface changePasswordForm {
   newPassword: string;
@@ -39,6 +40,9 @@ const ChangePasswordPage: NextPage = () => {
       <Head>
         <title>Change Password · GameList</title>
       </Head>
+      <Title className={styles.title} level={2}>
+        Change Password
+      </Title>
       <Form onFinish={onFinish} className={styles.form}>
         <Form.Item
           name="newPassword"
@@ -46,15 +50,11 @@ const ChangePasswordPage: NextPage = () => {
             { required: true, message: 'Please input your new password!' },
           ]}
         >
-          <Input
-            prefix={<LockOutlined />}
-            type="password"
-            placeholder="New Password"
-          />
+          <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            Change Password
+            Update Password
           </Button>
         </Form.Item>
       </Form>

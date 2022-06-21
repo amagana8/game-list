@@ -203,7 +203,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
               <Button
                 type="primary"
                 className={styles.favorite}
-                icon={favorited ? <HeartFilled />: <HeartOutlined />}
+                icon={favorited ? <HeartFilled /> : <HeartOutlined />}
                 onClick={
                   favorited ? () => unfavoriteGame() : () => favoriteGame()
                 }

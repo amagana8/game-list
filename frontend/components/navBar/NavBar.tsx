@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button, Menu, Popover, Space, Select } from 'antd';
+import { Button, Menu, Popover, Space, Select, message } from 'antd';
 import styles from './NavBar.module.scss';
 import Router from 'next/router';
 import {
@@ -29,6 +29,7 @@ const NavBar = () => {
   const handleLogout = async () => {
     resetUser();
     await signOut();
+    message.success('You have been successfully logged out.');
     Router.push('/');
   };
 

@@ -43,15 +43,21 @@ export const changePassword = {
       throw new Error('Invalid password!');
     }
 
-    user.password = await argon2.hash(newPassword);
-    user.tokenVersion++;
+    const hashedPassword = await argon2.hash(newPassword);
+    const { users } = await User.update({
+      where: { id: payload.sub },
+      update: {
+        password: hashedPassword,
+        tokenVersion: user.tokenVersion + 1,
+      },
+    });
 
     // log in user after password change
-    sendRefreshToken(context.res, createRefreshToken(user));
+    sendRefreshToken(context.res, createRefreshToken(users[0]));
 
     return {
       username: user.username,
-      accessToken: createAccessToken(user),
+      accessToken: createAccessToken(users[0]),
     };
   },
 };

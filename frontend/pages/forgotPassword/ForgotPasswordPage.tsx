@@ -6,6 +6,7 @@ import { MailOutlined } from '@ant-design/icons';
 import Head from 'next/head';
 import styles from './ForgotPassword.module.scss';
 import Router from 'next/router';
+import Title from 'antd/lib/typography/Title';
 
 interface ForgotPasswordForm {
   email: string;
@@ -37,6 +38,9 @@ const ForgotPasswordPage: NextPage = () => {
       <Head>
         <title>Forgot Password · GameList</title>
       </Head>
+      <Title className={styles.title} level={2}>
+        Reset Password
+      </Title>
       <Form onFinish={onFinish} className={styles.form}>
         <Form.Item
           name="email"
