@@ -20,6 +20,8 @@ import { signIn } from '@resolvers/SignIn';
 import { updateUser } from '@resolvers/UpdateUser';
 import { AuthResponseTypeDef } from '@schema/types/AuthResponse';
 import { signOut } from '@resolvers/SignOut';
+import { changePassword } from '@resolvers/ChangePassword';
+import { forgotPassword } from '@resolvers/ForgotPassword';
 
 const cors = Cors();
 
@@ -44,6 +46,8 @@ const resolvers = {
     ...signIn,
     ...updateUser,
     ...signOut,
+    ...forgotPassword,
+    ...changePassword,
   },
 };
 

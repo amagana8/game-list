@@ -10,5 +10,7 @@ export const mutations = gql`
       newEmail: String
     ): String!
     signOut: Boolean!
+    forgotPassword(email: String!): Boolean!
+    changePassword(token: String!, newPassword: String!): AuthResponse!
   }
 `;

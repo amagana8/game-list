@@ -128,3 +128,18 @@ export const RemoveFavoriteGame = gql`
     }
   }
 `;
+
+export const ForgotPassword = gql`
+  mutation ForgotPassword($email: String!) {
+    forgotPassword(email: $email)
+  }
+`;
+
+export const ChangePassword = gql`
+  mutation ChangePassword($token: String!, $newPassword: String!) {
+    changePassword(token: $token, newPassword: $newPassword) {
+      username
+      accessToken
+    }
+  }
+`;

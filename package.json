@@ -23,6 +23,7 @@
     "micro-cors": "0.1.1",
     "neo4j-driver": "4.4.6",
     "next": "12.1.6",
+    "nodemailer": "^6.7.5",
     "nprogress": "0.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@types/micro-cors": "0.1.2",
     "@types/node": "18.0.0",
+    "@types/nodemailer": "^6.4.4",
     "@types/nprogress": "0.2.0",
     "@types/react": "18.0.14",
     "eslint": "8.18.0",

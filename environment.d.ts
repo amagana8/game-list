@@ -6,6 +6,8 @@ declare global {
       NEO4J_PASSWORD: string;
       ACCESS_JWT_SECRET: string;
       REFRESH_JWT_SECRET: string;
+      EMAIL_USERNAME: string;
+      EMAIL_PASSWORD: string;
     }
   }
 }

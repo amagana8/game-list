@@ -60,15 +60,19 @@ const LoginPage: NextPage = () => {
           />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" className={styles.button}>
             Login
           </Button>
-        </Form.Item>
-        <Form.Item>
-          or
-          <Link href="/signup">
-            <a> register now!</a>
-          </Link>
+          <div className={styles.link}>
+            <Link href="/forgot-password">
+              <a>Forgot Password?</a>
+            </Link>
+          </div>
+          <div className={styles.link}>
+            <Link href="/signup">
+              <a>Create an account</a>
+            </Link>
+          </div>
         </Form.Item>
       </Form>
     </>
