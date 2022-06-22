@@ -16,6 +16,9 @@ export const GameFragment = gql`
     genres {
       name
     }
+    platforms {
+      name
+    }
     releaseDate
   }
 `;

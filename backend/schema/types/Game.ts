@@ -12,6 +12,7 @@ export const gameTypeDef = gql`
     cover: String
     developers: [Company!]! @relationship(type: "DEVELOPED_BY", direction: OUT)
     publishers: [Company!]! @relationship(type: "PUBLISHED_BY", direction: OUT)
+    platforms: [Platform!]! @relationship(type: "ON_PLATFORM", direction: OUT)
     genres: [Genre!]! @relationship(type: "IN_GENRE", direction: OUT)
     summary: String
     releaseDate: DateTime

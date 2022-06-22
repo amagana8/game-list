@@ -269,7 +269,13 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
               </Text>
             </li>
             <li>
-              <Text strong>Genre: </Text>
+              <Text strong>Platforms: </Text>
+              <Text className={styles.genre}>
+                {game.platforms.map((platform) => platform.name).join(', ')}
+              </Text>
+            </li>
+            <li>
+              <Text strong>Genres: </Text>
               <Text className={styles.genre}>
                 {game.genres.map((genre) => genre.name).join(', ')}
               </Text>

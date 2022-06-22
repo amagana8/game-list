@@ -23,6 +23,7 @@ export interface Game {
   userReviews: Review[];
   userListAggregate: { edge: { score: { average: number } } };
   scoreDistribution: ScoreCount[];
+  platforms: Platform[];
 }
 
 interface ScoreCount {
@@ -35,6 +36,11 @@ export interface Company {
 
 export interface Genre {
   id: string;
+  name: string;
+}
+
+export interface Platform {
+  id: string,
   name: string;
 }
 
