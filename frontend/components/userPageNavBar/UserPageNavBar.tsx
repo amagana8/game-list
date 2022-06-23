@@ -43,11 +43,6 @@ const UserPageNavBar = ({ username, index }: UserPageNavBarProps) => {
     },
   ];
 
-  const currentItem = items.find((item) => item.key === index);
-  if (currentItem) {
-    currentItem.label = <>{currentItem.key}</>;
-  }
-
   return (
     <>
       <Title>{username}</Title>

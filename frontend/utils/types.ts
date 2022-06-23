@@ -40,7 +40,7 @@ export interface Genre {
 }
 
 export interface Platform {
-  id: string,
+  id: string;
   name: string;
 }
 

@@ -6,7 +6,7 @@ import { Status } from '@utils/enums';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
 import Head from 'next/head';
 import { GetList } from '@graphql/queries';
-import { useRef } from 'react';
+import { useCallback, useState } from 'react';
 import { initializeApollo } from '@frontend/apollo-client';
 import Error from 'next/error';
 
@@ -48,7 +48,13 @@ const GameListPage: NextPage<GameListPageProps> = ({
   username,
   gameList,
 }: GameListPageProps) => {
-  const gameListRef = useRef<any>(null);
+  const [ref, setRef] = useState<any>();
+  const currentRef = useCallback((node: any) => {
+    if (node !== null) {
+      setRef(node.current);
+    }
+  }, []);
+
   if (!username) {
     return <Error statusCode={404} />;
   }
@@ -60,7 +66,7 @@ const GameListPage: NextPage<GameListPageProps> = ({
       </Head>
       <Anchor
         className={styles.anchor}
-        getContainer={gameListRef.current}
+        getContainer={ref}
         showInkInFixed={true}
       >
         <Link href="#playing" title="Playing" />
@@ -71,7 +77,7 @@ const GameListPage: NextPage<GameListPageProps> = ({
       </Anchor>
 
       <UserPageNavBar username={username} index="Game List" />
-      <div ref={gameListRef}>
+      <div ref={currentRef}>
         <GameTable status={Status.Playing} data={gameList.Playing.edges} />
         <GameTable status={Status.Completed} data={gameList.Completed.edges} />
         <GameTable status={Status.Paused} data={gameList.Paused.edges} />
