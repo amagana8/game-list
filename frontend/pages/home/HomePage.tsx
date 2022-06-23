@@ -11,7 +11,6 @@ import { GetHomeInfo } from '@graphql/queries';
 import Title from 'antd/lib/typography/Title';
 import { useQuery } from '@apollo/client';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
-import { useMemo } from 'react';
 
 const getServerSideProps: GetServerSideProps = async () => {
   return {
@@ -20,7 +19,6 @@ const getServerSideProps: GetServerSideProps = async () => {
 };
 
 const HomePage: NextPage = () => {
-  const date = useMemo(() => new Date(), []);
   const { data, loading } = useQuery(GetHomeInfo, {
     variables: {
       userOptions: {
@@ -31,18 +29,7 @@ const HomePage: NextPage = () => {
           },
         ],
       },
-      gameWhere: {
-        releaseDate_LTE: date.toISOString(),
-        cover_NOT: '',
-      },
-      gamesOptions: {
-        limit: 10,
-        sort: [
-          {
-            releaseDate: 'DESC',
-          },
-        ],
-      },
+      gamesLimit: 10,
       reviewsOptions: {
         limit: 10,
         sort: [
@@ -89,8 +76,8 @@ const HomePage: NextPage = () => {
           />
         </Col>
         <Col span={8}>
-          <Title>New Releases</Title>
-          <GameGrid games={data.games} type={GameGridType.Home} />
+          <Title>Highest Rated</Title>
+          <GameGrid games={data.topGames} type={GameGridType.Home} />
         </Col>
         <Col span={8}>
           <Title>Recent Reviews</Title>

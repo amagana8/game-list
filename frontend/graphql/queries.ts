@@ -187,9 +187,9 @@ export const GetReviews = gql`
 
 export const GetHomeInfo = gql`
   query GetHomeInfo(
-    $gameWhere: GameWhere
     $userOptions: UserOptions
-    $gamesOptions: GameOptions
+    $gamesLimit: Int = 50
+    $gamesOffset: Int = 0
     $reviewsOptions: ReviewOptions
   ) {
     users(options: $userOptions) {
@@ -202,7 +202,7 @@ export const GetHomeInfo = gql`
         }
       }
     }
-    games(options: $gamesOptions, where: $gameWhere) {
+    topGames(limit: $gamesLimit, offset: $gamesOffset) {
       ...SmallGameFragment
     }
     reviews(options: $reviewsOptions) {
@@ -228,6 +228,15 @@ export const GetFavoriteGames = gql`
       favoriteGames {
         ...SmallGameFragment
       }
+    }
+  }
+  ${SmallGameFragment}
+`;
+
+export const GetTopGames = gql`
+  query TopGames($limit: Int = 50, $offset: Int = 0) {
+    topGames(limit: $limit, offset: $offset) {
+      ...SmallGameFragment
     }
   }
   ${SmallGameFragment}

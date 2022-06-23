@@ -4,7 +4,7 @@ import { GameGrid } from '@components/gameGrid/GameGrid';
 import { Game } from '@utils/types';
 import { GameGridType } from '@utils/enums';
 import { GetServerSideProps } from 'next';
-import { GetGames } from '@graphql/queries';
+import { GetTopGames } from '@graphql/queries';
 import { initializeApollo } from '@frontend/apollo-client';
 import Title from 'antd/lib/typography/Title';
 
@@ -14,25 +14,12 @@ interface BrowsePageProps {
 
 const getServerSideProps: GetServerSideProps = async () => {
   const client = initializeApollo();
-  const date = new Date().toISOString();
 
-  const { data } = await client.query({
-    query: GetGames,
-    variables: {
-      options: {
-        limit: 50,
-        sort: [{ releaseDate: 'DESC' }],
-      },
-      where: {
-        releaseDate_LTE: date,
-        cover_NOT: '',
-      },
-    },
-  });
+  const { data } = await client.query({ query: GetTopGames });
 
   return {
     props: {
-      games: data.games,
+      games: data.topGames,
     },
   };
 };

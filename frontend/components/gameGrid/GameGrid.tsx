@@ -1,12 +1,12 @@
 import { useLazyQuery } from '@apollo/client';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
-import { GetGames } from '@graphql/queries';
+import { GetTopGames } from '@graphql/queries';
 import { GameGridType } from '@utils/enums';
 import { Game } from '@utils/types';
 import { Button, Card, Image, List } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './GameGrid.module.scss';
 
 interface GameGridProps {
@@ -15,32 +15,23 @@ interface GameGridProps {
 }
 
 const GameGrid = ({ games, type }: GameGridProps) => {
-  const date = useRef(new Date().toISOString());
   const [list, setList] = useState(games);
   useEffect(() => {
     setList(games);
   }, [games]);
   const [reachedEnd, setReachedEnd] = useState(false);
 
-  const [getMoreGames, { loading }] = useLazyQuery(GetGames, {
+  const [getMoreGames, { loading }] = useLazyQuery(GetTopGames, {
     onCompleted: (data) => {
-      setList((prevState) => [...prevState, ...data.games]);
-      if (!data.games.length) setReachedEnd(true);
+      setList((prevState) => [...prevState, ...data.topGames]);
+      if (!data.topGames.length) setReachedEnd(true);
     },
   });
 
   const onLoadMore = () => {
     getMoreGames({
       variables: {
-        options: {
-          offset: list.length,
-          limit: 50,
-          sort: [{ releaseDate: 'DESC' }],
-        },
-        where: {
-          releaseDate_LTE: date.current,
-          cover_NOT: '',
-        },
+        offset: list.length,
       },
     });
   };
