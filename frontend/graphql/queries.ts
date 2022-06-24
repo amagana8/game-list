@@ -12,19 +12,7 @@ import {
 export const GetList = gql`
   query Users($where: UserWhere) {
     users(where: $where) {
-      Playing: gameListConnection(where: { edge: { status: PLAYING } }) {
-        ...ListFragment
-      }
-      Completed: gameListConnection(where: { edge: { status: COMPLETED } }) {
-        ...ListFragment
-      }
-      Paused: gameListConnection(where: { edge: { status: PAUSED } }) {
-        ...ListFragment
-      }
-      Dropped: gameListConnection(where: { edge: { status: DROPPED } }) {
-        ...ListFragment
-      }
-      Planning: gameListConnection(where: { edge: { status: PLANNING } }) {
+      gameListConnection {
         ...ListFragment
       }
     }
@@ -240,4 +228,13 @@ export const GetTopGames = gql`
     }
   }
   ${SmallGameFragment}
+`;
+
+export const GetPlatforms = gql`
+  query Platforms {
+    platforms {
+      name
+      id
+    }
+  }
 `;

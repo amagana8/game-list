@@ -1,27 +1,31 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { Anchor } from 'antd';
+import { Anchor, Space } from 'antd';
 import { GameTable } from '@components/gameTable/GameTable';
 import styles from './GameListPage.module.scss';
 import { Status } from '@utils/enums';
 import { UserPageNavBar } from '@components/userPageNavBar/UserPageNavBar';
 import Head from 'next/head';
-import { GetList } from '@graphql/queries';
-import { useCallback, useState } from 'react';
+import { GetGenres, GetList, GetPlatforms } from '@graphql/queries';
+import { useCallback, useEffect, useState } from 'react';
 import { initializeApollo } from '@frontend/apollo-client';
 import Error from 'next/error';
+import { Genre, ListEntry, Platform } from '@utils/types';
+import { GameFilters } from '@components/gameFilters/GameFilters';
 
 const { Link } = Anchor;
 
 interface GameListPageProps {
   gameList?: any;
   username?: string;
+  platforms: Platform[];
+  genres: Genre[];
 }
 
 const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const client = initializeApollo();
 
   const { username } = query;
-  const { data } = await client.query({
+  const { data: userData } = await client.query({
     query: GetList,
     variables: {
       where: {
@@ -30,7 +34,10 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   });
 
-  if (!data.users.length) {
+  const { data: platformData } = await client.query({ query: GetPlatforms });
+  const { data: genreData } = await client.query({ query: GetGenres });
+
+  if (!userData.users.length) {
     return {
       props: {},
     };
@@ -39,7 +46,9 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
   return {
     props: {
       username,
-      gameList: data.users[0],
+      gameList: userData.users[0].gameListConnection,
+      platforms: platformData.platforms,
+      genres: genreData.genres,
     },
   };
 };
@@ -47,6 +56,8 @@ const getServerSideProps: GetServerSideProps = async ({ query }) => {
 const GameListPage: NextPage<GameListPageProps> = ({
   username,
   gameList,
+  platforms,
+  genres,
 }: GameListPageProps) => {
   const [ref, setRef] = useState<any>();
   const currentRef = useCallback((node: any) => {
@@ -55,34 +66,81 @@ const GameListPage: NextPage<GameListPageProps> = ({
     }
   }, []);
 
+  const [selectedPlatforms, setSelectedPlatforms] = useState<String[]>([]);
+  const [selectedGenres, setSelectedGenres] = useState<String[]>([]);
+
+  const [list, setList] = useState(gameList.edges);
+
+  useEffect(() => {
+    // filter by platforms
+    let games = selectedPlatforms.length
+      ? gameList.edges.filter((entry: ListEntry) =>
+          entry.node.platforms.some((platform) =>
+            selectedPlatforms.includes(platform.name),
+          ),
+        )
+      : gameList.edges;
+
+    // filter by genres
+    if (selectedGenres.length) {
+      games = games.filter((entry: ListEntry) =>
+        entry.node.genres.some((genre) => selectedGenres.includes(genre.name)),
+      );
+    }
+
+    setList(games);
+  }, [selectedPlatforms, selectedGenres, gameList.edges]);
+
   if (!username) {
     return <Error statusCode={404} />;
   }
+
+  const getStatusList = (status: Status) => {
+    return list.filter((entry: ListEntry) => entry.status === status);
+  };
 
   return (
     <>
       <Head>
         <title>{`${username}'s List · GameList`}</title>
       </Head>
-      <Anchor
-        className={styles.anchor}
-        getContainer={ref}
-        showInkInFixed={true}
-      >
-        <Link href="#playing" title="Playing" />
-        <Link href="#completed" title="Completed" />
-        <Link href="#paused" title="Paused" />
-        <Link href="#dropped" title="Dropped" />
-        <Link href="#planning" title="Planning" />
-      </Anchor>
+      <div className={styles.anchor}>
+        <Space direction="vertical">
+          <Anchor getContainer={ref} showInkInFixed={true}>
+            <Link href="#playing" title="Playing" />
+            <Link href="#completed" title="Completed" />
+            <Link href="#paused" title="Paused" />
+            <Link href="#dropped" title="Dropped" />
+            <Link href="#planning" title="Planning" />
+          </Anchor>
 
+          <GameFilters
+            platforms={platforms}
+            genres={genres}
+            setPlatforms={setSelectedPlatforms}
+            setGenres={setSelectedGenres}
+          />
+        </Space>
+      </div>
       <UserPageNavBar username={username} index="Game List" />
-      <div ref={currentRef}>
-        <GameTable status={Status.Playing} data={gameList.Playing.edges} />
-        <GameTable status={Status.Completed} data={gameList.Completed.edges} />
-        <GameTable status={Status.Paused} data={gameList.Paused.edges} />
-        <GameTable status={Status.Dropped} data={gameList.Dropped.edges} />
-        <GameTable status={Status.Planning} data={gameList.Planning.edges} />
+      <div ref={currentRef} className={styles.list}>
+        <GameTable
+          status={Status.Playing}
+          data={getStatusList(Status.Playing)}
+        />
+        <GameTable
+          status={Status.Completed}
+          data={getStatusList(Status.Completed)}
+        />
+        <GameTable status={Status.Paused} data={getStatusList(Status.Paused)} />
+        <GameTable
+          status={Status.Dropped}
+          data={getStatusList(Status.Dropped)}
+        />
+        <GameTable
+          status={Status.Planning}
+          data={getStatusList(Status.Planning)}
+        />
       </div>
     </>
   );

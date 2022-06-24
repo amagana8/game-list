@@ -67,3 +67,10 @@ export interface UserState {
   username: string;
   accessToken: string;
 }
+
+export interface ListEntry {
+  hours: Number;
+  score: Number;
+  status: string;
+  node: Game;
+}

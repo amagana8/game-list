@@ -5,17 +5,11 @@ import styles from './GameTable.module.scss';
 import { Game } from '@utils/types';
 import { ColumnsType } from 'antd/es/table';
 import Title from 'antd/lib/typography/Title';
+import { ListEntry } from '@utils/types';
 
 interface gameTableProps {
   status: string;
   data: any;
-}
-
-interface ListEntry {
-  hours: Number;
-  score: Number;
-  status: string;
-  node: Game;
 }
 
 interface TableEntry {

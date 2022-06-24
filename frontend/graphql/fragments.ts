@@ -29,6 +29,12 @@ export const SmallGameFragment = gql`
     slug
     title
     cover
+    platforms {
+      name
+    }
+    genres {
+      name
+    }
   }
 `;
 
