@@ -11,7 +11,7 @@ export const queries = gql`
         statement: """
         MATCH (:User)-[r:LISTED]->(g:Game)
         WHERE r.score IS NOT NULL
-        WITH g as game, max(r.score) as score
+        WITH g as game, AVG(r.score) as score
         RETURN game
         ORDER BY score DESC
         SKIP $offset
