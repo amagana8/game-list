@@ -1,3 +1,7 @@
-import { AddReviewPage } from '@pages/addReview/AddReviewPage';
+import {
+  getServerSideProps,
+  AddReviewPage,
+} from '@pages/addReview/AddReviewPage';
 
+export { getServerSideProps };
 export default AddReviewPage;

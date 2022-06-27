@@ -3,6 +3,7 @@ import { useAuthStore } from '@frontend/authStore';
 import { NewReview } from '@graphql/mutations';
 import { Button, Form, Input } from 'antd';
 import Title from 'antd/lib/typography/Title';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import Router, { useRouter } from 'next/router';
 import styles from './AddReviewPage.module.scss';
@@ -12,7 +13,13 @@ interface ReviewForm {
   body: string;
 }
 
-const AddReviewPage = () => {
+const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};
+
+const AddReviewPage: NextPage = () => {
   const { slug } = useRouter().query;
   const username = useAuthStore((state) => state.username);
   const layout = {
@@ -80,4 +87,4 @@ const AddReviewPage = () => {
   );
 };
 
-export { AddReviewPage };
+export { getServerSideProps, AddReviewPage };
