@@ -4,9 +4,9 @@ import { GetServerSideProps, NextPage } from 'next';
 import { initializeApollo } from '@frontend/apollo-client';
 import { GetFollowers, GetFollowing } from '@graphql/queries';
 import { User } from '@utils/types';
-import { List, Tabs } from 'antd';
-import Link from 'next/link';
+import { Tabs } from 'antd';
 import styles from './SocialPage.module.scss';
+import { UserList } from '@components/userList/UserList';
 
 interface SocialPageProps {
   username: string;
@@ -57,28 +57,10 @@ const SocialPage: NextPage<SocialPageProps> = ({
       <UserPageNavBar username={username} index="Social" />
       <Tabs type="card" className={styles.tabs}>
         <Tabs.TabPane tab="Following" key="following">
-          <List
-            dataSource={following.map((row: User) => row.username)}
-            renderItem={(username: string) => (
-              <List.Item>
-                <Link href={`/user/${username}`}>
-                  <a>{username}</a>
-                </Link>
-              </List.Item>
-            )}
-          />
+          <UserList users={following} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Followers" key="followers">
-          <List
-            dataSource={followers.map((row: User) => row.username)}
-            renderItem={(username: string) => (
-              <List.Item>
-                <Link href={`/user/${username}`}>
-                  <a>{username}</a>
-                </Link>
-              </List.Item>
-            )}
-          />
+          <UserList users={followers} />
         </Tabs.TabPane>
       </Tabs>
     </>

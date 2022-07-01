@@ -1,14 +1,10 @@
-import { List } from 'antd';
 import Head from 'next/head';
-import Link from 'next/link';
 import { initializeApollo } from '@frontend/apollo-client';
 import { SearchUsers } from '@graphql/queries';
 import { GetServerSideProps } from 'next';
 import Title from 'antd/lib/typography/Title';
-
-interface User {
-  username: string;
-}
+import { UserList } from '@components/userList/UserList';
+import { User } from '@utils/types';
 
 interface UserSearchPageProps {
   users: User[];
@@ -45,16 +41,7 @@ const UserSearchPage = ({ users }: UserSearchPageProps) => {
         <title>Search Users · GameList</title>
       </Head>
       <Title>Users</Title>
-      <List
-        dataSource={users.map((row: User) => row.username)}
-        renderItem={(username: string) => (
-          <List.Item>
-            <Link href={`/user/${username}`}>
-              <a>{username}</a>
-            </Link>
-          </List.Item>
-        )}
-      />
+      <UserList users={users} />
     </>
   );
 };
