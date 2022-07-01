@@ -238,3 +238,29 @@ export const GetPlatforms = gql`
     }
   }
 `;
+
+export const GetFollowing = gql`
+  query Following($where: UserWhere) {
+    users(where: $where) {
+      following {
+        username
+      }
+    }
+  }
+`;
+
+export const GetFollowers = gql`
+  query Followers($where: UserWhere) {
+    users(where: $where) {
+      followers {
+        username
+      }
+    }
+  }
+`;
+
+export const GetIsFollowing = gql`
+  query Query($follower: String!, $followee: String!) {
+    isFollowing(follower: $follower, followee: $followee)
+  }
+`;

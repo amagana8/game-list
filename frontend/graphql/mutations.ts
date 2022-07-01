@@ -143,3 +143,15 @@ export const ChangePassword = gql`
     }
   }
 `;
+
+export const FollowUser = gql`
+  mutation Follow($user: String!) {
+    follow(user: $user)
+  }
+`;
+
+export const UnFollowUser = gql`
+  mutation UnFollow($user: String!) {
+    unFollow(user: $user)
+  }
+`;

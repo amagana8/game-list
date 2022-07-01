@@ -18,5 +18,9 @@ export const queries = gql`
         LIMIT $limit
         """
       )
+    isFollowing(follower: String!, followee: String!): Boolean!
+      @cypher(
+        statement: " MATCH (a:User {username: $follower})-[r:FOLLOWS]->(b:User {username: $followee}) RETURN apoc.convert.toBoolean(COUNT(r))"
+      )
   }
 `;

@@ -86,13 +86,13 @@ const GameGrid = ({ games, type, platforms, genres }: GameGridProps) => {
     <>
       {platforms && genres && (
         <div className={styles.filterBar}>
-        <GameFilters
-          platforms={platforms}
-          genres={genres}
-          setPlatforms={setSelectedPlatforms}
-          setGenres={setSelectedGenres}
-          horizontal
-        />
+          <GameFilters
+            platforms={platforms}
+            genres={genres}
+            setPlatforms={setSelectedPlatforms}
+            setGenres={setSelectedGenres}
+            horizontal
+          />
         </div>
       )}
       <List

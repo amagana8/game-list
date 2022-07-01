@@ -22,6 +22,10 @@ export const userTypeDef = gql`
       @relationship(type: "LISTED", properties: "ListEntry", direction: OUT)
     gameReviews: [Review!]! @relationship(type: "WROTE_REVIEW", direction: OUT)
     favoriteGames: [Game!]! @relationship(type: "FAVORITED", direction: OUT)
+    following: [User!]!
+      @cypher(statement: "MATCH (this)-[:FOLLOWS]->(u:User) RETURN u")
+    followers: [User!]!
+      @cypher(statement: "MATCH (this)<-[:FOLLOWS]-(u:User) RETURN u")
     genreDistribution: [GenreCount!]!
       @cypher(
         statement: "MATCH (this)-[:LISTED]->(:Game)-[:IN_GENRE]->(g:Genre)  WITH g.name AS genreName, COUNT(g) AS genreAmount RETURN ({genre: genreName, amount: genreAmount})"

@@ -12,5 +12,23 @@ export const mutations = gql`
     signOut: Boolean!
     forgotPassword(email: String!): Boolean!
     changePassword(token: String!, newPassword: String!): AuthResponse!
+    follow(user: String!): Boolean!
+      @cypher(
+        statement: """
+        MATCH (a:User {id: $auth.jwt.sub})
+        WITH a
+        MATCH (b:User {username: $user})
+        MERGE (a)-[r:FOLLOWS]->(b)
+        RETURN apoc.convert.toBoolean(COUNT(r))
+        """
+      )
+    unFollow(user: String!): Boolean!
+      @cypher(
+        statement: """
+        MATCH (a:User {id: $auth.jwt.sub})-[r:FOLLOWS]->(b:User {username: $user})
+        DELETE r
+        RETURN NOT EXISTS( (a)-[:FOLLOWS]->(b))
+        """
+      )
   }
 `;
