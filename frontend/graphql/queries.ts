@@ -70,6 +70,7 @@ export const GetGameStatus = gql`
     $gameListConnectionWhere: UserGameListConnectionWhere
     $gameReviewsWhere: ReviewWhere
     $favoriteGamesWhere: GameWhere
+    $gameId: String!
   ) {
     users(where: $where) {
       gameListConnection(where: $gameListConnectionWhere) {
@@ -84,6 +85,15 @@ export const GetGameStatus = gql`
       }
       favoriteGames(where: $favoriteGamesWhere) {
         id
+      }
+      followersPlaying(gameId: $gameId) {
+        username
+        gameListConnection(where: $gameListConnectionWhere) {
+          edges {
+            status
+            score
+          }
+        }
       }
     }
   }

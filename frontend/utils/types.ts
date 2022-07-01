@@ -1,3 +1,5 @@
+import { Status } from './enums';
+
 export interface UserForm {
   email: string;
   username: string;
@@ -47,6 +49,7 @@ export interface Platform {
 export interface User {
   username: string;
   gameListAggregate: { edge: { hours: { sum: number } } };
+  gameListConnection: { edges: { status: Status, score: number }[] };
 }
 export interface Review {
   id: string;

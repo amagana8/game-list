@@ -9,6 +9,7 @@ import {
   Progress,
   Image,
   message,
+  List,
 } from 'antd';
 import { AddGameModal } from '@components/addGameModal/AddGameModal';
 import React, { useState } from 'react';
@@ -19,7 +20,7 @@ import { colorMap } from '@utils/enums';
 import Head from 'next/head';
 import { parseDate, roundNumber } from '@utils/index';
 import Link from 'next/link';
-import { Game } from '@utils/types';
+import { Game, User } from '@utils/types';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { ReviewGridType } from '@utils/enums';
 import type { GetServerSideProps } from 'next';
@@ -29,6 +30,7 @@ import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { AddFavoriteGame, RemoveFavoriteGame } from '@graphql/mutations';
 import { useAuthStore } from '@frontend/authStore';
 import Error from 'next/error';
+import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
 
 const DoughnutChart = dynamic(
   () => import('@components/charts/doughnutChart/DoughnutChart'),
@@ -84,7 +86,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
   const [addFavoriteGame] = useMutation(AddFavoriteGame);
   const [removeFavoriteGame] = useMutation(RemoveFavoriteGame);
 
-  const { loading } = useQuery(GetGameStatus, {
+  const { loading, data } = useQuery(GetGameStatus, {
     variables: {
       where: {
         username,
@@ -102,6 +104,7 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
       favoriteGamesWhere: {
         id: game?.id,
       },
+      gameId: game?.id,
     },
     skip: !username || !game,
     onCompleted: (data) => {
@@ -292,26 +295,55 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
           </Paragraph>
         </Col>
       </Row>
-      <Space direction="vertical" size="large">
-        <Row>
-          <Col span={8}>
-            <Title>Status Distribution</Title>
-            <DoughnutChart data={statusData} />
-          </Col>
-          <Col span={8} offset={4}>
-            <Title>Score Distribution</Title>
-            <BarChart data={game.scoreDistribution} />
-          </Col>
-        </Row>
-        <div>
+      <Row>
+        <Col span={8}>
+          <Title>Status Distribution</Title>
+          <DoughnutChart data={statusData} />
+        </Col>
+        <Col span={8} offset={4}>
+          <Title>Score Distribution</Title>
+          <BarChart data={game.scoreDistribution} />
+        </Col>
+      </Row>
+      <Row justify="space-between" className={styles.offset}>
+        <Col span={8}>
+          <Title>Following</Title>
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            <List
+              dataSource={data.users[0].followersPlaying}
+              renderItem={(user: User) => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={
+                      <div>
+                        <Link href={`/user/${user.username}`}>
+                          <a>{user.username}</a>
+                        </Link>
+                      </div>
+                    }
+                  />
+                  <Space size="large">
+                    <div>
+                      {`${user.gameListConnection.edges[0].status}`.toLowerCase()}
+                    </div>
+                    <div>{`${user.gameListConnection.edges[0].score}/10`}</div>
+                  </Space>
+                </List.Item>
+              )}
+            />
+          )}
+        </Col>
+        <Col span={12}>
           <Title>Reviews</Title>
           <ReviewGrid
             reviews={game.userReviews}
             type={ReviewGridType.Game}
             gameId={game.id}
           />
-        </div>
-      </Space>
+        </Col>
+      </Row>
     </>
   );
 };
