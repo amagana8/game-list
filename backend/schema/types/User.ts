@@ -43,9 +43,8 @@ export const userTypeDef = gql`
     followersPlaying(gameId: String!): [User!]!
       @cypher(
         statement: """
-        MATCH (this)-[:LISTED]->(g:Game {id: $gameId})<-[:LISTED]-(b:User)
-        WHERE (this)-[:FOLLOWS]->(b)
-        RETURN b
+        MATCH (this)-[:FOLLOWS]->(u:User)-[:LISTED]->(g:Game {id: $gameId})
+        RETURN u
         """
       )
   }
