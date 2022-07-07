@@ -47,5 +47,13 @@ export const userTypeDef = gql`
         RETURN u
         """
       )
+    followingActivity: [UserActivity!]!
+      @cypher(
+        statement: """
+        MATCH (this)-[:FOLLOWS]->(u:User)-[r:LISTED]->(g:Game)
+        RETURN ({user: u.username, status: r.status, date: coalesce(r.updatedAt, r.createdAt), gameTitle: g.title, gameSlug: g.slug, gameCover: g.cover})
+        ORDER BY coalesce(r.updatedAt, r.createdAt) DESC
+        """
+      )
   }
 `;

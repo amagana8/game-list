@@ -22,5 +22,14 @@ export const queries = gql`
       @cypher(
         statement: " MATCH (a:User {username: $follower})-[r:FOLLOWS]->(b:User {username: $followee}) RETURN apoc.convert.toBoolean(COUNT(r))"
       )
+    globalActivity: [UserActivity!]!
+      @cypher(
+        statement: """
+        MATCH (u:User)-[r:LISTED]->(g:Game)
+        RETURN ({user: u.username, status: r.status, date: coalesce(r.updatedAt, r.createdAt), gameTitle: g.title, gameSlug: g.slug, gameCover: g.cover})
+        ORDER BY coalesce(r.updatedAt, r.createdAt) DESC
+        LIMIT 50
+        """
+      )
   }
 `;

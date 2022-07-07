@@ -23,6 +23,7 @@ import { signOut } from '@resolvers/SignOut';
 import { changePassword } from '@resolvers/ChangePassword';
 import { forgotPassword } from '@resolvers/ForgotPassword';
 import { platformTypeDef } from '@schema/types/Platform';
+import { userActivityTypeDef } from '@schema/types/UserActivity';
 
 const cors = Cors();
 
@@ -38,6 +39,7 @@ const typeDefs = [
   listEntryTypeDef,
   AuthResponseTypeDef,
   platformTypeDef,
+  userActivityTypeDef,
   queries,
   mutations,
 ];

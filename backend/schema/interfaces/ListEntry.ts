@@ -2,8 +2,10 @@ import { gql } from 'apollo-server-micro';
 
 export const listEntryTypeDef = gql`
   interface ListEntry @relationshipProperties {
-    status: Status
+    status: Status!
     hours: Float
     score: Float
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime @timestamp(operations: [UPDATE])
   }
 `;
