@@ -1,6 +1,6 @@
 import { Button, Input, Typography, Space, Popconfirm, message } from 'antd';
 import Head from 'next/head';
-import { parseDate } from '@utils/index';
+import { parseDate } from '@utils/parseDate';
 import { Review } from '@utils/types';
 import { useEffect, useState } from 'react';
 import styles from './ReviewPage.module.scss';

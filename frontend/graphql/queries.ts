@@ -184,12 +184,7 @@ export const GetReviews = gql`
 `;
 
 export const GetHomeInfo = gql`
-  query GetHomeInfo(
-    $userOptions: UserOptions
-    $gamesLimit: Int = 50
-    $gamesOffset: Int = 0
-    $reviewsOptions: ReviewOptions
-  ) {
+  query GetHomeInfo($userOptions: UserOptions, $reviewsOptions: ReviewOptions) {
     users(options: $userOptions) {
       username
       gameListAggregate {
@@ -200,14 +195,10 @@ export const GetHomeInfo = gql`
         }
       }
     }
-    topGames(limit: $gamesLimit, offset: $gamesOffset) {
-      ...SmallGameFragment
-    }
     reviews(options: $reviewsOptions) {
       ...ReviewFragment
     }
   }
-  ${SmallGameFragment}
   ${ReviewFragment}
 `;
 
@@ -272,5 +263,33 @@ export const GetFollowers = gql`
 export const GetIsFollowing = gql`
   query Query($follower: String!, $followee: String!) {
     isFollowing(follower: $follower, followee: $followee)
+  }
+`;
+
+export const GetFollowingActivity = gql`
+  query Users($where: UserWhere) {
+    users(where: $where) {
+      followingActivity {
+        status
+        user
+        date
+        gameTitle
+        gameSlug
+        gameCover
+      }
+    }
+  }
+`;
+
+export const GetGlobalActivity = gql`
+  query GlobalActivity {
+    globalActivity {
+      user
+      gameSlug
+      gameTitle
+      gameCover
+      status
+      date
+    }
   }
 `;

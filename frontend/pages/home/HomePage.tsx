@@ -1,16 +1,20 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
-import { Col, List, Row } from 'antd';
-import styles from './HomePage.module.scss';
+import { Col, List, Row, Tabs } from 'antd';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
 import { User } from '@utils/types';
-import { GameGridType, ReviewGridType } from '@utils/enums';
-import { GameGrid } from '@components/gameGrid/GameGrid';
+import { ReviewGridType } from '@utils/enums';
 import Link from 'next/link';
-import { GetHomeInfo } from '@graphql/queries';
+import {
+  GetFollowingActivity,
+  GetGlobalActivity,
+  GetHomeInfo,
+} from '@graphql/queries';
 import Title from 'antd/lib/typography/Title';
 import { useQuery } from '@apollo/client';
 import { LoadingSpinner } from '@components/loadingSpinner/LoadingSpinner';
+import { useAuthStore } from '@frontend/authStore';
+import { ActivityFeed } from '@components/activityFeed/ActivityFeed';
 
 const getServerSideProps: GetServerSideProps = async () => {
   return {
@@ -19,6 +23,7 @@ const getServerSideProps: GetServerSideProps = async () => {
 };
 
 const HomePage: NextPage = () => {
+  const username = useAuthStore((state) => state.username);
   const { data, loading } = useQuery(GetHomeInfo, {
     variables: {
       userOptions: {
@@ -29,7 +34,6 @@ const HomePage: NextPage = () => {
           },
         ],
       },
-      gamesLimit: 10,
       reviewsOptions: {
         limit: 10,
         sort: [
@@ -41,7 +45,15 @@ const HomePage: NextPage = () => {
     },
   });
 
-  if (loading) {
+  const { data: activityData, loading: activityLoading } = useQuery(
+    GetFollowingActivity,
+    { variables: { where: { username } }, skip: !username },
+  );
+
+  const { data: globalData, loading: globalLoading } =
+    useQuery(GetGlobalActivity);
+
+  if (loading || activityLoading || globalLoading) {
     return <LoadingSpinner />;
   }
 
@@ -55,11 +67,27 @@ const HomePage: NextPage = () => {
           friends, see stats on your playtime, and discover new games."
         />
       </Head>
-      <Row gutter={16}>
-        <Col span={8}>
+      <Row justify="space-evenly">
+        <Col span={7}>
+          <Title>Activity</Title>
+          {username ? (
+            <Tabs type="card">
+              <Tabs.TabPane tab="Following" key="Following">
+                <ActivityFeed
+                  feedData={activityData.users[0].followingActivity}
+                />
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Global" key="Global">
+                <ActivityFeed feedData={globalData.globalActivity} />
+              </Tabs.TabPane>
+            </Tabs>
+          ) : (
+            <ActivityFeed feedData={globalData.globalActivity} />
+          )}
+        </Col>
+        <Col span={7}>
           <Title>Latest Users</Title>
           <List
-            className={styles.users}
             dataSource={data.users}
             renderItem={(user: User) => (
               <List.Item>
@@ -75,11 +103,7 @@ const HomePage: NextPage = () => {
             )}
           />
         </Col>
-        <Col span={8}>
-          <Title>Highest Rated</Title>
-          <GameGrid games={data.topGames} type={GameGridType.Home} />
-        </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Title>Recent Reviews</Title>
           <ReviewGrid reviews={data.reviews} type={ReviewGridType.Home} />
         </Col>
