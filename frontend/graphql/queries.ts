@@ -78,6 +78,7 @@ export const GetGameStatus = gql`
           status
           hours
           score
+          platforms
         }
       }
       gameReviews(where: $gameReviewsWhere) {

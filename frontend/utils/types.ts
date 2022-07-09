@@ -64,6 +64,7 @@ export interface GameConnection {
   status: string;
   hours: number;
   score: number;
+  platforms: string[];
 }
 
 export interface UserState {
@@ -75,5 +76,6 @@ export interface ListEntry {
   hours: Number;
   score: Number;
   status: string;
+  platforms: string[];
   node: Game;
 }

@@ -1,4 +1,4 @@
-import { Image, Table } from 'antd';
+import { Image, Table, Tag } from 'antd';
 import Link from 'next/link';
 import { AlignType } from 'rc-table/lib/interface';
 import styles from './GameTable.module.scss';
@@ -19,12 +19,13 @@ interface TableEntry {
   cover: string;
   score: number;
   hours: number;
+  platforms: string[];
 }
 
 const GameTable = ({ status, data }: gameTableProps) => {
   const columns: ColumnsType<TableEntry> = [
     {
-      title: '',
+      title: 'Cover',
       key: 'action',
       width: '6%',
       render: (game: Game) => (
@@ -44,7 +45,7 @@ const GameTable = ({ status, data }: gameTableProps) => {
     {
       title: 'Title',
       key: 'action',
-      width: '78%',
+      width: '70%',
       sorter: (a: TableEntry, b: TableEntry) => a.title.localeCompare(b.title),
       render: (game: Game) => (
         <Link href={`/game/${game.slug}`}>
@@ -73,6 +74,18 @@ const GameTable = ({ status, data }: gameTableProps) => {
       align: 'center' as AlignType,
       sorter: (a: TableEntry, b: TableEntry) => a.hours - b.hours,
     },
+    {
+      title: 'Platform(s)',
+      dataIndex: 'platforms',
+      width: '8%',
+      render: (platforms: string[]) => {
+        return platforms?.map((platform: string) => (
+          <Tag key={platform} className={styles.tag}>
+            {platform}
+          </Tag>
+        )) as any;
+      },
+    },
   ];
 
   const tableData: TableEntry[] = data.map((row: ListEntry) => ({
@@ -82,6 +95,7 @@ const GameTable = ({ status, data }: gameTableProps) => {
     cover: row.node.cover,
     score: row.score,
     hours: row.hours,
+    platforms: row.platforms,
   }));
 
   return (

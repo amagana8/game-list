@@ -52,6 +52,7 @@ const AddGameModal = ({
                   hours: input.hours,
                   score: input.score,
                   status: input.status,
+                  platforms: input.platforms,
                 },
               },
             ],
@@ -101,6 +102,11 @@ const AddGameModal = ({
     return Math.round(num / 0.5) * 0.5;
   };
 
+  const layout = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 12 },
+  };
+
   return (
     <Modal
       title={game.title}
@@ -130,7 +136,12 @@ const AddGameModal = ({
         </Button>,
       ]}
     >
-      <Form id="addGameForm" onFinish={onFinish} initialValues={initialValues}>
+      <Form
+        id="addGameForm"
+        {...layout}
+        onFinish={onFinish}
+        initialValues={initialValues}
+      >
         <Form.Item label="Status" name="status">
           <Select>
             <Option value={Status.Playing}>Playing</Option>
@@ -145,6 +156,14 @@ const AddGameModal = ({
         </Form.Item>
         <Form.Item label="Score" name="score">
           <InputNumber max={10} parser={parseScore} />
+        </Form.Item>
+        <Form.Item label="Platforms" name="platforms">
+          <Select
+            mode="multiple"
+            options={game.platforms.map((platform) => ({
+              value: platform.name,
+            }))}
+          />
         </Form.Item>
       </Form>
     </Modal>

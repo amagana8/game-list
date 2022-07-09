@@ -5,6 +5,7 @@ export const listEntryTypeDef = gql`
     status: Status!
     hours: Float
     score: Float
+    platforms: [String!]!
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
   }

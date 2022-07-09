@@ -58,6 +58,7 @@ export const ListFragment = gql`
       hours
       score
       status
+      platforms
       node {
         ...SmallGameFragment
       }
