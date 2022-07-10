@@ -8,7 +8,7 @@ import Title from 'antd/lib/typography/Title';
 import { ListEntry, TableEntry } from '@utils/types';
 import { ListPopover } from '@components/listPopover/ListPopover';
 import { PopoverType } from '@utils/enums';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
 import { UpdateListEntry } from '@graphql/mutations';
@@ -21,7 +21,7 @@ interface gameTableProps {
 }
 
 const GameTable = ({ status, data, editable }: gameTableProps) => {
-  const [tableData, setTableData] = useState<TableEntry[]>(
+  const mapTableData = (data: any) =>
     data.map((row: ListEntry) => ({
       key: row.node.id,
       slug: row.node.slug,
@@ -31,8 +31,13 @@ const GameTable = ({ status, data, editable }: gameTableProps) => {
       score: row.score,
       hours: row.hours,
       platforms: row.platforms,
-    })),
-  );
+    }));
+
+  const [tableData, setTableData] = useState<TableEntry[]>(mapTableData(data));
+  useEffect(() => {
+    setTableData(mapTableData(data));
+  }, [data]);
+
   const username = useAuthStore((state) => state.username);
   const [updateListEntry] = useMutation(UpdateListEntry);
   const onChange = async (input: string[], row: TableEntry) => {

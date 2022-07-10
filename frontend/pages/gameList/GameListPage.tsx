@@ -77,8 +77,8 @@ const GameListPage: NextPage<GameListPageProps> = ({
     // filter by platforms
     let games = selectedPlatforms.length
       ? gameList.edges.filter((entry: ListEntry) =>
-          entry.node.platforms.some((platform) =>
-            selectedPlatforms.includes(platform.name),
+          entry.platforms.some((platform) =>
+            selectedPlatforms.includes(platform),
           ),
         )
       : gameList.edges;
