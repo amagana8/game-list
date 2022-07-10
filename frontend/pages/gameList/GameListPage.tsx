@@ -11,6 +11,7 @@ import { initializeApollo } from '@frontend/apollo-client';
 import Error from 'next/error';
 import { Genre, ListEntry, Platform } from '@utils/types';
 import { GameFilters } from '@components/gameFilters/GameFilters';
+import { useAuthStore } from '@frontend/authStore';
 
 const { Link } = Anchor;
 
@@ -59,6 +60,7 @@ const GameListPage: NextPage<GameListPageProps> = ({
   platforms,
   genres,
 }: GameListPageProps) => {
+  const currentUser = useAuthStore((state) => state.username);
   const [ref, setRef] = useState<any>();
   const currentRef = useCallback((node: any) => {
     if (node !== null) {
@@ -127,19 +129,27 @@ const GameListPage: NextPage<GameListPageProps> = ({
         <GameTable
           status={Status.Playing}
           data={getStatusList(Status.Playing)}
+          editable={username === currentUser}
         />
         <GameTable
           status={Status.Completed}
           data={getStatusList(Status.Completed)}
+          editable={username === currentUser}
         />
-        <GameTable status={Status.Paused} data={getStatusList(Status.Paused)} />
+        <GameTable
+          status={Status.Paused}
+          data={getStatusList(Status.Paused)}
+          editable={username === currentUser}
+        />
         <GameTable
           status={Status.Dropped}
           data={getStatusList(Status.Dropped)}
+          editable={username === currentUser}
         />
         <GameTable
           status={Status.Planning}
           data={getStatusList(Status.Planning)}
+          editable={username === currentUser}
         />
       </div>
     </>

@@ -24,6 +24,11 @@ export enum GameGridType {
   Favorites,
 }
 
+export enum PopoverType {
+  Score = 'score',
+  Hours = 'hours',
+}
+
 export const scoreMap = new Map([
   ['ones', '1'],
   ['twos', '2'],

@@ -49,7 +49,7 @@ export interface Platform {
 export interface User {
   username: string;
   gameListAggregate: { edge: { hours: { sum: number } } };
-  gameListConnection: { edges: { status: Status, score: number }[] };
+  gameListConnection: { edges: { status: Status; score: number }[] };
 }
 export interface Review {
   id: string;
@@ -78,4 +78,15 @@ export interface ListEntry {
   status: string;
   platforms: string[];
   node: Game;
+}
+
+export interface TableEntry {
+  key: number;
+  slug: string;
+  gamePlatforms: { name: string }[];
+  title: string;
+  cover: string;
+  score: number;
+  hours: number;
+  platforms: string[];
 }

@@ -45,6 +45,27 @@ export const RemoveGame = gql`
   }
 `;
 
+export const UpdateListEntry = gql`
+  mutation UpdateUsers(
+    $where: UserWhere
+    $update: UserUpdateInput
+    $gameListConnectionWhere: UserGameListConnectionWhere
+  ) {
+    updateUsers(where: $where, update: $update) {
+      users {
+        gameListConnection(where: $gameListConnectionWhere) {
+          edges {
+            hours
+            score
+            platforms
+            status
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const NewGame = gql`
   mutation CreateGames($input: [GameCreateInput!]!) {
     createGames(input: $input) {
