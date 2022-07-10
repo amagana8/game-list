@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { Anchor, Space } from 'antd';
+import { Anchor, Input, Space } from 'antd';
 import { GameTable } from '@components/gameTable/GameTable';
 import styles from './GameListPage.module.scss';
 import { Status } from '@utils/enums';
@@ -70,7 +70,7 @@ const GameListPage: NextPage<GameListPageProps> = ({
 
   const [selectedPlatforms, setSelectedPlatforms] = useState<String[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<String[]>([]);
-
+  const [filter, setFilter] = useState<string>('');
   const [list, setList] = useState(gameList.edges);
 
   useEffect(() => {
@@ -90,8 +90,12 @@ const GameListPage: NextPage<GameListPageProps> = ({
       );
     }
 
+    games = games.filter((entry: ListEntry) =>
+      entry.node.title.toLowerCase().includes(filter.toLowerCase()),
+    );
+
     setList(games);
-  }, [selectedPlatforms, selectedGenres, gameList.edges]);
+  }, [selectedPlatforms, selectedGenres, filter, gameList.edges]);
 
   if (!username) {
     return <Error statusCode={404} />;
@@ -121,6 +125,13 @@ const GameListPage: NextPage<GameListPageProps> = ({
             genres={genres}
             setPlatforms={setSelectedPlatforms}
             setGenres={setSelectedGenres}
+          />
+          <Input
+            placeholder="Title"
+            className={styles.input}
+            onPressEnter={(e) =>
+              setFilter((e.target as HTMLTextAreaElement).value)
+            }
           />
         </Space>
       </div>

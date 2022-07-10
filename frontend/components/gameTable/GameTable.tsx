@@ -121,6 +121,7 @@ const GameTable = ({ status, data, editable }: gameTableProps) => {
       width: '8%',
       align: 'center' as AlignType,
       sorter: (a: TableEntry, b: TableEntry) => a.score - b.score,
+      defaultSortOrder: 'descend',
       render: (value: number, record: TableEntry) => (
         <ListPopover
           value={value}
