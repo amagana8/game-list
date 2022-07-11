@@ -24,6 +24,7 @@ import { changePassword } from '@resolvers/ChangePassword';
 import { forgotPassword } from '@resolvers/ForgotPassword';
 import { platformTypeDef } from '@schema/types/Platform';
 import { userActivityTypeDef } from '@schema/types/UserActivity';
+import { UserCountTypeDef } from '@schema/types/UserCount';
 
 const cors = Cors();
 
@@ -40,6 +41,7 @@ const typeDefs = [
   AuthResponseTypeDef,
   platformTypeDef,
   userActivityTypeDef,
+  UserCountTypeDef,
   queries,
   mutations,
 ];

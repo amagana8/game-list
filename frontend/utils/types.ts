@@ -90,3 +90,8 @@ export interface TableEntry {
   hours: number;
   platforms: string[];
 }
+
+export interface UserCount {
+  user: string;
+  amount: number;
+}

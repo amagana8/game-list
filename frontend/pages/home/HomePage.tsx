@@ -2,7 +2,7 @@ import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { Col, List, Row, Tabs } from 'antd';
 import { ReviewGrid } from '@components/reviewGrid/ReviewGrid';
-import { User } from '@utils/types';
+import { User, UserCount } from '@utils/types';
 import { ReviewGridType } from '@utils/enums';
 import Link from 'next/link';
 import {
@@ -26,14 +26,6 @@ const HomePage: NextPage = () => {
   const username = useAuthStore((state) => state.username);
   const { data, loading } = useQuery(GetHomeInfo, {
     variables: {
-      userOptions: {
-        limit: 10,
-        sort: [
-          {
-            createdAt: 'DESC',
-          },
-        ],
-      },
       reviewsOptions: {
         limit: 10,
         sort: [
@@ -68,7 +60,7 @@ const HomePage: NextPage = () => {
         />
       </Head>
       <Row justify="space-evenly">
-        <Col span={7}>
+        <Col span={10}>
           <Title>Activity</Title>
           {username ? (
             <Tabs type="card">
@@ -85,25 +77,23 @@ const HomePage: NextPage = () => {
             <ActivityFeed feedData={globalData.globalActivity} />
           )}
         </Col>
-        <Col span={7}>
-          <Title>Latest Users</Title>
+        <Col span={8}>
+        <Title>Biggest Gamers</Title>
           <List
-            dataSource={data.users}
-            renderItem={(user: User) => (
+            dataSource={data.usersWithMostGamesPlayed}
+            renderItem={(row: UserCount) => (
               <List.Item>
                 <List.Item.Meta
                   title={
-                    <Link href={`/user/${user.username}`}>
-                      <a>{user.username}</a>
+                    <Link href={`/user/${row.user}`}>
+                      <a>{row.user}</a>
                     </Link>
                   }
-                  description={`Total Hours: ${user.gameListAggregate.edge.hours.sum}`}
+                  description={`Games Played: ${row.amount}`}
                 />
               </List.Item>
             )}
           />
-        </Col>
-        <Col span={7}>
           <Title>Recent Reviews</Title>
           <ReviewGrid reviews={data.reviews} type={ReviewGridType.Home} />
         </Col>

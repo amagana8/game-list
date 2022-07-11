@@ -31,5 +31,16 @@ export const queries = gql`
         LIMIT 50
         """
       )
+    usersWithMostGamesPlayed: [UserCount!]!
+      @cypher(
+        statement: """
+        MATCH (u:User)-[r:LISTED]-(g:Game)
+        WHERE r.status <> 'PLANNING'
+        WITH COUNT(r) AS  gameCount, u.username AS username
+        RETURN ({user: username, amount: gameCount})
+        ORDER BY gameCount DESC
+        LIMIT 50
+        """
+      )
   }
 `;

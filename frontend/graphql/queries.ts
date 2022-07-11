@@ -185,16 +185,10 @@ export const GetReviews = gql`
 `;
 
 export const GetHomeInfo = gql`
-  query GetHomeInfo($userOptions: UserOptions, $reviewsOptions: ReviewOptions) {
-    users(options: $userOptions) {
-      username
-      gameListAggregate {
-        edge {
-          hours {
-            sum
-          }
-        }
-      }
+  query GetHomeInfo($reviewsOptions: ReviewOptions) {
+    usersWithMostGamesPlayed {
+      user
+      amount
     }
     reviews(options: $reviewsOptions) {
       ...ReviewFragment
