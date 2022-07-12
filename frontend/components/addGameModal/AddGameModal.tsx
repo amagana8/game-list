@@ -52,7 +52,7 @@ const AddGameModal = ({
                   hours: input.hours,
                   score: input.score,
                   status: input.status,
-                  platforms: input.platforms,
+                  platforms: input.platforms ?? [],
                 },
               },
             ],
