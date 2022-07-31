@@ -309,31 +309,37 @@ const GamePage: NextPage<GameProps> = ({ game }: GameProps) => {
       <Row justify="space-between" className={styles.offset}>
         <Col span={8}>
           <Title>Following</Title>
-          {loading ? (
-            <LoadingSpinner />
-          ) : (
-            <List
-              dataSource={data.users[0].followersPlaying}
-              renderItem={(user: User) => (
-                <List.Item>
-                  <List.Item.Meta
-                    title={
-                      <div>
-                        <Link href={`/user/${user.username}`}>
-                          <a>{user.username}</a>
-                        </Link>
-                      </div>
-                    }
-                  />
-                  <Space size="large">
-                    <div>
-                      {`${user.gameListConnection.edges[0].status}`.toLowerCase()}
-                    </div>
-                    <div>{`${user.gameListConnection.edges[0].score}/10`}</div>
-                  </Space>
-                </List.Item>
+          {username ? (
+            <>
+              {loading ? (
+                <LoadingSpinner />
+              ) : (
+                <List
+                  dataSource={data.users[0].followersPlaying}
+                  renderItem={(user: User) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        title={
+                          <div>
+                            <Link href={`/user/${user.username}`}>
+                              <a>{user.username}</a>
+                            </Link>
+                          </div>
+                        }
+                      />
+                      <Space size="large">
+                        <div>
+                          {`${user.gameListConnection.edges[0].status}`.toLowerCase()}
+                        </div>
+                        <div>{`${user.gameListConnection.edges[0].score}/10`}</div>
+                      </Space>
+                    </List.Item>
+                  )}
+                />
               )}
-            />
+            </>
+          ) : (
+            <Text>Login to see if anyone you follow has played this game.</Text>
           )}
         </Col>
         <Col span={12}>

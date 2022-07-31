@@ -111,6 +111,7 @@ const AddGameModal = ({
     <Modal
       title={game.title}
       visible={showModal}
+      onCancel={() => setShowModal(false)}
       footer={[
         <Popconfirm
           key="delete"
